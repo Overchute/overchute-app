@@ -1,134 +1,162 @@
 // Import base modules
-import Bool "mo:base/Bool";
 import Buffer "mo:base/Buffer";
 import Debug "mo:base/Debug";
 import Int "mo:base/Int";
 import Nat "mo:base/Nat";
-import Nat8 "mo:base/Nat8";
-import Prelude "mo:base/Prelude";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
 import Time "mo:base/Time";
-import TrieMap "mo:base/TrieMap";
+import Trie "mo:base/Trie";
+import Result "mo:base/Result";
 import Types "./types";
 
 shared (msg) actor class crowdsale (){
-    let admin = msg.caller;
-    var state = Types.empty();
+    private let admin = msg.caller;
 
     public type Crowdsale = Types.Crowdsale;
+    public type CrowdsaleCreate = Types.CrowdsaleCreate;
+    public type CrowdsaleUpdate = Types.CrowdsaleUpdate;
     public type CrowdsaleId = Types.CrowdsaleId;
     public type UserId = Types.UserId;
     public type Status = Types.Status;
+    public type Error = Types.Error;
+
+    private stable var crowdsales : Trie.Trie<CrowdsaleId, Crowdsale> = Trie.empty();
 
     public shared query(msg) func getOwnId() : async UserId { admin };
 
-    func _createCrowdsale(name: Text, creator: UserId, offerPrice: Int, deadline: Int) : ?CrowdsaleId {
+    // create crowdsale
+    public shared(msg) func createCrowdsale(crowdsaleCreate: CrowdsaleCreate) : async Result.Result<(Text), Error> {
         let now = Time.now();
-        let crowdsaleId = Principal.toText(creator) # "-" # name # "-" # (Int.toText(now));
-        switch (state.crowdsales.get(crowdsaleId)) {
-            case (?_) { null };
-            case null {
-                state.crowdsales.put(crowdsaleId,
-                                    {
-                                        crowdsaleId = crowdsaleId;
-                                        name = name;
-                                        creator = creator;
-                                        status = #open;
-                                        createdAt = now;
-                                        updatedAt = now;
-                                        offerPrice = offerPrice;
-                                        deadline = deadline;
-                                        contributedAmount = 0;
-                                    });
-                    ?crowdsaleId
-            };
-        }
-    };
+        let callerId = msg.caller;
+        let id = Principal.toText(callerId) # "-" # crowdsaleCreate.name #  "-" # (Int.toText(now));
 
-    public shared(msg) func createCrowdsale(name: Text, offerPrice: Int, deadline: Int) : async ?CrowdsaleId {
-        _createCrowdsale(name, msg.caller, offerPrice, deadline);
-    };
+        let crowdsale: Crowdsale = {
+            crowdsaleId = id;
+            name = crowdsaleCreate.name;
+            creator = callerId;
+            createdAt = 0;
+            updatedAt = 0;
+            status = #open;
+            offerPrice = crowdsaleCreate.offerPrice;
+            deadline = crowdsaleCreate.deadline;
+            contributedAmount = 0;
+        };
 
-    /** doesn't work yet
-    func _updateCrowdsale(crowdsaleId: CrowdsaleId, name: Text, offerPrice: Int, deadline: Int) : ?CrowdsaleId {
-        let now = Time.now();
-        do ? {
-            let v = state.crowdsales.get(crowdsaleId)!;
-            var _name = v.name;
-            var _offerPrice = v.offerPrice;
-            var _deadline = v.deadline;
-            if (name != "") { 
-                _name := name; 
-            };
-            if (offerPrice != 0) { 
-                _offerPrice := offerPrice; 
-            };
-            if (deadline != 0) { 
-                _deadline := deadline; 
-            };
-            switch (v) {
-                case (?v) {
-                    state.crowdsales.put(crowdsaleId,
-                                        {
-                                            crowdsaleId = crowdsaleId;
-                                            name = _name;
-                                            creator = v.creator;
-                                            status = v.status;
-                                            createdAt = v.createdAt;
-                                            updatedAt = now;
-                                            offerPrice = _offerPrice;
-                                            deadline = _deadline;
-                                            contributedAmount = v.contributedAmount;
-                                        });
-                };
-                case (null) { null; }
-            }
-        }
-    };**/
-
-    func _getCrowdsaleInfo(crowdsaleId: CrowdsaleId) : ?Crowdsale {
-        do ? {
-            let v = state.crowdsales.get(crowdsaleId)!;
-            {
-                crowdsaleId = crowdsaleId;
-                name = v.name;
-                creator = v.creator;
-                createdAt = v.createdAt;
-                updatedAt = v.updatedAt;
-                status = v.status;
-                offerPrice = v.offerPrice;
-                deadline = v.deadline;
-                contributedAmount = v.contributedAmount;
-            }
-        }
-    };
-
-    public query(msg) func getCrowdsaleInfo(crowdsaleId: CrowdsaleId) : async ?Crowdsale {
-        _getCrowdsaleInfo(crowdsaleId);
-    };
-
-    public query(msg) func getAllCrowdsales() : async ?[Crowdsale] {
-        do ? {
-            let b = Buffer.Buffer<Crowdsale>(0);
-            for ((v, _) in state.crowdsales.entries()) {
-                let crowdsaleInfo = _getCrowdsaleInfo(v)!;
-                // to-do security
-                b.add(crowdsaleInfo);
-            };
-            b.toArray()
-        }
-    };
-   
-
-    /**
-    public shared(msg) func changeCrowdsaleStatus(crowdsaleId: CrowdsaleId, status: Status) : async ?Crowdsale {
-        var v = state.crowdsales.get(crowdsaleId);
-        // v.status := status;
-        let crowdsale = state.crowdsales.replace(
-            crowdsaleId,
-            v
+        let (newCrowdsales, existing) = Trie.put(
+            crowdsales,
+            key(id),
+            Text.equal,
+            crowdsale
         );
-        return crowdsale;
+
+        switch(existing) {
+            case null {
+                crowdsales := newCrowdsales;
+                #ok((id));
+            };
+            case (? v) {
+                #err(#AlreadyExists);
+            };
+        };
+    };
+
+    // get crowdsale by its id
+    public query(msg) func getCrowdsale(id: CrowdsaleId) : async Result.Result<Crowdsale, Error> {
+        let result = Trie.find(
+            crowdsales,
+            key(id),
+            Text.equal
+        );
+        return Result.fromOption(result, #NotFound);
+    };
+
+    // update crowdsale by its id
+    public shared(msg) func update(crowdsaleUpdate: CrowdsaleUpdate) : async Result.Result<(Text), Error> {
+        let result = Trie.find(
+            crowdsales,
+            key(crowdsaleUpdate.crowdsaleId),
+            Text.equal
+        );
+
+        let crowdsale: Crowdsale = {
+            crowdsaleId = crowdsaleUpdate.crowdsaleId;
+            name = crowdsaleUpdate.name;
+            // creator = result.creator;
+            // createdAt = result.createdAt;
+            creator = msg.caller;
+            createdAt = 0;
+            updatedAt = 0;
+            status = crowdsaleUpdate.status;
+            offerPrice = crowdsaleUpdate.offerPrice;
+            deadline = crowdsaleUpdate.deadline;
+            contributedAmount = crowdsaleUpdate.contributedAmount;
+        };
+
+        switch (result) {
+            case null {
+                #err(#NotFound);
+            };
+            case (? v) {
+                crowdsales := Trie.replace(
+                    crowdsales,
+                    key(crowdsaleUpdate.crowdsaleId),
+                    Text.equal,
+                    ?crowdsale
+                ).0;
+                #ok((crowdsaleUpdate.crowdsaleId));
+            };
+        };
+    };
+
+
+    // delete crowdsale by its id
+    public shared(msg) func delete(id: CrowdsaleId) : async Result.Result<(Text), Error> {
+        let result = Trie.find(
+            crowdsales,
+            key(id),
+            Text.equal
+        );
+
+        switch (result) {
+            case null {
+                #err(#NotFound);
+            };
+            case (? v) {
+                crowdsales := Trie.replace(
+                    crowdsales,
+                    key(id),
+                    Text.equal,
+                    null
+                ).0;
+                #ok((id));
+            };
+        };
+    };
+
+    // public query(msg) func getAllCrowdsales() : async Result.Result<[Crowdsale], Error> {
+    //     let allCrowdsales = Trie.find(
+    //         crowdsales,
+    //         key()
+    //     )
+    // };
+
+    /*func getCrowdsaleInfo(crowdsaleId: CrowdsaleId) : Crowdsale {
+        let v = crowdsales.get(crowdsaleId);
+        {
+            crowdsaleId = crowdsaleId;
+            name = v.name;
+            creator = v.creator;
+            createdAt = v.createdAt;
+            updatedAt = v.updatedAt;
+            status = v.status;
+            offerPrice = v.offerPrice;
+            deadline = v.deadline;
+            contributedAmount = v.contributedAmount;
+        }
     };*/
+
+    private func key(x : Text) : Trie.Key<CrowdsaleId> {
+        return { key = x; hash = Text.hash(x) }
+    };
 };

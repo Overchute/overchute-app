@@ -10,7 +10,6 @@ import TrieMap "mo:base/TrieMap";
 module {
     public type UserId = Principal;
     public type CrowdsaleId = Text;
-    public type Map<X, Y> = TrieMap.TrieMap<X, Y>;
     public type Status = { #open; #closed; #failed; #fullfilled; };
 
     public type Crowdsale = {
@@ -25,14 +24,24 @@ module {
         contributedAmount: Int;
     };
 
-    public type State = {
-        /// all crowdsales.
-        crowdsales: Map<CrowdsaleId, Crowdsale>;
+    public type CrowdsaleCreate = {
+        name: Text;
+        offerPrice: Int;
+        deadline: Int;
     };
 
-    public func empty () : State {
-        let st : State = {
-            crowdsales = TrieMap.TrieMap<CrowdsaleId, Crowdsale>(Text.equal, Text.hash);
-        };
+    public type CrowdsaleUpdate = {
+        crowdsaleId: CrowdsaleId;
+        name: Text;
+        status: Status;
+        offerPrice: Int;
+        deadline: Int;
+        contributedAmount: Int;
+    };
+
+    public type Error = {
+        #NotFound;
+        #AlreadyExists;
+        #NotAuthorized;
     };
 }
