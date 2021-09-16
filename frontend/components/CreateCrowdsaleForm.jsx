@@ -55,9 +55,13 @@ function CreateCrowdsaleForm() {
   const handleCreateCrodwsale = useCallback(async (name, offer, deadline) => {
     setIsDisabled(true)
     console.log(name, offer, deadline)
-    let response = await crowdsale.createCrowdsale(name, offer, deadline)
+    let response = await crowdsale.createCrowdsale({
+      name: name,
+      offerPrice: offer,
+      deadline: deadline,
+    })
     console.log(response)
-    let csId = response[0]
+    let csId = response.ok
     setSuccess(true)
     setTimeout(() => {
       history.push(`/crowdsale/show/${csId}`)
