@@ -16,18 +16,18 @@ module {
         crowdsaleId: CrowdsaleId;
         name: Text;
         creator: UserId;
-        createdAt: Int;
-        updatedAt: Int;
+        createdAt: Time.Time;
+        updatedAt: Time.Time;
         status: Status;
         offerPrice: Int;
-        deadline: Int;
+        deadline: Time.Time;
         contributedAmount: Int;
     };
 
     public type CrowdsaleCreate = {
         name: Text;
         offerPrice: Int;
-        deadline: Int;
+        deadline: Time.Time;
     };
 
     public type CrowdsaleUpdate = {
@@ -35,7 +35,7 @@ module {
         name: Text;
         status: Status;
         offerPrice: Int;
-        deadline: Int;
+        deadline: Time.Time;
         contributedAmount: Int;
     };
 

@@ -35,8 +35,8 @@ shared (msg) actor class crowdsale (){
             crowdsaleId = id;
             name = crowdsaleCreate.name;
             creator = callerId;
-            createdAt = 0;
-            updatedAt = 0;
+            createdAt = Time.now();
+            updatedAt = Time.now();
             status = #open;
             offerPrice = crowdsaleCreate.offerPrice;
             deadline = crowdsaleCreate.deadline;
@@ -79,25 +79,22 @@ shared (msg) actor class crowdsale (){
             Text.equal
         );
 
-        let crowdsale: Crowdsale = {
-            crowdsaleId = crowdsaleUpdate.crowdsaleId;
-            name = crowdsaleUpdate.name;
-            // creator = result.creator;
-            // createdAt = result.createdAt;
-            creator = msg.caller;
-            createdAt = 0;
-            updatedAt = 0;
-            status = crowdsaleUpdate.status;
-            offerPrice = crowdsaleUpdate.offerPrice;
-            deadline = crowdsaleUpdate.deadline;
-            contributedAmount = crowdsaleUpdate.contributedAmount;
-        };
-
         switch (result) {
             case null {
                 #err(#NotFound);
             };
             case (? v) {
+                let crowdsale: Crowdsale = {
+                    crowdsaleId = crowdsaleUpdate.crowdsaleId;
+                    name = crowdsaleUpdate.name;
+                    creator = v.creator;
+                    createdAt = v.createdAt;
+                    updatedAt = Time.now();
+                    status = crowdsaleUpdate.status;
+                    offerPrice = crowdsaleUpdate.offerPrice;
+                    deadline = crowdsaleUpdate.deadline;
+                    contributedAmount = crowdsaleUpdate.contributedAmount;
+                };
                 crowdsales := Trie.replace(
                     crowdsales,
                     key(crowdsaleUpdate.crowdsaleId),
@@ -134,27 +131,15 @@ shared (msg) actor class crowdsale (){
         };
     };
 
-    // public query(msg) func getAllCrowdsales() : async Result.Result<[Crowdsale], Error> {
-    //     let allCrowdsales = Trie.find(
-    //         crowdsales,
-    //         key()
-    //     )
-    // };
+    // retrieve all created crowdsales
+    public query(msg) func getAllCrowdsales() : async [Crowdsale] {
+        let result = Trie.toArray<CrowdsaleId, Crowdsale, Crowdsale>(crowdsales, transform);
+        return result;
+    };
 
-    /*func getCrowdsaleInfo(crowdsaleId: CrowdsaleId) : Crowdsale {
-        let v = crowdsales.get(crowdsaleId);
-        {
-            crowdsaleId = crowdsaleId;
-            name = v.name;
-            creator = v.creator;
-            createdAt = v.createdAt;
-            updatedAt = v.updatedAt;
-            status = v.status;
-            offerPrice = v.offerPrice;
-            deadline = v.deadline;
-            contributedAmount = v.contributedAmount;
-        }
-    };*/
+    private func transform(id: CrowdsaleId, crowdsale: Crowdsale): Crowdsale {
+        return crowdsale;
+    };
 
     private func key(x : Text) : Trie.Key<CrowdsaleId> {
         return { key = x; hash = Text.hash(x) }
