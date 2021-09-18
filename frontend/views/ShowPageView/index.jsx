@@ -7,13 +7,15 @@ import { crowdsale } from "canisters/crowdsale"
 
 function ShowPageView({ match }) {
   let crowdsaleId = match.params.id
+  console.log("show csi", crowdsaleId)
   const [data, setData] = React.useState([])
 
   const getCrowdsaleById = useCallback(async (crowdsaleId) => {
-    let response = await crowdsale.getCrowdsaleInfo(crowdsaleId)
-    response.length > 0 ? setData(response) : setData(["none"])
+    let response = await crowdsale.getCrowdsale(crowdsaleId)
+    console.log("show response", response)
+    response.ok !== undefined ? setData([response.ok]) : setData(["none"])
     // setData(response)
-    console.log(response)
+    // console.log(response)
   })
   useEffect(() => {
     getCrowdsaleById(crowdsaleId)
