@@ -13,7 +13,7 @@ function ListPageView() {
   const handleListAllCrodwsales = useCallback(async () => {
     setIsDisabled(true)
     let res = await crowdsale.getAllCrowdsales()
-    res[0].length > 0 ? setData(res[0]) : setData(["none"])
+    res.length > 0 ? setData(res) : setData(["none"])
 
     console.log(res)
     setIsDisabled(false)
@@ -21,7 +21,7 @@ function ListPageView() {
   useEffect(() => {
     handleListAllCrodwsales()
   }, [])
-  console.log("data at list crodsales", data, data.length)
+  console.log("data at list crowdsales", data, data.length)
   return (
     <Box
       margin="6rem 0 0 0"

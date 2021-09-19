@@ -54,6 +54,7 @@ function CreateCrowdsaleForm() {
   })
   const handleCreateCrodwsale = useCallback(async (name, offer, deadline) => {
     setIsDisabled(true)
+
     console.log(name, offer, deadline)
     let response = await crowdsale.createCrowdsale({
       name: name,
