@@ -1,8 +1,8 @@
 import React from "react"
-import Button from "@material-ui/core/Button"
+import Button from "@mui/material/Button"
 import { Link } from "react-router-dom"
-import Box from "@material-ui/core/Box"
-import Typography from "@material-ui/core/Typography"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
 import logo from "../../assets/logo.svg"
 
 function Page404View() {

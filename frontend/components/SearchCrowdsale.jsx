@@ -1,13 +1,15 @@
 import React from "react"
 import { useHistory } from "react-router-dom"
-import InputBase from "@material-ui/core/InputBase"
-import SearchIcon from "@material-ui/icons/SearchRounded"
+import InputBase from "@mui/material/InputBase"
+import SearchIcon from "@mui/icons-material/SearchRounded"
 
-import { alpha, makeStyles } from "@material-ui/core/styles"
+import { alpha } from "@mui/material/styles"
+import { makeStyles } from "@mui/styles"
 
 const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
+    padding: theme.spacing(2, 2, 2, 0),
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.search.bg, 0.15),
     "&:hover": {
@@ -22,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   searchIcon: {
-    padding: theme.spacing(0, 2),
+    padding: theme.spacing(0, 1),
     height: "100%",
     position: "absolute",
     pointerEvents: "none",
@@ -32,21 +34,23 @@ const useStyles = makeStyles((theme) => ({
   },
   inputRoot: {
     color: "inherit",
+    paddingLeft: "2rem",
   },
   inputInput: {
     padding: theme.spacing(3, 3, 3, 0),
     // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "60ch",
-    },
+    // [theme.breakpoints.up("md")]: {
+    //   width: "60ch",
+    // },
   },
 }))
 
 function SearchCrowdsale() {
   const classes = useStyles()
+  console.log("classes", classes)
   let history = useHistory()
   const [query, setQuery] = React.useState("")
 
@@ -62,11 +66,12 @@ function SearchCrowdsale() {
     >
       <div>
         <div className={classes.search}>
-          <div className={classes.searchIcon}>
+          {/* <div className={classes.searchIcon}>
             <SearchIcon />
-          </div>
+          </div> */}
           <InputBase
             placeholder="Search…"
+            fullWidth
             classes={{
               root: classes.inputRoot,
               input: classes.inputInput,

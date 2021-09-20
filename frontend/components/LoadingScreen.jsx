@@ -3,7 +3,8 @@ import React from "react"
 import PropTypes from "prop-types"
 import { motion } from "framer-motion"
 import Logo from "./Logo"
-import { makeStyles, alpha } from "@material-ui/core/styles"
+import { alpha } from "@mui/material/styles"
+import { makeStyles } from "@mui/styles"
 
 // ----------------------------------------------------------------------
 
@@ -28,12 +29,12 @@ const useStyles = makeStyles((theme) => ({
   inner: {
     width: 100,
     height: 100,
-    border: `solid 3px ${alpha(theme.palette.primary.dark, 0.24)}`,
+    border: `solid 3px ${alpha(theme.palette.primary.dark, 0.84)}`,
   },
   outside: {
     width: 120,
     height: 120,
-    border: `solid 8px ${alpha(theme.palette.primary.dark, 0.24)}`,
+    border: `solid 8px ${alpha(theme.palette.primary.dark, 0.84)}`,
   },
 }))
 

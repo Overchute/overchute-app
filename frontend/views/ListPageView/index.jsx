@@ -1,9 +1,9 @@
 import React, { useEffect, useCallback } from "react"
 import { Link } from "react-router-dom"
-import Box from "@material-ui/core/Box"
-import Button from "@material-ui/core/Button"
-import Typography from "@material-ui/core/Typography"
-import Paper from "@material-ui/core/Paper"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import Typography from "@mui/material/Typography"
+import Paper from "@mui/material/Paper"
 import LoadingScreen from "../../components/LoadingScreen"
 import { crowdsale } from "canisters/crowdsale"
 
@@ -13,7 +13,7 @@ function ListPageView() {
   const handleListAllCrodwsales = useCallback(async () => {
     setIsDisabled(true)
     let res = await crowdsale.getAllCrowdsales()
-    res[0].length > 0 ? setData(res[0]) : setData(["none"])
+    res.length > 0 ? setData(res) : setData(["none"])
 
     console.log(res)
     setIsDisabled(false)
@@ -21,7 +21,7 @@ function ListPageView() {
   useEffect(() => {
     handleListAllCrodwsales()
   }, [])
-  console.log("data at list crodsales", data, data.length)
+  console.log("data at list crowdsales", data, data.length)
   return (
     <Box
       margin="6rem 0 0 0"

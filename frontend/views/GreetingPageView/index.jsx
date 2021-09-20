@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from "react"
-import Box from "@material-ui/core/Box"
-import Typography from "@material-ui/core/Typography"
-import TextField from "@material-ui/core/TextField"
-import Button from "@material-ui/core/Button"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+import TextField from "@mui/material/TextField"
+import Button from "@mui/material/Button"
 import LogoName from "../../assets/LogoName"
 import { counter } from "canisters/counter"
 

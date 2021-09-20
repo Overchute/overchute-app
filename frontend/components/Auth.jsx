@@ -10,12 +10,12 @@ import {
   DialogContentText,
   DialogTitle,
   Slide,
-} from "@material-ui/core"
+} from "@mui/material"
 import { AuthClient } from "@dfinity/auth-client"
-import InfinityIcon from "@material-ui/icons/AllInclusiveOutlined"
-import ExitIcon from "@material-ui/icons/ExitToAppOutlined"
-import InfoIcon from "@material-ui/icons/InfoOutlined"
-import IconButton from "@material-ui/core/IconButton"
+import InfinityIcon from "@mui/icons-material/AllInclusiveOutlined"
+import ExitIcon from "@mui/icons-material/ExitToAppOutlined"
+import InfoIcon from "@mui/icons-material/InfoOutlined"
+import IconButton from "@mui/material/IconButton"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
