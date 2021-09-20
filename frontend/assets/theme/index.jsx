@@ -1,10 +1,10 @@
 import { AppTheme } from "./types"
-import { grey, blueGrey } from "@material-ui/core/colors"
+import { grey, blueGrey } from "@mui/material/colors"
 
 const appThemeOptions = {
   [AppTheme.LIGHT]: {
     palette: {
-      type: "light",
+      mode: "light",
       common: {
         black: "#000",
         white: "#fff",
@@ -34,7 +34,7 @@ const appThemeOptions = {
   },
   [AppTheme.DARK]: {
     palette: {
-      type: "dark",
+      mode: "dark",
       common: {
         black: "#000",
         white: "#fff",

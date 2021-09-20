@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from "react"
-import Box from "@material-ui/core/Box"
-import Typography from "@material-ui/core/Typography"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
 import LogoName from "../../assets/LogoName"
-import Button from "@material-ui/core/Button"
+import Button from "@mui/material/Button"
 import { counter } from "canisters/counter"
 
 function HelloPageView() {

@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect } from "react"
-import Box from "@material-ui/core/Box"
-import Typography from "@material-ui/core/Typography"
-import LinearProgress from "@material-ui/core/LinearProgress"
-import Button from "@material-ui/core/Button"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+import LinearProgress from "@mui/material/LinearProgress"
+import Button from "@mui/material/Button"
 import LogoName from "../../assets/LogoName"
 import { counter } from "canisters/counter"
 

@@ -4,8 +4,8 @@ import { Switch, Route } from "react-router-dom"
 import AppRoutes from "./AppRoutes"
 import HomeRoutes from "./HomeRoutes"
 import LoadingScreen from "../components/LoadingScreen"
-import Box from "@material-ui/core/Box"
-import { makeStyles } from "@material-ui/core/styles"
+import Box from "@mui/material/Box"
+import { makeStyles } from "@mui/styles"
 
 const nprogressStyle = makeStyles((theme) => ({
   "@global": {

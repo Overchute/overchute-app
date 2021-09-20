@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react"
-import Typography from "@material-ui/core/Typography"
-import Box from "@material-ui/core/Box"
+import Typography from "@mui/material/Typography"
+import Box from "@mui/material/Box"
 import LoadingScreen from "../../components/LoadingScreen"
 import CrowdsaleInfo from "../../components/CrowdsaleInfo"
 import { crowdsale } from "canisters/crowdsale"

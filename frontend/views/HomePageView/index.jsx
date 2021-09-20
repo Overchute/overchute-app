@@ -1,9 +1,9 @@
 import React from "react"
-import Box from "@material-ui/core/Box"
-import Typography from "@material-ui/core/Typography"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
 import LogoName from "../../assets/LogoName"
-import Button from "@material-ui/core/Button"
-import AddBoxIcon from "@material-ui/icons/AddBoxRounded"
+import Button from "@mui/material/Button"
+import AddBoxIcon from "@mui/icons-material/AddBoxRounded"
 import { Link } from "react-router-dom"
 
 function HomePageView() {
