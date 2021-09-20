@@ -9,9 +9,12 @@ import Time "mo:base/Time";
 import Trie "mo:base/Trie";
 import Result "mo:base/Result";
 import Types "./types";
+import Array "mo:base/Array";
+import UUID "mo:uuid/UUID";
 
 shared (msg) actor class crowdsale (){
     private let admin = msg.caller;
+    private let g = UUID.Generator();
 
     public type Crowdsale = Types.Crowdsale;
     public type CrowdsaleCreate = Types.CrowdsaleCreate;
@@ -29,7 +32,7 @@ shared (msg) actor class crowdsale (){
     public shared(msg) func createCrowdsale(crowdsaleCreate: CrowdsaleCreate) : async Result.Result<(Text), Error> {
         let now = Time.now();
         let callerId = msg.caller;
-        let id = Principal.toText(callerId) # "-" # crowdsaleCreate.name #  "-" # (Int.toText(now));
+        let id = UUID.toText(g.new());        
 
         let crowdsale: Crowdsale = {
             crowdsaleId = id;
@@ -140,6 +143,12 @@ shared (msg) actor class crowdsale (){
     private func transform(id: CrowdsaleId, crowdsale: Crowdsale): Crowdsale {
         return crowdsale;
     };
+
+    // public query(msg) func getCrowdsaleByPrincipal(p: Principal) : async [Crowdsale] {
+    //     let result = Trie.toArray<CrowdsaleId, Crowdsale, Crowdsale>(crowdsales, transform);
+    //     let crowdsalesByPrincipal = Trie.toArray<Principal, Crowdsale, Crowdsale>(crowdsales, transform);
+    //     return crowdsalesByPrincipal;
+    // };
 
     private func key(x : Text) : Trie.Key<CrowdsaleId> {
         return { key = x; hash = Text.hash(x) }

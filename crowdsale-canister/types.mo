@@ -7,6 +7,8 @@ import Bool "mo:base/Int";
 import Nat8 "mo:base/Nat8";
 import TrieMap "mo:base/TrieMap";
 
+// get crowdsales by principal
+
 module {
     public type UserId = Principal;
     public type CrowdsaleId = Text;
@@ -19,8 +21,10 @@ module {
         createdAt: Time.Time;
         updatedAt: Time.Time;
         status: Status;
+        // only can decrease
         offerPrice: Int;
         deadline: Time.Time;
+        // contributor can increase
         contributedAmount: Int;
     };
 
