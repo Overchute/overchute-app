@@ -16,6 +16,7 @@
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.0.0",
+    "@mui/lab": "*",
     "@mui/material": "^5.0.0",
     "@mui/styles": "^5.0.0",
     "formik": "^2.2.9",
