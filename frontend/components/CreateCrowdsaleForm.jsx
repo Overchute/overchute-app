@@ -1,5 +1,5 @@
 import React, { useCallback } from "react"
-import { useFormik } from "formik"
+import { Formik, Form, useFormik } from "formik"
 import { useHistory } from "react-router-dom"
 import * as yup from "yup"
 import TextField from "@mui/material/TextField"
@@ -10,6 +10,9 @@ import SendIcon from "@mui/icons-material/SendRounded"
 import LoadingScreen from "./LoadingScreen"
 import { crowdsale } from "canisters/crowdsale"
 import Typography from "@mui/material/Typography"
+import AdapterDateFns from "@mui/lab/AdapterDateFns"
+import LocalizationProvider from "@mui/lab/LocalizationProvider"
+import DatePicker from "@mui/lab/DatePicker"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +25,8 @@ const useStyles = makeStyles((theme) => ({
 
 let validationSchema = yup.object().shape({
   offer: yup.number().required().positive().integer(),
-  deadline: yup.number().required().positive().integer(),
+  deadline: yup.date().nullable(),
+  // deadline: yup.number().required().positive().integer(),
   name: yup.string.required,
 })
 
@@ -31,27 +35,32 @@ function CreateCrowdsaleForm() {
   let history = useHistory()
   const [isDisabled, setIsDisabled] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
-  const [todaydate, setTodayDate] = React.useState(null)
-  const formik = useFormik({
-    initialValues: {
-      offer: "",
-      deadline: "",
-      name: "",
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      console.log(
-        typeof values.name,
-        typeof parseInt(values.offer),
-        typeof parseInt(values.deadline),
-      )
-      handleCreateCrodwsale(
-        values.name,
-        parseInt(values.offer),
-        parseInt(values.deadline),
-      )
-    },
-  })
+  const [todaydate, setTodayDate] = React.useState(Date.now())
+  let initialValues = {
+    offer: "",
+    deadline: todaydate,
+    name: "",
+  }
+  // const formik = useFormik({
+  //   // initialValues: {
+  //   //   offer: "",
+  //   //   deadline: "",
+  //   //   name: "",
+  //   // },
+  //   validationSchema: validationSchema,
+  //   onSubmit: (values) => {
+  //     console.log(
+  //       typeof values.name,
+  //       typeof parseInt(values.offer),
+  //       typeof parseInt(values.deadline),
+  //     )
+  //     handleCreateCrodwsale(
+  //       values.name,
+  //       parseInt(values.offer),
+  //       parseInt(values.deadline),
+  //     )
+  //   },
+  // })
   const handleCreateCrodwsale = useCallback(async (name, offer, deadline) => {
     setIsDisabled(true)
 
@@ -70,99 +79,113 @@ function CreateCrowdsaleForm() {
   })
 
   return (
-    <form
-      className={classes.root}
-      onSubmit={formik.handleSubmit}
-      autoComplete="off"
-    >
-      <Box>
-        <Box>
-          <TextField
-            required
-            id="name"
-            label="Enter Name"
-            value={formik.values.name}
-            variant="outlined"
-            onChange={formik.handleChange}
-            error={formik.touched.name && Boolean(formik.errors.name)}
-            helperText={formik.touched.name && formik.errors.name}
-          />
-        </Box>
-        <TextField
-          required
-          id="offer"
-          label="Enter Offer"
-          value={formik.values.offer}
-          variant="outlined"
-          onChange={formik.handleChange}
-          error={formik.touched.offer && Boolean(formik.errors.offer)}
-          helperText={formik.touched.offer && formik.errors.offer}
-        />
-        <TextField
-          required
-          id="deadline"
-          label="Enter Deadline"
-          value={formik.values.deadline}
-          variant="outlined"
-          onChange={formik.handleChange}
-          error={formik.touched.deadline && Boolean(formik.errors.deadline)}
-          helperText={formik.touched.deadline && formik.errors.deadline}
-        />
-      </Box>
-      <Box
-        style={{
-          textAlign: "right",
-          marginTop: "2rem",
-          marginRight: "1rem",
-          display: isDisabled === true ? "none" : "block",
-        }}
-      >
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          startIcon={<SendIcon />}
-          style={{ padding: "1rem" }}
-          type="submit"
-        >
-          submit crowdsale
-        </Button>
-      </Box>
-      <Box margin="4rem 0" display={isDisabled === true ? "block" : "none"}>
-        <LoadingScreen />
-      </Box>
-      <Box
-        textAlign="center"
-        margin="4rem 0"
-        display={success === true ? "block" : "none"}
-      >
-        <Typography variant="subtitle1">
-          Congratulations 🎉 🎉 🎉 <br />
-          Your crowdsale has been created. <br />
-          One moment we are re-directing you to its page.
-        </Typography>
-      </Box>
-
-      {/* <Box
-        style={{
-          textAlign: "right",
-          marginTop: "2rem",
-          marginRight: "1rem",
-          display: isDisabled === true ? "none" : "block",
-        }}
-      >
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          startIcon={<SendIcon />}
-          style={{ padding: "1rem" }}
-          onClick={handleGetAllCrodwsales}
-        >
-          getall crowdsales
-        </Button>
-      </Box> */}
-    </form>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={(values) => {
+        console.log(
+          values.name,
+          parseInt(values.offer),
+          values.deadline.getTime(),
+        )
+        handleCreateCrodwsale(
+          values.name,
+          parseInt(values.offer),
+          values.deadline.getTime(),
+        )
+      }}
+      render={(props) => (
+        <Form className={classes.root}>
+          <Box>
+            <Box>
+              <TextField
+                required
+                id="name"
+                label="Enter Name"
+                value={props.values.name}
+                variant="outlined"
+                onChange={props.handleChange}
+                error={props.touched.name && Boolean(props.errors.name)}
+                helperText={props.touched.name && props.errors.name}
+              />
+            </Box>
+            <TextField
+              required
+              id="offer"
+              label="Enter Offer"
+              value={props.values.offer}
+              variant="outlined"
+              onChange={props.handleChange}
+              error={props.touched.offer && Boolean(props.errors.offer)}
+              helperText={props.touched.offer && props.errors.offer}
+            />
+            {/* <TextField
+              required
+              id="deadline"
+              label="Enter Deadline"
+              value={props.values.deadline}
+              variant="outlined"
+              onChange={props.handleChange}
+              error={props.touched.deadline && Boolean(props.errors.deadline)}
+              helperText={props.touched.deadline && props.errors.deadline}
+            /> */}
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                required
+                id="deadline"
+                label="Enter Deadline"
+                value={props.values.deadline}
+                onChange={(newValue) => {
+                  props.setFieldValue("deadline", newValue)
+                  // console.log("NEW DATE", newValue, newValue.getTime())
+                  // if (newValue === "") {
+                  //   props.setFieldValue("deadline", todaydate)
+                  // } else {
+                  //   props.setFieldValue("deadline", newValue)
+                  // }
+                }}
+                error={props.touched.deadline && Boolean(props.errors.deadline)}
+                helperText={props.touched.deadline && props.errors.deadline}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
+          </Box>
+          <Box
+            style={{
+              textAlign: "right",
+              marginTop: "2rem",
+              marginRight: "1rem",
+              display: isDisabled === true ? "none" : "block",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              startIcon={<SendIcon />}
+              style={{ padding: "1rem" }}
+              type="submit"
+            >
+              submit crowdsale
+            </Button>
+          </Box>
+          <Box margin="4rem 0" display={isDisabled === true ? "block" : "none"}>
+            <LoadingScreen />
+          </Box>
+          <Box
+            textAlign="center"
+            margin="4rem 0"
+            display={success === true ? "block" : "none"}
+          >
+            <Typography variant="subtitle1">
+              Congratulations 🎉 🎉 🎉 <br />
+              Your crowdsale has been created. <br />
+              One moment we are re-directing you to its page.
+            </Typography>
+          </Box>
+        </Form>
+      )}
+    />
   )
 }
 
