@@ -4,7 +4,7 @@ import Principal "mo:base/Principal";
 import Text "mo:base/Text";
 import Int "mo:base/Int";
 import Float "mo:base/Float";
-import TrieMap "mo:base/TrieMap";
+import Trie "mo:base/Trie";
 
 module {
     public type UserId = Principal;
@@ -20,6 +20,7 @@ module {
         offerPrice: Float;
         deadline: Time.Time;
         contributedAmount: Float;
+        contributions: Trie.Trie<Principal, Float>;
     };
 
     public type CrowdsaleCreate = {
@@ -31,6 +32,14 @@ module {
         crowdsaleId: CrowdsaleId;
         offerPrice: Float;
         deadline: Time.Time;
+    };
+
+    public type CrowdsaleUpdateHidden = {
+        crowdsaleId: CrowdsaleId;
+        offerPrice: Float;
+        status: Status;
+        deadline: Time.Time;
+        contributedAmount: Float;
     };
 
     public type Error = {

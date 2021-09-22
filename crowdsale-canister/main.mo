@@ -38,7 +38,7 @@ shared (msg) actor class crowdsale (){
 
         if (crowdsaleCreate.deadline <= now) {
             Debug.print(debug_show(now));
-            throw Err.reject("Deadline can't be less then now");
+            throw Err.reject("Deadline can't be less than now");
         };
 
         let crowdsale: Crowdsale = {
@@ -50,6 +50,7 @@ shared (msg) actor class crowdsale (){
             offerPrice = crowdsaleCreate.offerPrice;
             deadline = crowdsaleCreate.deadline;
             contributedAmount = 0;
+            contributions = Trie.empty();
         };
 
         let (newCrowdsales, existing) = Trie.put(
@@ -109,6 +110,7 @@ shared (msg) actor class crowdsale (){
                     offerPrice = crowdsaleUpdate.offerPrice;
                     deadline = crowdsaleUpdate.deadline;
                     contributedAmount = v.contributedAmount;
+                    contributions = v.contributions;
                 };
                 crowdsales := Trie.replace(
                     crowdsales,
@@ -145,6 +147,48 @@ shared (msg) actor class crowdsale (){
                     null
                 ).0;
                 #ok((id));
+            };
+        };
+    };
+
+    // todo
+    // make contribution to crowdsale
+    public shared(msg) func makeContribution(id: CrowdsaleId, amount: Float) : async Result.Result<(Text), Error> {
+        let callerId = msg.caller;
+        let result = Trie.find(
+            crowdsales,
+            key(id),
+            Text.equal
+        );
+        switch (result) {
+            case null {
+                #err(#NotFound);
+            };
+            case (? v) {
+                // let (newCrowdsales, existing) = Trie.put(
+                //     crowdsales,
+                //     key(id),
+                //     Text.equal,
+                //     crowdsale
+                // );
+                let crowdsale: Crowdsale = {
+                    crowdsaleId = v.crowdsaleId;
+                    creator = v.creator;
+                    createdAt = v.createdAt;
+                    updatedAt = Time.now();
+                    status = v.status;
+                    offerPrice = v.offerPrice;
+                    deadline = v.deadline;
+                    contributedAmount = v.contributedAmount + amount;
+                    contributions = v.contributions;
+                };
+                crowdsales := Trie.replace(
+                    crowdsales,
+                    key(v.crowdsaleId),
+                    Text.equal,
+                    ?crowdsale
+                ).0;
+                #ok((v.crowdsaleId));
             };
         };
     };
