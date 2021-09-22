@@ -19,6 +19,7 @@
     "@mui/lab": "*",
     "@mui/material": "^5.0.0",
     "@mui/styles": "^5.0.0",
+    "date-fns": "^2.24.0",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "history": "^4.10.1",

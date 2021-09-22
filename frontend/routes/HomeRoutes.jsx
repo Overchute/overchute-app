@@ -14,6 +14,11 @@ const HomeRoutes = {
       component: lazy(() => import("../views/HomePageView")),
     },
     {
+      exact: true,
+      path: "/loading",
+      component: lazy(() => import("../views/LoadingPageView")),
+    },
+    {
       component: () => <Redirect to="/404" />,
     },
   ],
