@@ -140,7 +140,7 @@ shared (msg) actor class crowdsale (){
     };
 
     // retrieve all created crowdsales by caller
-    public query(msg) func getCrowdsaleByCaller() : async [Crowdsale] {
+    public query(msg) func getCrowdsalesByCaller() : async [Crowdsale] {
         let caller = msg.caller;
         let allCrowdsales = Trie.toArray<CrowdsaleId, Crowdsale, Crowdsale>(crowdsales, transform);
         var result: [Crowdsale] = [];
@@ -157,7 +157,7 @@ shared (msg) actor class crowdsale (){
     };
 
     // retrieve all created crowdsales by creator
-    public query(msg) func getCrowdsaleByCreator(creator: Principal) : async [Crowdsale] {
+    public query(msg) func getCrowdsalesByCreator(creator: Principal) : async [Crowdsale] {
         let allCrowdsales = Trie.toArray<CrowdsaleId, Crowdsale, Crowdsale>(crowdsales, transform);
         var result: [Crowdsale] = [];
         for (i in Iter.range(0, allCrowdsales.size() - 1)) {
