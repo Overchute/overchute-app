@@ -18,21 +18,6 @@ const AppRoutes = {
     },
     {
       exact: true,
-      path: PATH_APP.app.counter,
-      component: lazy(() => import("../views/CounterPageView")),
-    },
-    {
-      exact: true,
-      path: PATH_APP.app.greeting,
-      component: lazy(() => import("../views/GreetingPageView")),
-    },
-    {
-      exact: true,
-      path: PATH_APP.app.helloWorld,
-      component: lazy(() => import("../views/HelloPageView")),
-    },
-    {
-      exact: true,
       path: PATH_APP.app.list,
       component: lazy(() => import("../views/ListPageView")),
     },

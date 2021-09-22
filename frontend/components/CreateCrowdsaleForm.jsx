@@ -27,7 +27,7 @@ let validationSchema = yup.object().shape({
   offer: yup.number().required().positive().integer(),
   deadline: yup.date().nullable(),
   // deadline: yup.number().required().positive().integer(),
-  name: yup.string().required(),
+  // name: yup.string().required(),
 })
 
 function CreateCrowdsaleForm() {
@@ -39,7 +39,7 @@ function CreateCrowdsaleForm() {
   let initialValues = {
     offer: "",
     deadline: todaydate,
-    name: "",
+    // name: "",
   }
   // const formik = useFormik({
   //   // initialValues: {
@@ -88,16 +88,13 @@ function CreateCrowdsaleForm() {
           parseInt(values.offer),
           values.deadline.getTime(),
         )
-        handleCreateCrodwsale(
-          values.name,
-          parseInt(values.offer),
-          values.deadline.getTime(),
-        )
+        let nano = values.deadline.getTime() * 1000000
+        handleCreateCrodwsale(values.name, parseInt(values.offer), nano)
       }}
       render={(props) => (
         <Form className={classes.root}>
           <Box>
-            <Box>
+            {/* <Box>
               <TextField
                 required
                 id="name"
@@ -108,7 +105,7 @@ function CreateCrowdsaleForm() {
                 error={props.touched.name && Boolean(props.errors.name)}
                 helperText={props.touched.name && props.errors.name}
               />
-            </Box>
+            </Box> */}
             <TextField
               required
               id="offer"
