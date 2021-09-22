@@ -36,10 +36,10 @@ shared (msg) actor class crowdsale (){
         let callerId = msg.caller;
         let id = UUID.toText(g.new());        
 
-        if (crowdsaleCreate.deadline <= now) {
-            Debug.print(debug_show(now));
-            throw Err.reject("Deadline can't be less than now");
-        };
+        // if (crowdsaleCreate.deadline <= now) {
+        //     Debug.print(debug_show(now));
+        //     throw Err.reject("Deadline can't be less than now");
+        // };
 
         let crowdsale: Crowdsale = {
             crowdsaleId = id;
