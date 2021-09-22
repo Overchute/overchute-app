@@ -12,6 +12,7 @@ import Types "./types";
 import Array "mo:base/Array";
 import UUID "mo:uuid/UUID";
 import Iter "mo:base/Iter";
+import Err "mo:base/Error";
 
 shared (msg) actor class crowdsale (){
     private let admin = msg.caller;
@@ -76,6 +77,7 @@ shared (msg) actor class crowdsale (){
 
     // update crowdsale by its id
     public shared(msg) func update(crowdsaleUpdate: CrowdsaleUpdate) : async Result.Result<(Text), Error> {
+        let callerId = msg.caller;
         let result = Trie.find(
             crowdsales,
             key(crowdsaleUpdate.crowdsaleId),
@@ -87,15 +89,21 @@ shared (msg) actor class crowdsale (){
                 #err(#NotFound);
             };
             case (? v) {
+                if (v.creator != callerId) {
+                    throw Err.reject("No access");
+                };
+                if (crowdsaleUpdate.offerPrice > v.offerPrice) {
+                    throw Err.reject("Offer price reduction is only allowed");
+                };
                 let crowdsale: Crowdsale = {
                     crowdsaleId = crowdsaleUpdate.crowdsaleId;
                     creator = v.creator;
                     createdAt = v.createdAt;
                     updatedAt = Time.now();
-                    status = crowdsaleUpdate.status;
+                    status = v.status;
                     offerPrice = crowdsaleUpdate.offerPrice;
                     deadline = crowdsaleUpdate.deadline;
-                    contributedAmount = crowdsaleUpdate.contributedAmount;
+                    contributedAmount = v.contributedAmount;
                 };
                 crowdsales := Trie.replace(
                     crowdsales,
@@ -108,9 +116,9 @@ shared (msg) actor class crowdsale (){
         };
     };
 
-
     // delete crowdsale by its id
     public shared(msg) func delete(id: CrowdsaleId) : async Result.Result<(Text), Error> {
+        let callerId = msg.caller;
         let result = Trie.find(
             crowdsales,
             key(id),
@@ -122,6 +130,9 @@ shared (msg) actor class crowdsale (){
                 #err(#NotFound);
             };
             case (? v) {
+                if (v.creator != callerId) {
+                    throw Err.reject("No access");
+                };
                 crowdsales := Trie.replace(
                     crowdsales,
                     key(id),
@@ -147,7 +158,7 @@ shared (msg) actor class crowdsale (){
         for (i in Iter.range(0, allCrowdsales.size() - 1)) {
             switch(allCrowdsales[i]) {
                 case (crowdsale) {
-                    if (crowdsale.creator == creator) {
+                    if (crowdsale.creator == caller) {
                         result := Array.append<Crowdsale>(result, [crowdsale]);
                     };
                 };

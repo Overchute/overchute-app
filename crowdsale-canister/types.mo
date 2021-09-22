@@ -3,8 +3,7 @@ import Blob "mo:base/Blob";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
 import Int "mo:base/Int";
-import Bool "mo:base/Int";
-import Nat8 "mo:base/Nat8";
+import Float "mo:base/Float";
 import TrieMap "mo:base/TrieMap";
 
 module {
@@ -18,22 +17,20 @@ module {
         createdAt: Time.Time;
         updatedAt: Time.Time;
         status: Status;
-        offerPrice: Int;
+        offerPrice: Float;
         deadline: Time.Time;
-        contributedAmount: Int;
+        contributedAmount: Float;
     };
 
     public type CrowdsaleCreate = {
-        offerPrice: Int;
+        offerPrice: Float;
         deadline: Time.Time;
     };
 
     public type CrowdsaleUpdate = {
         crowdsaleId: CrowdsaleId;
-        status: Status;
-        offerPrice: Int;
+        offerPrice: Float;
         deadline: Time.Time;
-        contributedAmount: Int;
     };
 
     public type Error = {
