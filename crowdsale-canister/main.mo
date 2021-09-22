@@ -11,6 +11,7 @@ import Result "mo:base/Result";
 import Types "./types";
 import Array "mo:base/Array";
 import UUID "mo:uuid/UUID";
+import Iter "mo:base/Iter";
 
 shared (msg) actor class crowdsale (){
     private let admin = msg.caller;
@@ -36,7 +37,6 @@ shared (msg) actor class crowdsale (){
 
         let crowdsale: Crowdsale = {
             crowdsaleId = id;
-            name = crowdsaleCreate.name;
             creator = callerId;
             createdAt = Time.now();
             updatedAt = Time.now();
@@ -89,7 +89,6 @@ shared (msg) actor class crowdsale (){
             case (? v) {
                 let crowdsale: Crowdsale = {
                     crowdsaleId = crowdsaleUpdate.crowdsaleId;
-                    name = crowdsaleUpdate.name;
                     creator = v.creator;
                     createdAt = v.createdAt;
                     updatedAt = Time.now();
@@ -140,17 +139,52 @@ shared (msg) actor class crowdsale (){
         return result;
     };
 
-    private func transform(id: CrowdsaleId, crowdsale: Crowdsale): Crowdsale {
-        return crowdsale;
+    // retrieve all created crowdsales by caller
+    public query(msg) func getCrowdsaleByCaller() : async [Crowdsale] {
+        let caller = msg.caller;
+        let allCrowdsales = Trie.toArray<CrowdsaleId, Crowdsale, Crowdsale>(crowdsales, transform);
+        var result: [Crowdsale] = [];
+        for (i in Iter.range(0, allCrowdsales.size() - 1)) {
+            switch(allCrowdsales[i]) {
+                case (crowdsale) {
+                    if (crowdsale.creator == creator) {
+                        result := Array.append<Crowdsale>(result, [crowdsale]);
+                    };
+                };
+            };
+        };
+        result;
     };
 
-    // public query(msg) func getCrowdsaleByPrincipal(p: Principal) : async [Crowdsale] {
-    //     let result = Trie.toArray<CrowdsaleId, Crowdsale, Crowdsale>(crowdsales, transform);
-    //     let crowdsalesByPrincipal = Trie.toArray<Principal, Crowdsale, Crowdsale>(crowdsales, transform);
-    //     return crowdsalesByPrincipal;
-    // };
+    // retrieve all created crowdsales by creator
+    public query(msg) func getCrowdsaleByCreator(creator: Principal) : async [Crowdsale] {
+        let allCrowdsales = Trie.toArray<CrowdsaleId, Crowdsale, Crowdsale>(crowdsales, transform);
+        var result: [Crowdsale] = [];
+        for (i in Iter.range(0, allCrowdsales.size() - 1)) {
+            switch(allCrowdsales[i]) {
+                case (crowdsale) {
+                    if (crowdsale.creator == creator) {
+                        result := Array.append<Crowdsale>(result, [crowdsale]);
+                    };
+                };
+            };
+        };
+        result;
+    };
+
+    private func extractCrowdsale(k : Text, v : Crowdsale) : Crowdsale {
+        return v;
+    };
 
     private func key(x : Text) : Trie.Key<CrowdsaleId> {
         return { key = x; hash = Text.hash(x) }
+    };
+
+    private func keyPrincipal(x : Principal) : Trie.Key<Principal>{
+        return { key = x; hash = Principal.hash(x) }
+    };
+
+    private func transform(id: CrowdsaleId, crowdsale: Crowdsale): Crowdsale {
+        return crowdsale;
     };
 };
