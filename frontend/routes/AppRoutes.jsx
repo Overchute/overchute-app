@@ -46,11 +46,6 @@ const AppRoutes = {
       path: PATH_APP.app.show,
       component: lazy(() => import("../views/ShowPageView")),
     },
-    {
-      exact: true,
-      path: PATH_APP.app.loading,
-      component: lazy(() => import("../views/LoadingPageView")),
-    },
 
     // ----------------------------------------------------------------------
     {

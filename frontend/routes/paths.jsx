@@ -20,6 +20,6 @@ export const PATH_APP = {
     list: path(ROOTS.app, "/list"),
     search: path(ROOTS.app, "/search"),
     show: path(ROOTS.app, "/show/:id"),
-    load: path(ROOTS.app, "/loading"),
+    load: path(ROOTS.home, "/loading"),
   },
 }
