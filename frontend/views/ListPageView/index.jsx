@@ -36,6 +36,10 @@ function ListPageView() {
       {data.length > 0 &&
         data[0] !== "none" &&
         data.map((i, x) => {
+          console.log(i)
+          let bi = Number(i.deadline) / 1000000
+          let dt = new Date(bi)
+          console.log(new Date(bi))
           return (
             <Paper
               key={x}
@@ -47,13 +51,14 @@ function ListPageView() {
                   {i.crowdsaleId}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  {i.name}
+                  {dt.toString()}
                 </Typography>
                 <Button
                   variant="contained"
                   color="primary"
                   component={Link}
                   to={`/crowdsale/show/${i.crowdsaleId}`}
+                  style={{ marginTop: "2rem" }}
                 >
                   Details
                 </Button>
