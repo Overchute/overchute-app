@@ -41,26 +41,7 @@ function CreateCrowdsaleForm() {
     deadline: todaydate,
     // name: "",
   }
-  // const formik = useFormik({
-  //   // initialValues: {
-  //   //   offer: "",
-  //   //   deadline: "",
-  //   //   name: "",
-  //   // },
-  //   validationSchema: validationSchema,
-  //   onSubmit: (values) => {
-  //     console.log(
-  //       typeof values.name,
-  //       typeof parseInt(values.offer),
-  //       typeof parseInt(values.deadline),
-  //     )
-  //     handleCreateCrodwsale(
-  //       values.name,
-  //       parseInt(values.offer),
-  //       parseInt(values.deadline),
-  //     )
-  //   },
-  // })
+
   const handleCreateCrodwsale = useCallback(async (name, offer, deadline) => {
     setIsDisabled(true)
 
@@ -116,16 +97,7 @@ function CreateCrowdsaleForm() {
               error={props.touched.offer && Boolean(props.errors.offer)}
               helperText={props.touched.offer && props.errors.offer}
             />
-            {/* <TextField
-              required
-              id="deadline"
-              label="Enter Deadline"
-              value={props.values.deadline}
-              variant="outlined"
-              onChange={props.handleChange}
-              error={props.touched.deadline && Boolean(props.errors.deadline)}
-              helperText={props.touched.deadline && props.errors.deadline}
-            /> */}
+
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
                 required

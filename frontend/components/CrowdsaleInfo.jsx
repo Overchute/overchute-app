@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography"
 import Paper from "@mui/material/Paper"
 
 function CrowdsaleInfo({ data }) {
-  let bi = BigInt(data.deadline) / 1000000n
+  let bi = Number(data.deadline) / 1000000
   let n = Number(bi)
   let dt = new Date(n)
   console.log(n, dt)
