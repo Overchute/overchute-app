@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState, useContext } from "react"
+import SiteContext from "../context"
 import {
   Box,
   Button,
@@ -20,8 +21,9 @@ import IconButton from "@mui/material/IconButton"
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
-// Note: This is just a basic example to get you started
+
 function Auth() {
+  const { state, dispatch } = useContext(SiteContext)
   const [signedIn, setSignedIn] = useState(false)
   const [principal, setPrincipal] = useState("")
   const [client, setClient] = useState()
@@ -35,6 +37,12 @@ function Auth() {
     if (isAuthenticated) {
       const identity = client.getIdentity()
       const principal = identity.getPrincipal().toString()
+      dispatch({ type: "SET_AUTHENTICATION", payload: true })
+      dispatch({ type: "SET_SIGNED", payload: true })
+      dispatch({ type: "SET_PRINCIPAL", payload: principal })
+      dispatch({ type: "SET_IDENTITY", payload: identity })
+      dispatch({ type: "SET_CLIENT", payload: client })
+
       setSignedIn(true)
       setPrincipal(principal)
     }
