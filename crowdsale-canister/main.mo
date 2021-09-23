@@ -38,7 +38,11 @@ shared (msg) actor class crowdsale (){
 
         if (crowdsaleCreate.deadline <= now) {
             Debug.print(debug_show(now));
-            throw Err.reject("Deadline can't be less than now");
+            throw Err.reject("Deadline cannot be less than now");
+        };
+
+        if (crowdsaleCreate.offerPrice <= 0) {
+            throw Err.reject("Offer price cannot be less or equal than 0");
         };
 
         let crowdsale: Crowdsale = {
@@ -151,7 +155,6 @@ shared (msg) actor class crowdsale (){
         };
     };
 
-    // todo
     // make contribution to crowdsale
     public shared(msg) func makeContribution(id: CrowdsaleId, amount: Float) : async Result.Result<(Text), Error> {
         let callerId = msg.caller;
@@ -165,29 +168,63 @@ shared (msg) actor class crowdsale (){
                 #err(#NotFound);
             };
             case (? v) {
-                // let (newCrowdsales, existing) = Trie.put(
-                //     crowdsales,
-                //     key(id),
-                //     Text.equal,
-                //     crowdsale
-                // );
-                let crowdsale: Crowdsale = {
-                    crowdsaleId = v.crowdsaleId;
-                    creator = v.creator;
-                    createdAt = v.createdAt;
-                    updatedAt = Time.now();
-                    status = v.status;
-                    offerPrice = v.offerPrice;
-                    deadline = v.deadline;
-                    contributedAmount = v.contributedAmount + amount;
-                    contributions = v.contributions;
+                let foundContributions = Trie.find(
+                    v.contributions,
+                    keyPrincipal(callerId),
+                    Principal.equal
+                );
+                switch (foundContributions) {
+                    case null {
+                        let (newContributions, existing) = Trie.put(
+                            v.contributions,
+                            keyPrincipal(callerId),
+                            Principal.equal,
+                            amount
+                        );
+                        let crowdsale: Crowdsale = {
+                            crowdsaleId = v.crowdsaleId;
+                            creator = v.creator;
+                            createdAt = v.createdAt;
+                            updatedAt = Time.now();
+                            status = v.status;
+                            offerPrice = v.offerPrice;
+                            deadline = v.deadline;
+                            contributedAmount = v.contributedAmount + amount;
+                            contributions = newContributions;
+                        };
+                        crowdsales := Trie.replace(
+                            crowdsales,
+                            key(v.crowdsaleId),
+                            Text.equal,
+                            ?crowdsale
+                        ).0;
+                    };
+                    case (? c) {
+                        let (newContributions, existing) = Trie.put(
+                            v.contributions,
+                            keyPrincipal(callerId),
+                            Principal.equal,
+                            c + amount
+                        );
+                        let crowdsale: Crowdsale = {
+                            crowdsaleId = v.crowdsaleId;
+                            creator = v.creator;
+                            createdAt = v.createdAt;
+                            updatedAt = Time.now();
+                            status = v.status;
+                            offerPrice = v.offerPrice;
+                            deadline = v.deadline;
+                            contributedAmount = v.contributedAmount + amount;
+                            contributions = newContributions;
+                        };
+                        crowdsales := Trie.replace(
+                            crowdsales,
+                            key(v.crowdsaleId),
+                            Text.equal,
+                            ?crowdsale
+                        ).0;
+                    };
                 };
-                crowdsales := Trie.replace(
-                    crowdsales,
-                    key(v.crowdsaleId),
-                    Text.equal,
-                    ?crowdsale
-                ).0;
                 #ok((v.crowdsaleId));
             };
         };
