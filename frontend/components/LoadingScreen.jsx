@@ -1,12 +1,9 @@
 import clsx from "clsx"
 import React from "react"
-import PropTypes from "prop-types"
 import { motion } from "framer-motion"
 import Logo from "./Logo"
 import { alpha } from "@mui/material/styles"
 import { makeStyles } from "@mui/styles"
-
-// ----------------------------------------------------------------------
 
 const TRANSITION = {
   ease: "linear",
@@ -37,12 +34,6 @@ const useStyles = makeStyles((theme) => ({
     border: `solid 8px ${alpha(theme.palette.primary.dark, 0.84)}`,
   },
 }))
-
-// ----------------------------------------------------------------------
-
-LoadingScreen.propTypes = {
-  className: PropTypes.string,
-}
 
 function LoadingScreen({ className, ...other }) {
   const classes = useStyles()

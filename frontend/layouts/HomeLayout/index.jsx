@@ -1,4 +1,5 @@
 import React from "react"
+import { Outlet } from "react-router-dom"
 import { makeStyles } from "@mui/styles"
 import SideBar from "./Sidebar"
 
@@ -19,14 +20,16 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
 }))
-function HomeLayout({ children }) {
+function HomeLayout() {
   const classes = useStyles()
   return (
     <div className={classes.root}>
       <SideBar />
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <div>{children}</div>
+        <div>
+          <Outlet />
+        </div>
       </main>
     </div>
   )

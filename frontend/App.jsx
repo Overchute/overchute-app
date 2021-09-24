@@ -1,15 +1,13 @@
 import React, { useReducer, useContext, useEffect } from "react"
 import SiteContext from "./context"
 import siteReducer from "./reducer"
-import { Router } from "react-router-dom"
-import routes, { renderRoutes } from "./routes"
-import { createBrowserHistory } from "history"
+import { BrowserRouter } from "react-router-dom"
+import Router from "./routes"
+
 import CssBaseline from "@mui/material/CssBaseline"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import AppThemeOptions from "./assets/theme/index"
 import { AppTheme } from "./assets/theme/types"
-
-const history = createBrowserHistory()
 
 function App() {
   const initialState = useContext(SiteContext)
@@ -35,7 +33,9 @@ function App() {
     <ThemeProvider theme={muiTheme}>
       <CssBaseline />
       <SiteContext.Provider value={{ state, dispatch }}>
-        <Router history={history}>{renderRoutes(routes)}</Router>
+        <BrowserRouter>
+          <Router />
+        </BrowserRouter>
       </SiteContext.Provider>
     </ThemeProvider>
   )

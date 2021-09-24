@@ -1,5 +1,5 @@
 import React, { lazy } from "react"
-import { Redirect } from "react-router-dom"
+import { Navigate } from "react-router-dom"
 import HomeLayout from "../layouts/HomeLayout"
 
 // ----------------------------------------------------------------------
@@ -19,7 +19,7 @@ const HomeRoutes = {
       component: lazy(() => import("../views/LoadingPageView")),
     },
     {
-      component: () => <Redirect to="/404" />,
+      component: () => <Navigate to="/404" />,
     },
   ],
 }

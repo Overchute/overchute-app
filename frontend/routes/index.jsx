@@ -1,107 +1,87 @@
-import NProgress from "nprogress"
-import React, { Suspense, Fragment, useEffect, lazy } from "react"
-import { Switch, Route } from "react-router-dom"
-import AppRoutes from "./AppRoutes"
-import HomeRoutes from "./HomeRoutes"
+import React, { Suspense, lazy } from "react"
+import { Navigate, useRoutes, useLocation } from "react-router-dom"
+// layouts
+import HomeLayout from "../layouts/HomeLayout"
+import NotFoundLayout from "../layouts/NotFoundLayout"
+// components
 import LoadingScreen from "../components/LoadingScreen"
-import Box from "@mui/material/Box"
-import { makeStyles } from "@mui/styles"
+// ----------------------------------------------------------------------
 
-const nprogressStyle = makeStyles((theme) => ({
-  "@global": {
-    "#nprogress": {
-      pointerEvents: "none",
-      "& .bar": {
-        top: 0,
-        left: 0,
-        height: 2,
-        width: "100%",
-        position: "fixed",
-        zIndex: theme.zIndex.snackbar,
-        backgroundColor: theme.palette.primary.main,
-        boxShadow: `0 0 2px ${theme.palette.primary.main}`,
-      },
-      "& .peg": {
-        right: 0,
-        opacity: 1,
-        width: 100,
-        height: "100%",
-        display: "block",
-        position: "absolute",
-        transform: "rotate(3deg) translate(0px, -4px)",
-        boxShadow: `0 0 10px ${theme.palette.primary.main}, 0 0 5px ${theme.palette.primary.main}`,
-      },
-    },
-  },
-}))
+const Loadable = (Component) => (props) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { pathname } = useLocation()
+  const isDashboard = pathname.includes("/dashboard")
 
-function RouteProgress(props) {
-  nprogressStyle()
-
-  NProgress.configure({
-    speed: 500,
-    showSpinner: false,
-  })
-
-  useEffect(() => {
-    NProgress.done()
-    return () => {
-      NProgress.start()
-    }
-  }, [])
-
-  return <Route {...props} />
-}
-// function LoadingScreen() {
-//   return <p>Loading Screen</p>
-// }
-export function renderRoutes(routes = []) {
   return (
     <Suspense
       fallback={
-        <Box height="70vh">
-          <LoadingScreen />
-        </Box>
+        <LoadingScreen
+        // sx={{
+        //   ...(!isDashboard && {
+        //     top: 0,
+        //     left: 0,
+        //     width: 1,
+        //     zIndex: 9999,
+        //     position: "fixed",
+        //   }),
+        // }}
+        />
       }
     >
-      <Switch>
-        {routes.map((route, i) => {
-          const Component = route.component
-          const Guard = route.guard || Fragment
-          const Layout = route.layout || Fragment
-
-          return (
-            <RouteProgress
-              key={i}
-              path={route.path}
-              exact={route.exact}
-              render={(props) => (
-                <Guard>
-                  <Layout>
-                    {route.routes ? (
-                      renderRoutes(route.routes)
-                    ) : (
-                      <Component {...props} />
-                    )}
-                  </Layout>
-                </Guard>
-              )}
-            />
-          )
-        })}
-      </Switch>
+      <Component {...props} />
     </Suspense>
   )
 }
 
-const routes = [
-  {
-    exact: true,
-    path: "/404",
-    component: lazy(() => import("../views/Page404View")),
-  },
-  AppRoutes,
-  HomeRoutes,
-]
+export default function Router() {
+  return useRoutes([
+    // Crowdsales Routes
+    {
+      path: "crowdsale",
+      element: <HomeLayout />,
+      children: [
+        { element: <Navigate to="/crowdsale" replace /> },
+        { path: "create", element: <Create /> },
+        { path: "list", element: <List /> },
+        { path: "search", element: <Search /> },
+        { path: "show/:id", element: <Show /> },
+        // {
+        //   path: "app",
+        //   children: [
+        //     { element: <Navigate to="/dashboard/app/four" replace /> },
+        //     { path: "four", element: <PageFour /> },
+        //     { path: "five", element: <PageFive /> },
+        //     { path: "six", element: <PageSix /> },
+        //   ],
+        // },
+      ],
+    },
 
-export default routes
+    // Main Routes
+    {
+      path: "*",
+      element: <NotFoundLayout />,
+      children: [
+        { path: "404", element: <NotFound /> },
+        { path: "*", element: <Navigate to="/404" replace /> },
+      ],
+    },
+    {
+      path: "/",
+      element: <HomeLayout />,
+      children: [{ element: <HomePage /> }],
+    },
+    { path: "*", element: <Navigate to="/404" replace /> },
+  ])
+}
+
+// IMPORT COMPONENTS
+
+// Crowdsale
+const Create = Loadable(lazy(() => import("../views/CreatePageView")))
+const List = Loadable(lazy(() => import("../views/ListPageView")))
+const Search = Loadable(lazy(() => import("../views/SearchPageView")))
+const Show = Loadable(lazy(() => import("../views/ShowPageView")))
+const NotFound = Loadable(lazy(() => import("../views/Page404View")))
+// Main
+const HomePage = Loadable(lazy(() => import("../views/HomePageView")))

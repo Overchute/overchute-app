@@ -1,12 +1,16 @@
 import React, { useCallback, useEffect } from "react"
+import { useParams } from "react-router-dom"
+import { makeStyles } from "@mui/styles"
 import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 import LoadingScreen from "../../components/LoadingScreen"
 import CrowdsaleInfo from "../../components/CrowdsaleInfo"
 import { crowdsale } from "canisters/crowdsale"
 
-function ShowPageView({ match }) {
-  let crowdsaleId = match.params.id
+function ShowPageView() {
+  let params = useParams()
+  console.log("params", params)
+  let crowdsaleId = params.id
   console.log("show csi", crowdsaleId)
   const [data, setData] = React.useState([])
 

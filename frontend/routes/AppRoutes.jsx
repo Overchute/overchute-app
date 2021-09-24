@@ -1,6 +1,6 @@
 import { PATH_APP } from "./paths"
 import React, { lazy } from "react"
-import { Redirect } from "react-router-dom"
+import { Navigate } from "react-router-dom"
 import HomeLayout from "../layouts/HomeLayout"
 
 // ----------------------------------------------------------------------
@@ -34,7 +34,7 @@ const AppRoutes = {
 
     // ----------------------------------------------------------------------
     {
-      component: () => <Redirect to="/404" />,
+      component: () => <Navigate to="/404" />,
     },
   ],
 }

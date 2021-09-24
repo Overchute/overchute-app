@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from "react"
 import SiteContext from "../context"
 import { Formik, Form, useFormik } from "formik"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
@@ -34,7 +34,7 @@ let validationSchema = yup.object().shape({
 function CreateCrowdsaleForm() {
   const classes = useStyles()
   const { state } = useContext(SiteContext)
-  let history = useHistory()
+  const navigate = useNavigate()
   const [isDisabled, setIsDisabled] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
   const [todaydate, setTodayDate] = React.useState(Date.now())
@@ -57,7 +57,7 @@ function CreateCrowdsaleForm() {
     let csId = response.ok
     setSuccess(true)
     setTimeout(() => {
-      history.push(`/crowdsale/show/${csId}`)
+      navigate(`/crowdsale/show/${csId}`)
     }, 5000)
   })
   console.log("state", state)

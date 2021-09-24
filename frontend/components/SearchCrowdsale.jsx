@@ -1,5 +1,6 @@
 import React from "react"
-import { useHistory } from "react-router-dom"
+
+import { useNavigate } from "react-router-dom"
 import InputBase from "@mui/material/InputBase"
 import SearchIcon from "@mui/icons-material/SearchRounded"
 
@@ -51,12 +52,12 @@ const useStyles = makeStyles((theme) => ({
 function SearchCrowdsale() {
   const classes = useStyles()
   console.log("classes", classes)
-  let history = useHistory()
+  const navigate = useNavigate()
   const [query, setQuery] = React.useState("")
 
   const reDirectToShowCrowdsale = (e) => {
     e.preventDefault()
-    history.push(`/crowdsale/show/${query}`)
+    navigate(`/crowdsale/show/${query}`)
   }
   return (
     <form
