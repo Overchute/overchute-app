@@ -3,12 +3,13 @@ import SiteContext from "../context"
 import { Formik, Form } from "formik"
 import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
-import { TextField, Button, Box, Typography } from "@mui/material"
+import { TextField, Button, Box, Typography, Paper } from "@mui/material"
 import { makeStyles } from "@mui/styles"
 import SendIcon from "@mui/icons-material/SendRounded"
 import LoadingScreen from "./LoadingScreen"
 import { crowdsale } from "canisters/crowdsale"
 import AdapterDateFns from "@mui/lab/AdapterDateFns"
+import DeleteIcon from "@mui/icons-material/DeleteRounded"
 import LocalizationProvider from "@mui/lab/LocalizationProvider"
 import DatePicker from "@mui/lab/DatePicker"
 
@@ -28,7 +29,10 @@ let validationSchema = yup.object().shape({
   // name: yup.string().required(),
 })
 
-function CreateCrowdsaleForm() {
+function EditCrowsaleForm({ data, id }) {
+  console.log("edit", data, id)
+  let bi = Number(data.deadline) / 1000000
+  let n = Number(bi)
   const classes = useStyles()
   const { state } = useContext(SiteContext)
   const navigate = useNavigate()
@@ -36,28 +40,28 @@ function CreateCrowdsaleForm() {
   const [success, setSuccess] = React.useState(false)
   const [todaydate, setTodayDate] = React.useState(Date.now())
   let initialValues = {
-    offer: "",
-    deadline: todaydate,
+    offer: data.offerPrice,
+    deadline: n,
     // name: "",
   }
 
-  const handleCreateCrodwsale = useCallback(async (name, offer, deadline) => {
-    setIsDisabled(true)
+  // const handleCreateCrodwsale = useCallback(async (name, offer, deadline) => {
+  //   setIsDisabled(true)
 
-    console.log(name, offer, deadline)
-    let response = await crowdsale.createCrowdsale({
-      name: name,
-      offerPrice: offer,
-      deadline: deadline,
-    })
-    console.log(response)
-    let csId = response.ok
-    setSuccess(true)
-    setTimeout(() => {
-      navigate(`/crowdsale/show/${csId}`)
-    }, 5000)
-  })
-  console.log("state", state)
+  //   console.log(name, offer, deadline)
+  //   let response = await crowdsale.createCrowdsale({
+  //     name: name,
+  //     offerPrice: offer,
+  //     deadline: deadline,
+  //   })
+  //   console.log(response)
+  //   let csId = response.ok
+  //   setSuccess(true)
+  //   setTimeout(() => {
+  //     navigate(`/crowdsale/show/${csId}`)
+  //   }, 5000)
+  // })
+  console.log("state", state, initialValues)
   return (
     <Formik
       initialValues={initialValues}
@@ -69,23 +73,19 @@ function CreateCrowdsaleForm() {
           values.deadline.getTime(),
         )
         let nano = values.deadline.getTime() * 1000000
-        handleCreateCrodwsale(values.name, parseInt(values.offer), nano)
+        console.log(parseInt(id, values.offer), nano)
+        // handleCreateCrodwsale(values.name, parseInt(values.offer), nano)
       }}
-      render={(props) => (
-        <Form className={classes.root}>
+    >
+      {(props) => (
+        <Form className={classes.root} onSubmit={props.handleSubmit}>
           <Box>
-            {/* <Box>
-              <TextField
-                required
-                id="name"
-                label="Enter Name"
-                value={props.values.name}
-                variant="outlined"
-                onChange={props.handleChange}
-                error={props.touched.name && Boolean(props.errors.name)}
-                helperText={props.touched.name && props.errors.name}
-              />
-            </Box> */}
+            <Typography
+              variant="h6"
+              children="Edit :"
+              style={{ margin: "1rem" }}
+            />
+
             <TextField
               required
               id="offer"
@@ -104,7 +104,9 @@ function CreateCrowdsaleForm() {
                 label="Enter Deadline"
                 value={props.values.deadline}
                 onChange={(newValue) => {
-                  props.setFieldValue("deadline", newValue)
+                  console.log("edit new value", newValue)
+                  let m = newValue.getTime()
+                  props.setFieldValue("deadline", m)
                   // console.log("NEW DATE", newValue, newValue.getTime())
                   // if (newValue === "") {
                   //   props.setFieldValue("deadline", todaydate)
@@ -117,6 +119,7 @@ function CreateCrowdsaleForm() {
                 renderInput={(params) => <TextField {...params} />}
               />
             </LocalizationProvider>
+            {props.errors.deadline && <div>{props.errors.deadline}</div>}
           </Box>
           <Box
             style={{
@@ -131,10 +134,10 @@ function CreateCrowdsaleForm() {
               color="primary"
               size="large"
               startIcon={<SendIcon />}
-              style={{ padding: "1rem" }}
+              style={{ padding: "1rem", marginLeft: "2rem" }}
               type="submit"
             >
-              submit crowdsale
+              update
             </Button>
           </Box>
           <Box margin="4rem 0" display={isDisabled === true ? "block" : "none"}>
@@ -147,14 +150,14 @@ function CreateCrowdsaleForm() {
           >
             <Typography variant="subtitle1">
               Congratulations 🎉 🎉 🎉 <br />
-              Your crowdsale has been created. <br />
+              Your crowdsale has been updated. <br />
               One moment we are re-directing you to its page.
             </Typography>
           </Box>
         </Form>
       )}
-    />
+    </Formik>
   )
 }
 
-export default CreateCrowdsaleForm
+export default EditCrowsaleForm

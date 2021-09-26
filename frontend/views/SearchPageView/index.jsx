@@ -1,7 +1,5 @@
 import React from "react"
-import Box from "@mui/material/Box"
-import Typography from "@mui/material/Typography"
-import Paper from "@mui/material/Paper"
+import { Box, Typography } from "@mui/material"
 
 import SearchCrowdsale from "../../components/SearchCrowdsale"
 

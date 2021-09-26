@@ -1,9 +1,7 @@
 import React, { useContext } from "react"
 import SiteContext from "../../context"
-import Box from "@mui/material/Box"
-import Typography from "@mui/material/Typography"
+import { Box, Typography, Button } from "@mui/material"
 import LogoName from "../../assets/LogoName"
-import Button from "@mui/material/Button"
 import AddBoxIcon from "@mui/icons-material/AddBoxRounded"
 import { Link } from "react-router-dom"
 

@@ -1,9 +1,6 @@
 import React, { useEffect, useCallback } from "react"
 import { Link } from "react-router-dom"
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import Typography from "@mui/material/Typography"
-import Paper from "@mui/material/Paper"
+import { Box, Typography, Button, Paper } from "@mui/material"
 import LoadingScreen from "../../components/LoadingScreen"
 import { crowdsale } from "canisters/crowdsale"
 

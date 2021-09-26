@@ -1,9 +1,7 @@
 import React, { Suspense, lazy } from "react"
 import { Navigate, useRoutes, useLocation } from "react-router-dom"
-// layouts
 import HomeLayout from "../layouts/HomeLayout"
 import NotFoundLayout from "../layouts/NotFoundLayout"
-// components
 import LoadingScreen from "../components/LoadingScreen"
 // ----------------------------------------------------------------------
 
