@@ -38,7 +38,6 @@ function CreateCrowdsaleForm() {
   // console.log("times", today, tomorrow, tomorrow.getTime())
   const [isDisabled, setIsDisabled] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
-  const [todaydate, setTodayDate] = React.useState(Date.now())
   const [minDeadline, setMinDeadline] = React.useState(tomorrow)
   let initialValues = {
     offer: "",

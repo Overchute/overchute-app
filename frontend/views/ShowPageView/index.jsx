@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { useParams } from "react-router-dom"
 // import { makeStyles } from "@mui/styles"
 import { Box, Typography, Button, Paper } from "@mui/material"
@@ -12,11 +13,15 @@ import { crowdsale } from "canisters/crowdsale"
 
 function ShowPageView() {
   let params = useParams()
+  const navigate = useNavigate()
   // console.log("params", params)
   let crowdsaleId = params.id
   // console.log("show csi", crowdsaleId)
   const [data, setData] = React.useState([])
   const [edit, setEdit] = React.useState(false)
+  const [isDisabled, setIsDisabled] = React.useState(false)
+  const [success, setSuccess] = React.useState(false)
+  const [msg, setMsg] = React.useState("")
 
   const getCrowdsaleById = useCallback(async (crowdsaleId) => {
     let response = await crowdsale.getCrowdsale(crowdsaleId)
@@ -24,6 +29,17 @@ function ShowPageView() {
     response.ok !== undefined ? setData([response.ok]) : setData(["none"])
     // setData(response)
     // console.log(response)
+  })
+  const handleDeleteCrowdsale = useCallback(async (crowdsaleId) => {
+    setIsDisabled(true)
+    console.log("delete now", crowdsaleId)
+    let response = await crowdsale.delete(crowdsaleId)
+    console.log("delete res", response)
+    setSuccess(true)
+    // delay for user to read message
+    setTimeout(() => {
+      navigate(`/`)
+    }, 5000)
   })
   useEffect(() => {
     getCrowdsaleById(crowdsaleId)
@@ -51,10 +67,26 @@ function ShowPageView() {
               {edit && <EditCrowdsaleForm id={crowdsaleId} data={data[0]} />}
             </Box>
             <Box
+              margin="4rem 0"
+              display={isDisabled === true ? "block" : "none"}
+            >
+              <LoadingScreen mode="mini" />
+            </Box>
+            <Box
+              textAlign="center"
+              margin="4rem 0"
+              display={success === true ? "block" : "none"}
+            >
+              <Typography variant="subtitle1">
+                Your crowdsale has been deleted. <br />
+                One moment we are re-directing you to our home page.
+              </Typography>
+            </Box>
+            <Box
               minWidth="50%"
               justifyContent="center"
               margin="2rem"
-              display={edit === true ? "none" : "flex"}
+              display={edit === true || isDisabled === true ? "none" : "flex"}
             >
               <Button
                 variant="outlined"
@@ -66,7 +98,7 @@ function ShowPageView() {
                   minWidth: "128px",
                   display: edit === true ? "none" : "inline-flex",
                 }}
-                onClick={() => console.log("delete")}
+                onClick={() => handleDeleteCrowdsale(crowdsaleId)}
               >
                 delete
               </Button>

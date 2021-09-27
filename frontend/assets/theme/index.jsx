@@ -10,7 +10,7 @@ const appThemeOptions = {
         white: "#fff",
       },
       primary: {
-        main: "#20b2aa",
+        main: "#22a2bc",
         contrast: "#fff",
       },
       secondary: {
@@ -40,7 +40,7 @@ const appThemeOptions = {
         white: "#fff",
       },
       primary: {
-        main: "#20b2aa",
+        main: "#22a2bc",
         contrast: "#fff",
       },
       secondary: {
