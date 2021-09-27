@@ -11,7 +11,7 @@ function CreatePageView() {
       alignItems="center"
     >
       <Typography variant="h2" style={{ margin: "2rem 0" }}>
-        Create a new Crowdsale
+        Create a crowdsale
       </Typography>
       <Paper elevation={3}>
         <Box minWidth="50%" padding="3rem">

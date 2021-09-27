@@ -32,27 +32,31 @@ function CreateCrowdsaleForm() {
   const classes = useStyles()
   const { state } = useContext(SiteContext)
   const navigate = useNavigate()
+  let today = new Date()
+  let tomorrow = new Date()
+  tomorrow.setDate(today.getDate() + 1)
+  // console.log("times", today, tomorrow, tomorrow.getTime())
   const [isDisabled, setIsDisabled] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
   const [todaydate, setTodayDate] = React.useState(Date.now())
+  const [minDeadline, setMinDeadline] = React.useState(tomorrow)
   let initialValues = {
     offer: "",
-    deadline: todaydate,
-    // name: "",
+    deadline: minDeadline,
   }
 
-  const handleCreateCrodwsale = useCallback(async (name, offer, deadline) => {
+  const handleCreateCrodwsale = useCallback(async (offer, deadline) => {
     setIsDisabled(true)
 
-    console.log(name, offer, deadline)
+    console.log(offer, deadline)
     let response = await crowdsale.createCrowdsale({
-      name: name,
       offerPrice: offer,
       deadline: deadline,
     })
-    console.log(response)
+    console.log("create res", response)
     let csId = response.ok
     setSuccess(true)
+    // delay for user to read message
     setTimeout(() => {
       navigate(`/crowdsale/show/${csId}`)
     }, 5000)
@@ -63,29 +67,19 @@ function CreateCrowdsaleForm() {
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(values) => {
-        console.log(
-          values.name,
-          parseInt(values.offer),
-          values.deadline.getTime(),
-        )
-        let nano = values.deadline.getTime() * 1000000
-        handleCreateCrodwsale(values.name, parseInt(values.offer), nano)
+        // console.log(
+        //   "sumbit raw",
+        //   parseInt(values.offer),
+        //   values.deadline,
+        // )
+        let nano = values.deadline * 1000000
+        console.log("sumbit nano", values.deadline, nano)
+        handleCreateCrodwsale(parseFloat(values.offer), nano)
       }}
-      render={(props) => (
-        <Form className={classes.root}>
+    >
+      {(props) => (
+        <Form className={classes.root} onSubmit={props.handleSubmit}>
           <Box>
-            {/* <Box>
-              <TextField
-                required
-                id="name"
-                label="Enter Name"
-                value={props.values.name}
-                variant="outlined"
-                onChange={props.handleChange}
-                error={props.touched.name && Boolean(props.errors.name)}
-                helperText={props.touched.name && props.errors.name}
-              />
-            </Box> */}
             <TextField
               required
               id="offer"
@@ -103,17 +97,11 @@ function CreateCrowdsaleForm() {
                 id="deadline"
                 label="Enter Deadline"
                 value={props.values.deadline}
+                minDate={minDeadline}
+                inputProps={{ readOnly: true }}
                 onChange={(newValue) => {
                   props.setFieldValue("deadline", newValue)
-                  // console.log("NEW DATE", newValue, newValue.getTime())
-                  // if (newValue === "") {
-                  //   props.setFieldValue("deadline", todaydate)
-                  // } else {
-                  //   props.setFieldValue("deadline", newValue)
-                  // }
                 }}
-                error={props.touched.deadline && Boolean(props.errors.deadline)}
-                helperText={props.touched.deadline && props.errors.deadline}
                 renderInput={(params) => <TextField {...params} />}
               />
             </LocalizationProvider>
@@ -127,18 +115,18 @@ function CreateCrowdsaleForm() {
             }}
           >
             <Button
-              variant="contained"
+              variant="outlined"
               color="primary"
               size="large"
               startIcon={<SendIcon />}
               style={{ padding: "1rem" }}
               type="submit"
             >
-              submit crowdsale
+              create crowdsale
             </Button>
           </Box>
           <Box margin="4rem 0" display={isDisabled === true ? "block" : "none"}>
-            <LoadingScreen />
+            <LoadingScreen mode="mini" />
           </Box>
           <Box
             textAlign="center"
@@ -153,7 +141,7 @@ function CreateCrowdsaleForm() {
           </Box>
         </Form>
       )}
-    />
+    </Formik>
   )
 }
 

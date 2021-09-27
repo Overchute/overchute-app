@@ -30,7 +30,7 @@ function HomePageView() {
         <Button
           component={Link}
           to="/crowdsale/create"
-          variant="contained"
+          variant="outlined"
           color="primary"
           size="large"
           startIcon={<AddBoxIcon />}

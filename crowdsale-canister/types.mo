@@ -9,7 +9,7 @@ import Trie "mo:base/Trie";
 module {
     public type UserId = Principal;
     public type CrowdsaleId = Text;
-    public type Status = { #open; #closed; #failed; #fullfilled; };
+    public type Status = { #open; #closed; #failed; #fulfilled; };
 
     public type Crowdsale = {
         crowdsaleId: CrowdsaleId;

@@ -51,7 +51,7 @@ function ListPageView() {
                   {dt.toString()}
                 </Typography>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   color="primary"
                   component={Link}
                   to={`/crowdsale/show/${i.crowdsaleId}`}
@@ -64,7 +64,12 @@ function ListPageView() {
           )
         })}
       {data.length > 0 && data[0] === "none" && (
-        <Typography variant="h6" children="Sorry, there are no crowdsales" />
+        <>
+          <Typography variant="h2" gutterBottom>
+            😨
+          </Typography>
+          <Typography variant="h5" children="Sorry, there are no crowdsales" />
+        </>
       )}
       {!data.length && <LoadingScreen />}
     </Box>

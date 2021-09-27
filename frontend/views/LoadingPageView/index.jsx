@@ -5,11 +5,7 @@ import Box from "@mui/material/Box"
 // This is just for testing purposes
 
 function LoadingPageView() {
-  return (
-    <Box height="70vh">
-      <LoadingScreen />
-    </Box>
-  )
+  return <LoadingScreen />
 }
 
 export default LoadingPageView

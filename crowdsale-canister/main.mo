@@ -13,6 +13,7 @@ import Array "mo:base/Array";
 import UUID "mo:uuid/UUID";
 import Iter "mo:base/Iter";
 import Err "mo:base/Error";
+import Bool "mo:base/Bool";
 
 shared (msg) actor class crowdsale (){
     private let admin = msg.caller;
@@ -168,6 +169,9 @@ shared (msg) actor class crowdsale (){
                 #err(#NotFound);
             };
             case (? v) {
+                if (Time.now() > v.deadline) {
+                    throw Err.reject("Crowdsale expired");
+                };
                 let foundContributions = Trie.find(
                     v.contributions,
                     keyPrincipal(callerId),
@@ -175,7 +179,7 @@ shared (msg) actor class crowdsale (){
                 );
                 switch (foundContributions) {
                     case null {
-                        let (newContributions, existing) = Trie.put(
+                        let (newContributions, _) = Trie.put(
                             v.contributions,
                             keyPrincipal(callerId),
                             Principal.equal,
@@ -200,7 +204,7 @@ shared (msg) actor class crowdsale (){
                         ).0;
                     };
                     case (? c) {
-                        let (newContributions, existing) = Trie.put(
+                        let (newContributions, _) = Trie.put(
                             v.contributions,
                             keyPrincipal(callerId),
                             Principal.equal,
@@ -225,7 +229,117 @@ shared (msg) actor class crowdsale (){
                         ).0;
                     };
                 };
+                checkIfFulfilled(v.crowdsaleId);
                 #ok((v.crowdsaleId));
+            };
+        };
+    };
+
+    // check if the crowdsale fulfilled and if yes, set status to fulfiled
+    private func checkIfFulfilled(id: CrowdsaleId) {
+        let result = Trie.find(
+            crowdsales,
+            key(id),
+            Text.equal
+        );
+        switch (result) {
+            case null {};
+            case (? v) {
+                if (v.contributedAmount >= v.offerPrice) {
+                    let crowdsale: Crowdsale = {
+                            crowdsaleId = v.crowdsaleId;
+                            creator = v.creator;
+                            createdAt = v.createdAt;
+                            updatedAt = Time.now();
+                            status = #fulfilled;
+                            offerPrice = v.offerPrice;
+                            deadline = v.deadline;
+                            contributedAmount = v.contributedAmount;
+                            contributions = v.contributions;
+                        };
+                        crowdsales := Trie.replace(
+                            crowdsales,
+                            key(v.crowdsaleId),
+                            Text.equal,
+                            ?crowdsale
+                        ).0;
+                }; 
+            };
+        };
+    };
+
+    // retrieve all crowdsale contributions by its id
+    public query func getAllContributionsByCrowdsaleId(id: CrowdsaleId) : async Result.Result<(Trie.Trie<Principal, Float>), Error> {
+        let result = Trie.find(
+            crowdsales,
+            key(id),
+            Text.equal
+        );
+        switch (result) {
+            case null {
+                #err(#NotFound);
+            };
+            case (? v) {
+                #ok((v.contributions));
+            };
+        };
+    };
+
+    // retrieve crowdsale contribution by its id and caller
+    public query(msg) func getContributionByCallerAndCrowdsaleId(id: CrowdsaleId) : async Result.Result<(Float), Error> {
+        let callerId = msg.caller;
+        let result = Trie.find(
+            crowdsales,
+            key(id),
+            Text.equal
+        );
+        switch (result) {
+            case null {
+                #err(#NotFound);
+            };
+            case (? c) {
+                let foundContributions = Trie.find(
+                    c.contributions,
+                    keyPrincipal(callerId),
+                    Principal.equal
+                );
+                switch (foundContributions) {
+                    case null {
+                        #err(#NotFound);
+                    };
+                    case (? v) {
+                        #ok((v));
+                    }
+                };
+            };
+        };
+    };
+
+    // retrieve crowdsale contributions by its id and principal
+    public func getContributionByPrincipalAndCrowdsaleId(id: CrowdsaleId, callerId: Principal) : async Result.Result<(Float), Error> {
+        let result = Trie.find(
+            crowdsales,
+            key(id),
+            Text.equal
+        );
+        switch (result) {
+            case null {
+                #err(#NotFound);
+            };
+            case (? c) {
+                let foundContributions = Trie.find(
+                    c.contributions,
+                    keyPrincipal(callerId),
+                    Principal.equal
+                );
+                switch (foundContributions) {
+                    case null {
+                        #err(#NotFound);
+                    };
+                    case (? v) {
+                        #ok((v));
+                    }
+                };
             };
         };
     };

@@ -57,7 +57,7 @@ function ShowPageView() {
               display={edit === true ? "none" : "flex"}
             >
               <Button
-                variant="contained"
+                variant="outlined"
                 color="error"
                 size="large"
                 startIcon={<DeleteIcon />}
@@ -71,7 +71,7 @@ function ShowPageView() {
                 delete
               </Button>
               <Button
-                variant="contained"
+                variant="outlined"
                 color="primary"
                 size="large"
                 startIcon={<EditIcon />}
@@ -86,43 +86,6 @@ function ShowPageView() {
               </Button>
             </Box>
           </Paper>
-          {/* {!edit && (
-            <>
-              <CrowdsaleInfo data={data[0]} />
-              <Box
-                minWidth="50%"
-                display="flex"
-                justifyContent="center"
-                margin="2rem"
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  startIcon={<EditIcon />}
-                  style={{ padding: "1rem", minWidth: "128px" }}
-                  onClick={() => {
-                    setEdit(true)
-                  }}
-                >
-                  edit
-                </Button>
-              </Box>
-            </>
-          )} */}
-          {/* {edit && (
-            <>
-              <EditCrowdsaleForm data={data[0]} />
-              <Box
-                minWidth="50%"
-                display="flex"
-                justifyContent="center"
-                margin="2rem"
-              >
-                
-              </Box>
-            </>
-          )} */}
         </Box>
       )}
       {data.length === 0 && <LoadingScreen />}
@@ -139,7 +102,7 @@ function ShowPageView() {
           <Typography variant="h6" style={{ margin: "2rem 0" }}>
             {`Id : ${crowdsaleId}`}
           </Typography>
-          <Typography variant="h3" style={{ margin: "2rem 0" }}>
+          <Typography variant="h2" style={{ margin: "2rem 0" }}>
             🤔
           </Typography>
           <Typography

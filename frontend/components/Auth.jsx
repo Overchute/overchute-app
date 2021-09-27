@@ -108,7 +108,7 @@ function Auth() {
             </Typography>
 
             <Button
-              variant="contained"
+              variant="outlined"
               color="primary"
               size="medium"
               endIcon={<ExitIcon />}
