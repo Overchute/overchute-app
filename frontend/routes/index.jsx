@@ -40,6 +40,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/crowdsale" replace /> },
         { path: "create", element: <Create /> },
+        { path: "delete/:id", element: <Delete /> },
         { path: "list", element: <List /> },
         { path: "search", element: <Search /> },
         { path: "show/:id", element: <Show /> },
@@ -82,6 +83,7 @@ export default function Router() {
 
 // Crowdsale
 const Create = Loadable(lazy(() => import("../views/CreatePageView")))
+const Delete = Loadable(lazy(() => import("../views/DeletePageView")))
 const List = Loadable(lazy(() => import("../views/ListPageView")))
 const Search = Loadable(lazy(() => import("../views/SearchPageView")))
 const Show = Loadable(lazy(() => import("../views/ShowPageView")))

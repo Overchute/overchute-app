@@ -12,6 +12,7 @@ export const PATH_APP = {
 
   app: {
     create: path(ROOTS.app, "/create"),
+    delete: path(ROOTS.app, "/delete/:id"),
     list: path(ROOTS.app, "/list"),
     search: path(ROOTS.app, "/search"),
     show: path(ROOTS.app, "/show/:id"),

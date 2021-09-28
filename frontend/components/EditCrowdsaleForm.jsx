@@ -4,13 +4,19 @@ import { Formik, Form } from "formik"
 import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
 import { TextField, Button, Box, Typography } from "@mui/material"
+import AdapterDateFns from "@mui/lab/AdapterDateFns"
+import LocalizationProvider from "@mui/lab/LocalizationProvider"
+import DatePicker from "@mui/lab/DatePicker"
+import {
+  transformDateNanosToSecs,
+  today,
+  tomorrow,
+} from "./utils/DateTransformer"
+
 import { makeStyles } from "@mui/styles"
 import SendIcon from "@mui/icons-material/SendRounded"
 import LoadingScreen from "./LoadingScreen"
 import { crowdsale } from "canisters/crowdsale"
-import AdapterDateFns from "@mui/lab/AdapterDateFns"
-import LocalizationProvider from "@mui/lab/LocalizationProvider"
-import DatePicker from "@mui/lab/DatePicker"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,11 +28,6 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function EditCrowsaleForm({ data, id }) {
-  console.log("edit", data, id)
-  let bi = Number(data.deadline) / 1000000
-  let n = Number(bi)
-  let today = new Date()
-  let tomorrow = new Date()
   tomorrow.setDate(today.getDate() + 1)
   const classes = useStyles()
   const { state } = useContext(SiteContext)
@@ -34,8 +35,8 @@ function EditCrowsaleForm({ data, id }) {
   const [isDisabled, setIsDisabled] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
   const [msg, setMsg] = React.useState("")
-
   const [minDeadline, setMinDeadline] = React.useState(tomorrow)
+
   let validationSchema = yup.object().shape({
     offer: yup
       .number()
@@ -47,7 +48,7 @@ function EditCrowsaleForm({ data, id }) {
   })
   let initialValues = {
     offer: data.offerPrice,
-    deadline: new Date(n),
+    deadline: new Date(transformDateNanosToSecs(data.deadline)),
     // name: "",
   }
 
@@ -128,7 +129,7 @@ function EditCrowsaleForm({ data, id }) {
             {props.errors.deadline && <div>{props.errors.deadline}</div>}
           </Box>
           <Typography
-            variant="body1"
+            variant="subtitle1"
             color="error"
             children={msg}
             style={{ marginLeft: "2rem" }}
