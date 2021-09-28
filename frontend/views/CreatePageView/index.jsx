@@ -5,7 +5,7 @@ import CreateCrowdsaleForm from "../../components/CreateCrowdsaleForm"
 function CreatePageView() {
   return (
     <Box
-      margin="6rem 0 0 0"
+      margin="3rem 0 0 0"
       display="flex"
       flexDirection="column"
       alignItems="center"

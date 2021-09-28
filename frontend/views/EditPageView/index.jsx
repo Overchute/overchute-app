@@ -5,7 +5,7 @@ import EditCrowdsaleForm from "../../components/EditCrowdsaleForm"
 function EditPageView() {
   return (
     <Box
-      margin="6rem 0 0 0"
+      margin="3rem 0 0 0"
       display="flex"
       flexDirection="column"
       alignItems="center"

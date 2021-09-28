@@ -50,7 +50,7 @@ function ShowPageView() {
     <>
       {data.length > 0 && data[0] !== "none" && (
         <Box
-          margin="6rem 0 0 0"
+          margin="3rem 0 0 0"
           display="flex"
           flexDirection="column"
           alignItems="center"
@@ -123,7 +123,7 @@ function ShowPageView() {
       {data.length === 0 && <LoadingScreen />}
       {data[0] === "none" && (
         <Box
-          margin="6rem 0 0 0"
+          margin="3rem 0 0 0"
           display="flex"
           flexDirection="column"
           alignItems="center"
