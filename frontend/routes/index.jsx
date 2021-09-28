@@ -1,9 +1,7 @@
 import React, { Suspense, lazy } from "react"
 import { Navigate, useRoutes, useLocation } from "react-router-dom"
-// layouts
 import HomeLayout from "../layouts/HomeLayout"
 import NotFoundLayout from "../layouts/NotFoundLayout"
-// components
 import LoadingScreen from "../components/LoadingScreen"
 // ----------------------------------------------------------------------
 
@@ -71,6 +69,11 @@ export default function Router() {
       element: <HomeLayout />,
       children: [{ element: <HomePage /> }],
     },
+    {
+      path: "/loading",
+      element: <HomeLayout />,
+      children: [{ element: <LoadingPage /> }],
+    },
     { path: "*", element: <Navigate to="/404" replace /> },
   ])
 }
@@ -85,3 +88,4 @@ const Show = Loadable(lazy(() => import("../views/ShowPageView")))
 const NotFound = Loadable(lazy(() => import("../views/Page404View")))
 // Main
 const HomePage = Loadable(lazy(() => import("../views/HomePageView")))
+const LoadingPage = Loadable(lazy(() => import("../views/LoadingPageView")))

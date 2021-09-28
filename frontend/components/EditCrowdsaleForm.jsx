@@ -21,71 +21,93 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-let validationSchema = yup.object().shape({
-  offer: yup.number().required().positive().integer(),
-  deadline: yup.date().nullable(),
-  // deadline: yup.number().required().positive().integer(),
-  // name: yup.string().required(),
-})
-
-function CreateCrowdsaleForm() {
-  const classes = useStyles()
-  const { state } = useContext(SiteContext)
-  const navigate = useNavigate()
+function EditCrowsaleForm({ data, id }) {
+  console.log("edit", data, id)
+  let bi = Number(data.deadline) / 1000000
+  let n = Number(bi)
   let today = new Date()
   let tomorrow = new Date()
   tomorrow.setDate(today.getDate() + 1)
-  // console.log("times", today, tomorrow, tomorrow.getTime())
+  const classes = useStyles()
+  const { state } = useContext(SiteContext)
+  const navigate = useNavigate()
   const [isDisabled, setIsDisabled] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
+  const [msg, setMsg] = React.useState("")
+
   const [minDeadline, setMinDeadline] = React.useState(tomorrow)
+  let validationSchema = yup.object().shape({
+    offer: yup
+      .number()
+      .max(data.offerPrice, "New offer has to be less than previous")
+      .positive()
+      .integer()
+      .required(),
+    deadline: yup.date().nullable(),
+    // deadline: yup.number().required().positive().integer(),
+    // name: yup.string().required(),
+  })
   let initialValues = {
-    offer: "",
-    deadline: minDeadline,
+    offer: data.offerPrice,
+    deadline: new Date(n),
+    // name: "",
   }
 
-  const handleCreateCrodwsale = useCallback(async (offer, deadline) => {
+  const handleUpdateCrodwsale = useCallback(async (id, offer, deadline) => {
     setIsDisabled(true)
 
     console.log(offer, deadline)
-    let response = await crowdsale.createCrowdsale({
+    let response = await crowdsale.update({
+      crowdsaleId: id,
       offerPrice: offer,
       deadline: deadline,
     })
-    console.log("create res", response)
+    console.log("update res", response)
     let csId = response.ok
     setSuccess(true)
-    // delay for user to read message
     setTimeout(() => {
-      navigate(`/crowdsale/show/${csId}`)
+      navigate(`/`)
     }, 5000)
   })
-  console.log("state", state)
+  console.log("state", state, initialValues)
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(values) => {
-        // console.log(
-        //   "sumbit raw",
-        //   parseInt(values.offer),
-        //   values.deadline,
-        // )
-        let nano = values.deadline * 1000000
-        console.log("sumbit nano", values.deadline, nano)
-        handleCreateCrodwsale(parseFloat(values.offer), nano)
+        // Validate if values are the same as before
+        let newOffer = parseFloat(values.offer)
+        if (
+          initialValues.offer !== newOffer ||
+          initialValues.deadline !== values.deadline
+        ) {
+          console.log("one field is changed")
+          let nano = values.deadline.getTime() * 1000000
+          handleUpdateCrodwsale(id, newOffer, nano)
+        } else {
+          setMsg("You need to change at least one field to update crowdsale")
+        }
       }}
     >
       {(props) => (
         <Form className={classes.root} onSubmit={props.handleSubmit}>
           <Box>
+            <Typography
+              variant="h6"
+              children="Edit :"
+              style={{ margin: "1rem" }}
+            />
+
             <TextField
               required
               id="offer"
               label="Enter Offer"
               value={props.values.offer}
               variant="outlined"
-              onChange={props.handleChange}
+              onChange={(e) => {
+                props.setFieldValue("offer", e.target.value)
+                setMsg("")
+              }}
               error={props.touched.offer && Boolean(props.errors.offer)}
               helperText={props.touched.offer && props.errors.offer}
             />
@@ -100,11 +122,19 @@ function CreateCrowdsaleForm() {
                 inputProps={{ readOnly: true }}
                 onChange={(newValue) => {
                   props.setFieldValue("deadline", newValue)
+                  setMsg("")
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />
             </LocalizationProvider>
+            {props.errors.deadline && <div>{props.errors.deadline}</div>}
           </Box>
+          <Typography
+            variant="body1"
+            color="error"
+            children={msg}
+            style={{ marginLeft: "2rem" }}
+          />
           <Box
             style={{
               textAlign: "right",
@@ -118,10 +148,10 @@ function CreateCrowdsaleForm() {
               color="primary"
               size="large"
               startIcon={<SendIcon />}
-              style={{ padding: "1rem" }}
+              style={{ padding: "1rem", marginLeft: "2rem" }}
               type="submit"
             >
-              create crowdsale
+              update
             </Button>
           </Box>
           <Box margin="4rem 0" display={isDisabled === true ? "block" : "none"}>
@@ -134,8 +164,8 @@ function CreateCrowdsaleForm() {
           >
             <Typography variant="subtitle1">
               Congratulations 🎉 🎉 🎉 <br />
-              Your crowdsale has been created. <br />
-              One moment we are re-directing you to its page.
+              Your crowdsale has been updated. <br />
+              One moment we are re-directing you to our home page.
             </Typography>
           </Box>
         </Form>
@@ -144,4 +174,4 @@ function CreateCrowdsaleForm() {
   )
 }
 
-export default CreateCrowdsaleForm
+export default EditCrowsaleForm

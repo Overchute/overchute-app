@@ -1,18 +1,27 @@
 import React, { useCallback, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { useParams } from "react-router-dom"
-import { makeStyles } from "@mui/styles"
-import Typography from "@mui/material/Typography"
-import Box from "@mui/material/Box"
+// import { makeStyles } from "@mui/styles"
+import { Box, Typography, Button, Paper } from "@mui/material"
+
 import LoadingScreen from "../../components/LoadingScreen"
 import CrowdsaleInfo from "../../components/CrowdsaleInfo"
+import EditCrowdsaleForm from "../../components/EditCrowdsaleForm"
+import DeleteIcon from "@mui/icons-material/DeleteRounded"
+import EditIcon from "@mui/icons-material/ModeEditOutlineRounded"
 import { crowdsale } from "canisters/crowdsale"
 
 function ShowPageView() {
   let params = useParams()
-  console.log("params", params)
+  const navigate = useNavigate()
+  // console.log("params", params)
   let crowdsaleId = params.id
-  console.log("show csi", crowdsaleId)
+  // console.log("show csi", crowdsaleId)
   const [data, setData] = React.useState([])
+  const [edit, setEdit] = React.useState(false)
+  const [isDisabled, setIsDisabled] = React.useState(false)
+  const [success, setSuccess] = React.useState(false)
+  const [msg, setMsg] = React.useState("")
 
   const getCrowdsaleById = useCallback(async (crowdsaleId) => {
     let response = await crowdsale.getCrowdsale(crowdsaleId)
@@ -20,6 +29,17 @@ function ShowPageView() {
     response.ok !== undefined ? setData([response.ok]) : setData(["none"])
     // setData(response)
     // console.log(response)
+  })
+  const handleDeleteCrowdsale = useCallback(async (crowdsaleId) => {
+    setIsDisabled(true)
+    console.log("delete now", crowdsaleId)
+    let response = await crowdsale.delete(crowdsaleId)
+    console.log("delete res", response)
+    setSuccess(true)
+    // delay for user to read message
+    setTimeout(() => {
+      navigate(`/`)
+    }, 5000)
   })
   useEffect(() => {
     getCrowdsaleById(crowdsaleId)
@@ -30,7 +50,7 @@ function ShowPageView() {
     <>
       {data.length > 0 && data[0] !== "none" && (
         <Box
-          margin="6rem 0 0 0"
+          margin="3rem 0 0 0"
           display="flex"
           flexDirection="column"
           alignItems="center"
@@ -41,13 +61,69 @@ function ShowPageView() {
           <Typography variant="h6" style={{ margin: "2rem 0" }}>
             {`Id : ${crowdsaleId}`}
           </Typography>
-          <CrowdsaleInfo data={data[0]} />
+          <Paper elevation={3}>
+            <Box minWidth="50%" padding="3rem">
+              {!edit && <CrowdsaleInfo data={data[0]} />}
+              {edit && <EditCrowdsaleForm id={crowdsaleId} data={data[0]} />}
+            </Box>
+            <Box
+              margin="4rem 0"
+              display={isDisabled === true ? "block" : "none"}
+            >
+              <LoadingScreen mode="mini" />
+            </Box>
+            <Box
+              textAlign="center"
+              margin="4rem 0"
+              display={success === true ? "block" : "none"}
+            >
+              <Typography variant="subtitle1">
+                Your crowdsale has been deleted. <br />
+                One moment we are re-directing you to our home page.
+              </Typography>
+            </Box>
+            <Box
+              minWidth="50%"
+              justifyContent="center"
+              margin="2rem"
+              display={edit === true || isDisabled === true ? "none" : "flex"}
+            >
+              <Button
+                variant="outlined"
+                color="error"
+                size="large"
+                startIcon={<DeleteIcon />}
+                style={{
+                  padding: "1rem",
+                  minWidth: "128px",
+                  display: edit === true ? "none" : "inline-flex",
+                }}
+                onClick={() => handleDeleteCrowdsale(crowdsaleId)}
+              >
+                delete
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                size="large"
+                startIcon={<EditIcon />}
+                style={{
+                  padding: "1rem",
+                  marginLeft: "2rem",
+                  minWidth: "128px",
+                }}
+                onClick={() => setEdit(true)}
+              >
+                edit
+              </Button>
+            </Box>
+          </Paper>
         </Box>
       )}
       {data.length === 0 && <LoadingScreen />}
       {data[0] === "none" && (
         <Box
-          margin="6rem 0 0 0"
+          margin="3rem 0 0 0"
           display="flex"
           flexDirection="column"
           alignItems="center"
@@ -58,7 +134,7 @@ function ShowPageView() {
           <Typography variant="h6" style={{ margin: "2rem 0" }}>
             {`Id : ${crowdsaleId}`}
           </Typography>
-          <Typography variant="h3" style={{ margin: "2rem 0" }}>
+          <Typography variant="h2" style={{ margin: "2rem 0" }}>
             🤔
           </Typography>
           <Typography
@@ -66,7 +142,7 @@ function ShowPageView() {
             variant="subtitle1"
             style={{ margin: "2rem 0" }}
           >
-            Looks like we couldn't find the crowdsale you were looking for.{" "}
+            Looks like we couldn't find the crowdsale you were looking for.
             <br />
             Please review the crowdsale you entered and try again.
           </Typography>

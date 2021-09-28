@@ -1,71 +1,58 @@
-import clsx from "clsx"
 import React from "react"
+import { Box } from "@mui/material"
 import { motion } from "framer-motion"
-import Logo from "./Logo"
 import { alpha } from "@mui/material/styles"
-import { makeStyles } from "@mui/styles"
 
-const TRANSITION = {
-  ease: "linear",
-  duration: 3.2,
-  loop: Infinity,
-}
+import Logo from "./Logo"
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    // backgroundColor: theme.palette.background.default,
-  },
-  box: {
-    position: "absolute",
-    borderRadius: "25%",
-  },
-  inner: {
-    width: 100,
-    height: 100,
-    border: `solid 3px ${alpha(theme.palette.primary.dark, 0.84)}`,
-  },
-  outside: {
-    width: 120,
-    height: 120,
-    border: `solid 8px ${alpha(theme.palette.primary.dark, 0.84)}`,
-  },
-}))
-
-function LoadingScreen({ className, ...other }) {
-  const classes = useStyles()
-
+function LoadingScreen({ mode }) {
   return (
-    <div className={clsx(classes.root, className)} {...other}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      height={mode === "mini" ? "100%" : "100vh"}
+    >
       <motion.div
         initial={{ rotateY: 0 }}
         animate={{ rotateY: 360 }}
         transition={{
           duration: 2,
           ease: "easeInOut",
-          flip: Infinity,
           repeatDelay: 1,
+          repeat: Infinity,
         }}
-        style={{ paddingTop: "22px" }}
       >
-        <Logo sx={{ height: 64 }} />
+        <Logo
+          sx={{
+            width: 64,
+            height: 64,
+          }}
+        />
       </motion.div>
 
-      <motion.div
+      <Box
+        component={motion.div}
         animate={{
           scale: [1.2, 1, 1, 1.2, 1.2],
           rotate: [270, 0, 0, 270, 270],
           opacity: [0.25, 1, 1, 1, 0.25],
           borderRadius: ["25%", "25%", "50%", "50%", "25%"],
         }}
-        transition={TRANSITION}
-        className={clsx(classes.box, classes.inner)}
+        transition={{ ease: "linear", duration: 3.2, repeat: Infinity }}
+        sx={{
+          width: 100,
+          height: 100,
+          borderRadius: "25%",
+          position: "absolute",
+          border: (theme) =>
+            `solid 3px ${alpha(theme.palette.primary.dark, 0.84)}`,
+        }}
       />
 
-      <motion.div
+      <Box
+        component={motion.div}
         animate={{
           scale: [1, 1.2, 1.2, 1, 1],
           rotate: [0, 270, 270, 0, 0],
@@ -75,11 +62,18 @@ function LoadingScreen({ className, ...other }) {
         transition={{
           ease: "linear",
           duration: 3.2,
-          loop: Infinity,
+          repeat: Infinity,
         }}
-        className={clsx(classes.box, classes.outside)}
+        sx={{
+          width: 120,
+          height: 120,
+          borderRadius: "25%",
+          position: "absolute",
+          border: (theme) =>
+            `solid 8px ${alpha(theme.palette.primary.dark, 0.84)}`,
+        }}
       />
-    </div>
+    </Box>
   )
 }
 

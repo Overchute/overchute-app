@@ -1,8 +1,8 @@
 import React from "react"
 import { Box, Typography, Paper } from "@mui/material"
-import CreateCrowdsaleForm from "../../components/CreateCrowdsaleForm"
+import EditCrowdsaleForm from "../../components/EditCrowdsaleForm"
 
-function CreatePageView() {
+function EditPageView() {
   return (
     <Box
       margin="3rem 0 0 0"
@@ -11,15 +11,15 @@ function CreatePageView() {
       alignItems="center"
     >
       <Typography variant="h2" style={{ margin: "2rem 0" }}>
-        Create a crowdsale
+        Edit
       </Typography>
       <Paper elevation={3}>
         <Box minWidth="50%" padding="3rem">
-          <CreateCrowdsaleForm />
+          <EditCrowdsaleForm />
         </Box>
       </Paper>
     </Box>
   )
 }
 
-export default CreatePageView
+export default EditPageView

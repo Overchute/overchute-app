@@ -1,9 +1,6 @@
 import React, { useEffect, useCallback } from "react"
 import { Link } from "react-router-dom"
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import Typography from "@mui/material/Typography"
-import Paper from "@mui/material/Paper"
+import { Box, Typography, Button, Paper } from "@mui/material"
 import LoadingScreen from "../../components/LoadingScreen"
 import { crowdsale } from "canisters/crowdsale"
 
@@ -24,7 +21,7 @@ function ListPageView() {
   console.log("data at list crowdsales", data, data.length)
   return (
     <Box
-      margin="6rem 0 0 0"
+      margin="3rem 0 0 0"
       display="flex"
       flexDirection="column"
       alignItems="center"
@@ -54,7 +51,7 @@ function ListPageView() {
                   {dt.toString()}
                 </Typography>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   color="primary"
                   component={Link}
                   to={`/crowdsale/show/${i.crowdsaleId}`}
@@ -67,7 +64,12 @@ function ListPageView() {
           )
         })}
       {data.length > 0 && data[0] === "none" && (
-        <Typography variant="h6" children="Sorry, there are no crowdsales" />
+        <>
+          <Typography variant="h2" gutterBottom>
+            😨
+          </Typography>
+          <Typography variant="h5" children="Sorry, there are no crowdsales" />
+        </>
       )}
       {!data.length && <LoadingScreen />}
     </Box>

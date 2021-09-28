@@ -1,9 +1,7 @@
 import React, { useContext } from "react"
 import SiteContext from "../../context"
-import Box from "@mui/material/Box"
-import Typography from "@mui/material/Typography"
+import { Box, Typography, Button } from "@mui/material"
 import LogoName from "../../assets/LogoName"
-import Button from "@mui/material/Button"
 import AddBoxIcon from "@mui/icons-material/AddBoxRounded"
 import { Link } from "react-router-dom"
 
@@ -13,7 +11,7 @@ function HomePageView() {
   console.log("state", state)
   return (
     <Box
-      margin="6rem 0 0 0"
+      margin="3rem 0 0 0"
       display="flex"
       flexDirection="column"
       alignItems="center"
@@ -32,7 +30,7 @@ function HomePageView() {
         <Button
           component={Link}
           to="/crowdsale/create"
-          variant="contained"
+          variant="outlined"
           color="primary"
           size="large"
           startIcon={<AddBoxIcon />}
