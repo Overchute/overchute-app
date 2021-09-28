@@ -44,8 +44,6 @@ function EditCrowsaleForm({ data, id }) {
       .integer()
       .required(),
     deadline: yup.date().nullable(),
-    // deadline: yup.number().required().positive().integer(),
-    // name: yup.string().required(),
   })
   let initialValues = {
     offer: data.offerPrice,

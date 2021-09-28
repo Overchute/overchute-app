@@ -24,8 +24,6 @@ const useStyles = makeStyles((theme) => ({
 let validationSchema = yup.object().shape({
   offer: yup.number().required().positive().integer(),
   deadline: yup.date().nullable(),
-  // deadline: yup.number().required().positive().integer(),
-  // name: yup.string().required(),
 })
 
 function CreateCrowdsaleForm() {
