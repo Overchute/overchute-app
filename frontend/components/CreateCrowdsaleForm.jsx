@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from "react"
-import SiteContext from "../context"
+// import SiteContext from "../context"
 import { Formik, Form } from "formik"
 import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
@@ -28,7 +28,7 @@ let validationSchema = yup.object().shape({
 
 function CreateCrowdsaleForm() {
   const classes = useStyles()
-  const { state } = useContext(SiteContext)
+  // const { state } = useContext(SiteContext)
   const navigate = useNavigate()
   let today = new Date()
   let tomorrow = new Date()
@@ -58,7 +58,7 @@ function CreateCrowdsaleForm() {
       navigate(`/crowdsale/show/${csId}`)
     }, 5000)
   })
-  console.log("state", state)
+  // console.log("state", state)
   return (
     <Formik
       initialValues={initialValues}
