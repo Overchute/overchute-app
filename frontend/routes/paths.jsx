@@ -11,6 +11,7 @@ export const PATH_APP = {
   root: ROOTS.app,
 
   app: {
+    contribute: path(ROOTS.app, "/contribute/:id"),
     create: path(ROOTS.app, "/create"),
     delete: path(ROOTS.app, "/delete/:id"),
     list: path(ROOTS.app, "/list"),

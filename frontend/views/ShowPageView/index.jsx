@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, Link } from "react-router-dom"
 import { Box, Typography, Button, Paper } from "@mui/material"
 import LoadingScreen from "../../components/LoadingScreen"
 import CrowdsaleInfo from "../../components/CrowdsaleInfo"
 import EditCrowdsaleForm from "../../components/EditCrowdsaleForm"
 import NoCrowdsaleFound from "../../components/NoCrowdsaleFound"
 import DeleteCrowdsale from "../../components/DeleteCrowdsale"
-
+import ContributeIcon from "@mui/icons-material/AddBoxOutlined"
 import EditIcon from "@mui/icons-material/ModeEditOutlineRounded"
 import { crowdsale } from "canisters/crowdsale"
 
@@ -80,6 +80,22 @@ function ShowPageView() {
                 onClick={() => setEdit(true)}
               >
                 edit
+              </Button>
+              <Button
+                component={Link}
+                to={`/crowdsale/contribute/${crowdsaleId}`}
+                variant="outlined"
+                color="primary"
+                size="large"
+                startIcon={<ContributeIcon />}
+                style={{
+                  padding: "1rem",
+                  marginLeft: "2rem",
+                  minWidth: "128px",
+                }}
+                // onClick={() => setEdit(true)}
+              >
+                contribute
               </Button>
             </Box>
           </Paper>
