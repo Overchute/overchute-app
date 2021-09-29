@@ -35,11 +35,12 @@ shared (msg) actor class crowdsale (){
     public shared(msg) func createCrowdsale(crowdsaleCreate: CrowdsaleCreate) : async Result.Result<(Text), Error> {
         let now = Time.now();
         let callerId = msg.caller;
-        let id = UUID.toText(g.new());        
+        let id = UUID.toText(g.new());
+        let dayTimeframe = now + (3600 * 1000_000_000);
 
-        if (crowdsaleCreate.deadline <= now) {
+        if (crowdsaleCreate.deadline <= dayTimeframe) {
             Debug.print(debug_show(now));
-            throw Err.reject("Deadline cannot be less than now");
+            throw Err.reject("The deadline cannot be less than 24 hours from the date of creation");
         };
 
         if (crowdsaleCreate.offerPrice <= 0) {
@@ -247,11 +248,54 @@ shared (msg) actor class crowdsale (){
             case (? v) {
                 if (v.contributedAmount >= v.offerPrice) {
                     let crowdsale: Crowdsale = {
+                        crowdsaleId = v.crowdsaleId;
+                        creator = v.creator;
+                        createdAt = v.createdAt;
+                        updatedAt = Time.now();
+                        status = #fulfilled;
+                        offerPrice = v.offerPrice;
+                        deadline = v.deadline;
+                        contributedAmount = v.contributedAmount;
+                        contributions = v.contributions;
+                    };
+                    crowdsales := Trie.replace(
+                        crowdsales,
+                        key(v.crowdsaleId),
+                        Text.equal,
+                        ?crowdsale
+                    ).0;
+                }; 
+            };
+        };
+    };
+
+    // check and update crowdsale status
+    public shared(msg) func checkAndUpdateStatus(id: CrowdsaleId) {
+        let callerId = msg.caller;
+        let now = Time.now();
+        if (admin != callerId) {
+            throw Err.reject("No access");
+        };
+        let result = Trie.find(
+            crowdsales,
+            key(id),
+            Text.equal
+        );
+        switch (result) {
+            case null {};
+            case (? v) {
+                if (now <= v.deadline) { return; }
+                else {
+                    if (v.status == #fulfilled) {
+                        // run distribution routine
+                        Debug.print("DISTRIBUTE THEM ALL!!!!111");
+                    } else if (v.status == #open) {
+                        let crowdsale: Crowdsale = {
                             crowdsaleId = v.crowdsaleId;
                             creator = v.creator;
                             createdAt = v.createdAt;
                             updatedAt = Time.now();
-                            status = #fulfilled;
+                            status = #failed;
                             offerPrice = v.offerPrice;
                             deadline = v.deadline;
                             contributedAmount = v.contributedAmount;
@@ -263,7 +307,8 @@ shared (msg) actor class crowdsale (){
                             Text.equal,
                             ?crowdsale
                         ).0;
-                }; 
+                    };
+                };
             };
         };
     };
