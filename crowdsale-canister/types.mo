@@ -34,14 +34,6 @@ module {
         deadline: Time.Time;
     };
 
-    public type CrowdsaleUpdateHidden = {
-        crowdsaleId: CrowdsaleId;
-        offerPrice: Float;
-        status: Status;
-        deadline: Time.Time;
-        contributedAmount: Float;
-    };
-
     public type Error = {
         #NotFound;
         #AlreadyExists;
