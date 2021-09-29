@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from "react"
-import SiteContext from "../context"
+
 import { Formik, Form } from "formik"
 import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 function EditCrowsaleForm({ data, id }) {
   tomorrow.setDate(today.getDate() + 1)
   const classes = useStyles()
-  const { state } = useContext(SiteContext)
+
   const navigate = useNavigate()
   const [isDisabled, setIsDisabled] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
@@ -65,10 +65,10 @@ function EditCrowsaleForm({ data, id }) {
     let csId = response.ok
     setSuccess(true)
     setTimeout(() => {
-      navigate(`/`)
+      navigate(`/crowdsale/show/${id}`)
     }, 5000)
   })
-  console.log("state", state, initialValues)
+  console.log("edit view", initialValues)
   return (
     <Formik
       initialValues={initialValues}
@@ -164,7 +164,7 @@ function EditCrowsaleForm({ data, id }) {
             <Typography variant="subtitle1">
               Congratulations 🎉 🎉 🎉 <br />
               Your crowdsale has been updated. <br />
-              One moment we are re-directing you to our home page.
+              One moment we are re-directing you to its page.
             </Typography>
           </Box>
         </Form>

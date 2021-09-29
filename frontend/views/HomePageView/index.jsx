@@ -36,42 +36,8 @@ function HomePageView() {
           startIcon={<AddBoxIcon />}
           style={{ padding: "1rem" }}
         >
-          Create new crowdsale
+          <Typography variant="h5">Create a crowdsale</Typography>
         </Button>
-        {/* <Typography variant="button">
-          <Link
-            href="https://sdk.dfinity.org/docs/developers-guide/sdk-guide.html"
-            target="_blank"
-            rel="noopener"
-            style={{ padding: "0 1rem" }}
-          >
-            ic sdk docs
-          </Link>
-          <Link
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener"
-            style={{ padding: "0 1rem" }}
-          >
-            vite docs
-          </Link>
-          <Link
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener"
-            style={{ padding: "0 1rem" }}
-          >
-            learn react
-          </Link>
-          <Link
-            href="https://material-ui.com/"
-            target="_blank"
-            rel="noopener"
-            style={{ padding: "0 1rem" }}
-          >
-            material ui
-          </Link>
-        </Typography> */}
       </Box>
     </Box>
   )

@@ -14,6 +14,7 @@ export const PATH_APP = {
     contribute: path(ROOTS.app, "/contribute/:id"),
     create: path(ROOTS.app, "/create"),
     delete: path(ROOTS.app, "/delete/:id"),
+    edit: path(ROOTS.app, "/edit/:id/:offer/:deadline"),
     list: path(ROOTS.app, "/list"),
     search: path(ROOTS.app, "/search"),
     show: path(ROOTS.app, "/show/:id"),

@@ -42,6 +42,7 @@ export default function Router() {
         { path: "contribute/:id", element: <Contribute /> },
         { path: "create", element: <Create /> },
         { path: "delete/:id", element: <Delete /> },
+        { path: "edit/:id/:offer/:deadline", element: <Edit /> },
         { path: "list", element: <List /> },
         { path: "search", element: <Search /> },
         { path: "show/:id", element: <Show /> },
@@ -86,6 +87,7 @@ export default function Router() {
 const Contribute = Loadable(lazy(() => import("../views/ContributePageView")))
 const Create = Loadable(lazy(() => import("../views/CreatePageView")))
 const Delete = Loadable(lazy(() => import("../views/DeletePageView")))
+const Edit = Loadable(lazy(() => import("../views/EditPageView")))
 const List = Loadable(lazy(() => import("../views/ListPageView")))
 const Search = Loadable(lazy(() => import("../views/SearchPageView")))
 const Show = Loadable(lazy(() => import("../views/ShowPageView")))

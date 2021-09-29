@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect } from "react"
-import { useNavigate, useParams, Link } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import { Box, Typography, Button, Paper } from "@mui/material"
 import LoadingScreen from "../../components/LoadingScreen"
 import CrowdsaleInfo from "../../components/CrowdsaleInfo"
-import EditCrowdsaleForm from "../../components/EditCrowdsaleForm"
 import NoCrowdsaleFound from "../../components/NoCrowdsaleFound"
 import DeleteCrowdsale from "../../components/DeleteCrowdsale"
 import ContributeIcon from "@mui/icons-material/AddBoxOutlined"
@@ -12,12 +11,11 @@ import { crowdsale } from "canisters/crowdsale"
 
 function ShowPageView() {
   let params = useParams()
-  const navigate = useNavigate()
-  // console.log("params", params)
+
   let crowdsaleId = params.id
   // console.log("show csi", crowdsaleId)
   const [data, setData] = React.useState([])
-  const [edit, setEdit] = React.useState(false)
+
   const [isDisabled, setIsDisabled] = React.useState(false)
 
   const getCrowdsaleById = useCallback(async (crowdsaleId) => {
@@ -32,7 +30,7 @@ function ShowPageView() {
     getCrowdsaleById(crowdsaleId)
     // eslint-disable-next-line
   }, [])
-  console.log("data length in show crowdsale", data, data.length, crowdsaleId)
+  // console.log("data length in show crowdsale", data, data.length, crowdsaleId)
   return (
     <>
       {data.length > 0 && data[0] !== "none" && (
@@ -50,8 +48,7 @@ function ShowPageView() {
           </Typography>
           <Paper elevation={3}>
             <Box minWidth="50%" padding="3rem">
-              {!edit && <CrowdsaleInfo data={data[0]} />}
-              {edit && <EditCrowdsaleForm id={crowdsaleId} data={data[0]} />}
+              <CrowdsaleInfo data={data[0]} />
             </Box>
             <Box
               margin="4rem 0"
@@ -64,10 +61,12 @@ function ShowPageView() {
               minWidth="50%"
               justifyContent="center"
               margin="2rem"
-              display={edit === true || isDisabled === true ? "none" : "flex"}
+              display="flex"
             >
               <DeleteCrowdsale crowdsaleId={crowdsaleId} />
               <Button
+                component={Link}
+                to={`/crowdsale/edit/${crowdsaleId}/${data[0].offerPrice}/${data[0].deadline}`}
                 variant="outlined"
                 color="primary"
                 size="large"
@@ -77,7 +76,6 @@ function ShowPageView() {
                   marginLeft: "2rem",
                   minWidth: "128px",
                 }}
-                onClick={() => setEdit(true)}
               >
                 edit
               </Button>
@@ -93,7 +91,6 @@ function ShowPageView() {
                   marginLeft: "2rem",
                   minWidth: "128px",
                 }}
-                // onClick={() => setEdit(true)}
               >
                 contribute
               </Button>
