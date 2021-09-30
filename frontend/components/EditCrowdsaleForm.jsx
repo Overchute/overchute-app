@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from "react"
-
+import { zonedTimeToUtc } from "date-fns-tz"
 import { Formik, Form } from "formik"
 import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
@@ -28,19 +28,19 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function EditCrowsaleForm({ data, id }) {
-  tomorrow.setDate(today.getDate() + 1)
   const classes = useStyles()
-
   const navigate = useNavigate()
   const [isDisabled, setIsDisabled] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
   const [msg, setMsg] = React.useState("")
-  const [minDeadline, setMinDeadline] = React.useState(tomorrow)
+  const [minDeadline, setMinDeadline] = React.useState(
+    new Date(transformDateNanosToSecs(data.deadline)),
+  )
 
   let validationSchema = yup.object().shape({
     offer: yup
       .number()
-      .max(data.offerPrice, "New offer has to be less than previous")
+      .max(data.offerPrice, "New offer has to be less or equal than previous")
       .positive()
       .integer()
       .required(),
@@ -49,7 +49,6 @@ function EditCrowsaleForm({ data, id }) {
   let initialValues = {
     offer: data.offerPrice,
     deadline: new Date(transformDateNanosToSecs(data.deadline)),
-    // name: "",
   }
 
   const handleUpdateCrodwsale = useCallback(async (id, offer, deadline) => {
@@ -75,17 +74,85 @@ function EditCrowsaleForm({ data, id }) {
       validationSchema={validationSchema}
       onSubmit={(values) => {
         // Validate if values are the same as before
-        let newOffer = parseFloat(values.offer)
+        const now = new Date()
+
+        const utcMilllisecondsSinceEpoch =
+          now.getTime() + now.getTimezoneOffset() * 60 * 1000
+        const sametimeTomorrowUTC = utcMilllisecondsSinceEpoch + 86400000
+        var d2 = new Date(
+          now.getUTCFullYear(),
+          now.getUTCMonth(),
+          now.getUTCDate() + 1,
+          23,
+          59,
+          0,
+        )
+        console.log(
+          utcMilllisecondsSinceEpoch,
+          // new Date(utcMilllisecondsSinceEpoch).toUTCString(),
+          // new Date(sametimeTomorrowUTC).toUTCString(),
+          new Date(utcMilllisecondsSinceEpoch),
+          new Date(sametimeTomorrowUTC),
+          d2,
+          d2.getTime(),
+          sametimeTomorrowUTC,
+          d2.getTime() - sametimeTomorrowUTC,
+        )
+        // let date = new Date()
+        // let zulu = new Date().toISOString()
+        // let timezone = date.getTimezoneOffset()
+        // const utcDate = zonedTimeToUtc(date, `${timezone}`)
+        // console.log(date, timezone)
+        // console.log(utcDate, zulu, Date.parse(date) * 1000000)
+
+        // let nano = values.deadline.getTime() * 1000000
+        // console.log(
+        //   initialValues.offer,
+        //   values.offer,
+
+        //   initialValues.deadline,
+
+        //   values.deadline,
+        // )
         if (
-          initialValues.offer !== newOffer ||
-          initialValues.deadline !== values.deadline
+          initialValues.offer === values.offer &&
+          initialValues.deadline === values.deadline
         ) {
-          console.log("one field is changed")
-          let nano = values.deadline.getTime() * 1000000
-          handleUpdateCrodwsale(id, newOffer, nano)
+          console.log("both are the same")
         } else {
-          setMsg("You need to change at least one field to update crowdsale")
+          if (initialValues.offer !== values.offer) {
+            console.log("offers are not the same")
+          }
+          // if (initialValues.deadline !== values.deadline) {
+          //   let initEpoch = parseFloat(initialValues.deadline.getTime())
+          //   let newEpoch = parseFloat(values.deadline.getTime())
+          //   let initialDate =
+          //     initEpoch.getUTCDate() +
+          //     "-" +
+          //     (initEpoch.getUTCMonth() + 1) +
+          //     "-" +
+          //     initEpoch.getUTCFullYear()
+          //   let newDate =
+          //     newEpoch.getUTCDate() +
+          //     "-" +
+          //     (newEpoch.getUTCMonth() + 1) +
+          //     "-" +
+          //     newEpoch.getUTCFullYear()
+          //   console.log("deadline are not the same", initialDate, newDate)
+          // }
         }
+
+        // if (
+        //   initialValues.offer !== values.offer ||
+        //   initialValues.deadline !== values.deadline
+        // ) {
+        //   // console.log("one field is changed")
+        //   let newOffer = parseFloat(values.offer)
+        //   let nano = values.deadline.getTime() * 1000000
+        //   handleUpdateCrodwsale(id, newOffer, nano)
+        // } else {
+        //   setMsg("You need to change at least one field to update crowdsale")
+        // }
       }}
     >
       {(props) => (
