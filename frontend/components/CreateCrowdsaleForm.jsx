@@ -1,5 +1,10 @@
-import React, { useCallback, useContext } from "react"
-// import SiteContext from "../context"
+import React, { useCallback } from "react"
+import {
+  minUTCDeadline,
+  convertToNanoseconds,
+  midnightUTCDeadlineInNanos,
+  tomorrow,
+} from "./utils/DateUtility"
 import { Formik, Form } from "formik"
 import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
@@ -11,6 +16,7 @@ import { crowdsale } from "canisters/crowdsale"
 import AdapterDateFns from "@mui/lab/AdapterDateFns"
 import LocalizationProvider from "@mui/lab/LocalizationProvider"
 import DatePicker from "@mui/lab/DatePicker"
+import DateNotice from "./DateNotice"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,13 +34,7 @@ let validationSchema = yup.object().shape({
 
 function CreateCrowdsaleForm() {
   const classes = useStyles()
-  // const { state } = useContext(SiteContext)
   const navigate = useNavigate()
-  let today = new Date()
-  let tomorrow = new Date()
-
-  tomorrow.setDate(today.getDate() + 1)
-  // console.log("times", today, tomorrow, tomorrow.getTime())
   const [isDisabled, setIsDisabled] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
   const [minDeadline, setMinDeadline] = React.useState(tomorrow)
@@ -70,9 +70,19 @@ function CreateCrowdsaleForm() {
         //   parseInt(values.offer),
         //   values.deadline,
         // )
-        let nano = values.deadline * 1000000
-        console.log("sumbit nano", values.deadline, nano)
-        handleCreateCrodwsale(parseFloat(values.offer), nano)
+        // console.log(
+        //   "sumbit deadline",
+        //   values.deadline,
+        //   convertToNanoseconds(values.deadline),
+        //   midnightUTCDeadlineInNanos(values.deadline),
+
+        //   midnightUTCDeadlineInNanos(values.deadline) -
+        //     convertToNanoseconds(values.deadline),
+        // )
+        // let yu = midnightUTCDeadlineInNanos(values.deadline)
+        let nanos = midnightUTCDeadlineInNanos(values.deadline)
+        console.log("sumbit deadline", values.deadline, nanos)
+        // handleCreateCrodwsale(parseFloat(values.offer), nanos)
       }}
     >
       {(props) => (
@@ -122,6 +132,9 @@ function CreateCrowdsaleForm() {
             >
               create crowdsale
             </Button>
+          </Box>
+          <Box margin="3rem 0" display={isDisabled === true ? "none" : "block"}>
+            <DateNotice />
           </Box>
           <Box margin="4rem 0" display={isDisabled === true ? "block" : "none"}>
             <LoadingScreen mode="mini" />

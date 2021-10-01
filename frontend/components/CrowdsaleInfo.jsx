@@ -1,6 +1,6 @@
 import React from "react"
 import { Typography } from "@mui/material"
-import { transformDateNanosToSecs } from "./utils/DateTransformer"
+import { transformDateNanosToSecs } from "./utils/DateUtility"
 
 function CrowdsaleInfo({ data }) {
   let created = new Date(transformDateNanosToSecs(data.createdAt))
