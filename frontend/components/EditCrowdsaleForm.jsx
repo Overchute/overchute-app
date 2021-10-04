@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from "react"
-import { zonedTimeToUtc } from "date-fns-tz"
+
 import { Formik, Form } from "formik"
 import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
@@ -7,8 +7,10 @@ import { TextField, Button, Box, Typography } from "@mui/material"
 import AdapterDateFns from "@mui/lab/AdapterDateFns"
 import LocalizationProvider from "@mui/lab/LocalizationProvider"
 import DatePicker from "@mui/lab/DatePicker"
-import { transformDateNanosToSecs, today, tomorrow } from "./utils/DateUtility"
-
+import {
+  transformDateNanosToSecs,
+  convertToNanoseconds,
+} from "./utils/DateUtility"
 import { makeStyles } from "@mui/styles"
 import SendIcon from "@mui/icons-material/SendRounded"
 import LoadingScreen from "./LoadingScreen"
@@ -68,87 +70,26 @@ function EditCrowsaleForm({ data, id }) {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values) => {
+      onSubmit={(values, actions, formikBag, FormikBag) => {
         // Validate if values are the same as before
-        const now = new Date()
+        console.log("actions", values)
 
-        const utcMilllisecondsSinceEpoch =
-          now.getTime() + now.getTimezoneOffset() * 60 * 1000
-        const sametimeTomorrowUTC = utcMilllisecondsSinceEpoch + 86400000
-        var d2 = new Date(
-          now.getUTCFullYear(),
-          now.getUTCMonth(),
-          now.getUTCDate() + 1,
-          23,
-          59,
-          0,
-        )
-        console.log(
-          utcMilllisecondsSinceEpoch,
-          // new Date(utcMilllisecondsSinceEpoch).toUTCString(),
-          // new Date(sametimeTomorrowUTC).toUTCString(),
-          new Date(utcMilllisecondsSinceEpoch),
-          new Date(sametimeTomorrowUTC),
-          d2,
-          d2.getTime(),
-          sametimeTomorrowUTC,
-          d2.getTime() - sametimeTomorrowUTC,
-        )
-        // let date = new Date()
-        // let zulu = new Date().toISOString()
-        // let timezone = date.getTimezoneOffset()
-        // const utcDate = zonedTimeToUtc(date, `${timezone}`)
-        // console.log(date, timezone)
-        // console.log(utcDate, zulu, Date.parse(date) * 1000000)
-
-        // let nano = values.deadline.getTime() * 1000000
-        // console.log(
-        //   initialValues.offer,
-        //   values.offer,
-
-        //   initialValues.deadline,
-
-        //   values.deadline,
-        // )
         if (
           initialValues.offer === values.offer &&
           initialValues.deadline === values.deadline
         ) {
+          setMsg("You need to change at least one field")
           console.log("both are the same")
         } else {
-          if (initialValues.offer !== values.offer) {
-            console.log("offers are not the same")
-          }
-          // if (initialValues.deadline !== values.deadline) {
-          //   let initEpoch = parseFloat(initialValues.deadline.getTime())
-          //   let newEpoch = parseFloat(values.deadline.getTime())
-          //   let initialDate =
-          //     initEpoch.getUTCDate() +
-          //     "-" +
-          //     (initEpoch.getUTCMonth() + 1) +
-          //     "-" +
-          //     initEpoch.getUTCFullYear()
-          //   let newDate =
-          //     newEpoch.getUTCDate() +
-          //     "-" +
-          //     (newEpoch.getUTCMonth() + 1) +
-          //     "-" +
-          //     newEpoch.getUTCFullYear()
-          //   console.log("deadline are not the same", initialDate, newDate)
+          // if (initialValues.offer !== values.offer) {
+          //   console.log(
+          //     "Offers are not the same we can proceed with saving changes",
+          //   )
           // }
+          let nanos = convertToNanoseconds(values.deadline)
+          handleUpdateCrodwsale(id, parseFloat(values.offer), nanos)
+          console.log("At least one field is changed. Let's go")
         }
-
-        // if (
-        //   initialValues.offer !== values.offer ||
-        //   initialValues.deadline !== values.deadline
-        // ) {
-        //   // console.log("one field is changed")
-        //   let newOffer = parseFloat(values.offer)
-        //   let nano = values.deadline.getTime() * 1000000
-        //   handleUpdateCrodwsale(id, newOffer, nano)
-        // } else {
-        //   setMsg("You need to change at least one field to update crowdsale")
-        // }
       }}
     >
       {(props) => (

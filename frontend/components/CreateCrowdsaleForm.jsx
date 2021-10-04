@@ -1,10 +1,5 @@
 import React, { useCallback } from "react"
-import {
-  minUTCDeadline,
-  convertToNanoseconds,
-  midnightUTCDeadlineInNanos,
-  tomorrow,
-} from "./utils/DateUtility"
+import { convertToNanoseconds, tomorrow } from "./utils/DateUtility"
 import { Formik, Form } from "formik"
 import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
@@ -70,19 +65,10 @@ function CreateCrowdsaleForm() {
         //   parseInt(values.offer),
         //   values.deadline,
         // )
-        // console.log(
-        //   "sumbit deadline",
-        //   values.deadline,
-        //   convertToNanoseconds(values.deadline),
-        //   midnightUTCDeadlineInNanos(values.deadline),
 
-        //   midnightUTCDeadlineInNanos(values.deadline) -
-        //     convertToNanoseconds(values.deadline),
-        // )
-        // let yu = midnightUTCDeadlineInNanos(values.deadline)
-        let nanos = midnightUTCDeadlineInNanos(values.deadline)
-        console.log("sumbit deadline", values.deadline, nanos)
-        // handleCreateCrodwsale(parseFloat(values.offer), nanos)
+        let nanos = convertToNanoseconds(values.deadline)
+        // console.log("sumbit deadline", values.deadline, nanos)
+        handleCreateCrodwsale(parseFloat(values.offer), nanos)
       }}
     >
       {(props) => (
@@ -129,6 +115,7 @@ function CreateCrowdsaleForm() {
               startIcon={<SendIcon />}
               style={{ padding: "1rem" }}
               type="submit"
+              disabled={!props.isValid || !props.dirty ? true : false}
             >
               create crowdsale
             </Button>
