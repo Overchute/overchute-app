@@ -7,6 +7,12 @@ const ROOTS = {
   home: "/",
 }
 
+const ROOTS_AUTH = "/auth"
+
+export const PATH_AUTH = {
+  root: ROOTS.PATH_AUTH,
+}
+
 export const PATH_APP = {
   root: ROOTS.app,
 

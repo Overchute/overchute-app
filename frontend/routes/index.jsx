@@ -58,7 +58,7 @@ export default function Router() {
       ],
     },
 
-    // Main Routes
+    // General Routes
     {
       path: "*",
       element: <NotFoundLayout />,
@@ -92,6 +92,6 @@ const List = Loadable(lazy(() => import("../views/ListPageView")))
 const Search = Loadable(lazy(() => import("../views/SearchPageView")))
 const Show = Loadable(lazy(() => import("../views/ShowPageView")))
 const NotFound = Loadable(lazy(() => import("../views/Page404View")))
-// Main
+// General
 const HomePage = Loadable(lazy(() => import("../views/HomePageView")))
 const LoadingPage = Loadable(lazy(() => import("../views/LoadingPageView")))
