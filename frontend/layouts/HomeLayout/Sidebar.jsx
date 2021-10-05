@@ -124,7 +124,7 @@ const Drawer = styled(MuiDrawer, {
 }))
 
 export default function MiniDrawer() {
-  const x = useSite()
+  const { themeMode, onChangeMode, toolbarOpen } = useSite()
   const { state, dispatch } = useContext(SiteContext)
   const theme = useTheme()
   var localTheme = localStorage.getItem("theme")
@@ -148,8 +148,7 @@ export default function MiniDrawer() {
   console.log("sidebar", x)
   return (
     <>
-      hello
-      {/* <AppBar position="fixed" open={state.toolbarOpen}>
+      <AppBar position="fixed" open={toolbarOpen}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -158,7 +157,7 @@ export default function MiniDrawer() {
             edge="start"
             sx={{
               marginRight: "36px",
-              ...(state.toolbarOpen && { display: "none" }),
+              ...(toolbarOpen && { display: "none" }),
             }}
           >
             <MenuIcon />
@@ -171,7 +170,7 @@ export default function MiniDrawer() {
           </Box>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={state.toolbarOpen}>
+      <Drawer variant="permanent" open={toolbarOpen}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
@@ -201,7 +200,7 @@ export default function MiniDrawer() {
             <ListItemText primary={"Theme"} />
           </ListItem>
         </List>
-      </Drawer> */}
+      </Drawer>
     </>
   )
 }
