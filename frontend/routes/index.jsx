@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from "react"
 import { Navigate, useRoutes, useLocation } from "react-router-dom"
+import AuthGuard from "../components/guards/AuthGuard"
 import HomeLayout from "../layouts/HomeLayout"
 import NotFoundLayout from "../layouts/NotFoundLayout"
 import LoadingScreen from "../components/LoadingScreen"
@@ -11,21 +12,7 @@ const Loadable = (Component) => (props) => {
   const isDashboard = pathname.includes("/dashboard")
 
   return (
-    <Suspense
-      fallback={
-        <LoadingScreen
-        // sx={{
-        //   ...(!isDashboard && {
-        //     top: 0,
-        //     left: 0,
-        //     width: 1,
-        //     zIndex: 9999,
-        //     position: "fixed",
-        //   }),
-        // }}
-        />
-      }
-    >
+    <Suspense fallback={<LoadingScreen />}>
       <Component {...props} />
     </Suspense>
   )
@@ -33,32 +20,24 @@ const Loadable = (Component) => (props) => {
 
 export default function Router() {
   return useRoutes([
-    // Crowdsales Routes
+    // Crowdsales Routes - Protected
     {
       path: "crowdsale",
-      element: <HomeLayout />,
+      element: (
+        <AuthGuard>
+          <HomeLayout />
+        </AuthGuard>
+      ),
       children: [
         { element: <Navigate to="/crowdsale" replace /> },
         { path: "contribute/:id", element: <Contribute /> },
         { path: "create", element: <Create /> },
         { path: "delete/:id", element: <Delete /> },
         { path: "edit/:id/:offer/:deadline", element: <Edit /> },
-        { path: "list", element: <List /> },
-        { path: "search", element: <Search /> },
-        { path: "show/:id", element: <Show /> },
-        // {
-        //   path: "app",
-        //   children: [
-        //     { element: <Navigate to="/dashboard/app/four" replace /> },
-        //     { path: "four", element: <PageFour /> },
-        //     { path: "five", element: <PageFive /> },
-        //     { path: "six", element: <PageSix /> },
-        //   ],
-        // },
       ],
     },
 
-    // General Routes
+    // Guest Routes - Unprotected
     {
       path: "*",
       element: <NotFoundLayout />,
@@ -73,6 +52,26 @@ export default function Router() {
       children: [{ element: <HomePage /> }],
     },
     {
+      path: "/list",
+      element: <HomeLayout />,
+      children: [{ element: <List /> }],
+    },
+    {
+      path: "/search",
+      element: <HomeLayout />,
+      children: [{ element: <Search /> }],
+    },
+    {
+      path: "show/:id",
+      element: <HomeLayout />,
+      children: [{ element: <Show /> }],
+    },
+    {
+      path: "/signin",
+      element: <HomeLayout />,
+      children: [{ element: <Signin /> }],
+    },
+    {
       path: "/loading",
       element: <HomeLayout />,
       children: [{ element: <LoadingPage /> }],
@@ -83,15 +82,17 @@ export default function Router() {
 
 // IMPORT COMPONENTS
 
-// Crowdsale
+// Crowdsale - protected
 const Contribute = Loadable(lazy(() => import("../views/ContributePageView")))
 const Create = Loadable(lazy(() => import("../views/CreatePageView")))
 const Delete = Loadable(lazy(() => import("../views/DeletePageView")))
 const Edit = Loadable(lazy(() => import("../views/EditPageView")))
-const List = Loadable(lazy(() => import("../views/ListPageView")))
-const Search = Loadable(lazy(() => import("../views/SearchPageView")))
 const Show = Loadable(lazy(() => import("../views/ShowPageView")))
-const NotFound = Loadable(lazy(() => import("../views/Page404View")))
-// General
+
+// Guest - unprotected
 const HomePage = Loadable(lazy(() => import("../views/HomePageView")))
 const LoadingPage = Loadable(lazy(() => import("../views/LoadingPageView")))
+const List = Loadable(lazy(() => import("../views/ListPageView")))
+const Search = Loadable(lazy(() => import("../views/SearchPageView")))
+const Signin = Loadable(lazy(() => import("../views//SigninPageView")))
+const NotFound = Loadable(lazy(() => import("../views/Page404View")))

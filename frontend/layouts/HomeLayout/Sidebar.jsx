@@ -1,9 +1,7 @@
 import React, { useContext } from "react"
-import SiteContext from "../../context"
-import clsx from "clsx"
+import { SiteContext } from "../../context/SiteContext"
 import { Link } from "react-router-dom"
 import { useTheme } from "@mui/material/styles"
-import { makeStyles } from "@mui/styles"
 import { styled } from "@mui/material/styles"
 import MuiDrawer from "@mui/material/Drawer"
 import MuiAppBar from "@mui/material/AppBar"
@@ -22,45 +20,38 @@ import ListItemText from "@mui/material/ListItemText"
 import HomeRounded from "@mui/icons-material/HomeRounded"
 import LightIcon from "@mui/icons-material/Brightness7Rounded"
 import DarkIcon from "@mui/icons-material/Brightness4Rounded"
-import CounterIcon from "@mui/icons-material/ControlPoint"
-import HelloIcon from "@mui/icons-material/EmojiPeopleRounded"
-import GreetingIcon from "@mui/icons-material/EmojiEmotionsRounded"
+
 import ListIcon from "@mui/icons-material/ListAltRounded"
 import AddBoxIcon from "@mui/icons-material/AddBoxRounded"
 import SearchIcon from "@mui/icons-material/SearchRounded"
+import useSite from "../../hooks/useSite"
 import { Auth } from "../../components/Auth"
 
 const Items = [
   {
     page: "home",
     title: "Home",
+    url: "/",
     icon: <HomeRounded />,
   },
   {
     page: "create",
     title: "Create",
+    url: "/crowdsale/create",
     icon: <AddBoxIcon />,
   },
   {
     page: "search",
     title: "Search",
+    url: "/search",
     icon: <SearchIcon />,
   },
   {
     page: "list",
     title: "List",
+    url: "/list",
     icon: <ListIcon />,
   },
-  // {
-  //   page: "greeting",
-  //   title: "Greeting",
-  //   icon: <GreetingIcon />,
-  // },
-  // {
-  //   page: "counter",
-  //   title: "Counter",
-  //   icon: <CounterIcon />,
-  // },
 ]
 
 const drawerWidth = 240
@@ -133,6 +124,7 @@ const Drawer = styled(MuiDrawer, {
 }))
 
 export default function MiniDrawer() {
+  const x = useSite()
   const { state, dispatch } = useContext(SiteContext)
   const theme = useTheme()
   var localTheme = localStorage.getItem("theme")
@@ -153,10 +145,11 @@ export default function MiniDrawer() {
       payload: localTheme === "light" ? "dark" : "light",
     })
   }
-  console.log("sidebar", state)
+  console.log("sidebar", x)
   return (
     <>
-      <AppBar position="fixed" open={state.toolbarOpen}>
+      hello
+      {/* <AppBar position="fixed" open={state.toolbarOpen}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -191,12 +184,7 @@ export default function MiniDrawer() {
         <Divider />
         <List>
           {Items.map((i) => (
-            <ListItem
-              button
-              component={Link}
-              to={i.page === "home" ? "/" : `/crowdsale/${i.page}`}
-              key={i.page}
-            >
+            <ListItem button component={Link} to={i.url} key={i.page}>
               <ListItemIcon sx={{ pl: { xs: 0, sm: 1 } }}>
                 {i.icon}
               </ListItemIcon>
@@ -213,7 +201,7 @@ export default function MiniDrawer() {
             <ListItemText primary={"Theme"} />
           </ListItem>
         </List>
-      </Drawer>
+      </Drawer> */}
     </>
   )
 }

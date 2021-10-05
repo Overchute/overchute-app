@@ -28,6 +28,7 @@ function ShowPageView() {
 
   useEffect(() => {
     getCrowdsaleById(crowdsaleId)
+    return () => {}
     // eslint-disable-next-line
   }, [])
   // console.log("data length in show crowdsale", data, data.length, crowdsaleId)

@@ -57,7 +57,7 @@ function SearchCrowdsale() {
 
   const reDirectToShowCrowdsale = (e) => {
     e.preventDefault()
-    navigate(`/crowdsale/show/${query}`)
+    navigate(`/show/${query}`)
   }
   return (
     <form

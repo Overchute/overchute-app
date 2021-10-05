@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState, useContext } from "react"
-import SiteContext from "../context"
+import React, { useEffect, useState, useContext } from "react"
+import AuthContext from "../context/AuthContext"
 import {
   Box,
   Button,
@@ -23,7 +23,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 })
 
 function Auth() {
-  const { state, dispatch } = useContext(SiteContext)
+  const { dispatch } = useContext(AuthContext)
   const [signedIn, setSignedIn] = useState(false)
   const [principal, setPrincipal] = useState("")
   const [client, setClient] = useState()
@@ -37,14 +37,13 @@ function Auth() {
     if (isAuthenticated) {
       const identity = client.getIdentity()
       const principal = identity.getPrincipal().toString()
+      setSignedIn(true)
+      setPrincipal(principal)
       dispatch({ type: "SET_AUTHENTICATION", payload: true })
       dispatch({ type: "SET_SIGNED", payload: true })
       dispatch({ type: "SET_PRINCIPAL", payload: principal })
       dispatch({ type: "SET_IDENTITY", payload: identity })
       dispatch({ type: "SET_CLIENT", payload: client })
-
-      setSignedIn(true)
-      setPrincipal(principal)
     }
   }
 
@@ -55,6 +54,11 @@ function Auth() {
         onSuccess: () => {
           const identity = client.getIdentity()
           const principal = identity.getPrincipal().toString()
+          dispatch({ type: "SET_AUTHENTICATION", payload: true })
+          dispatch({ type: "SET_SIGNED", payload: true })
+          dispatch({ type: "SET_PRINCIPAL", payload: principal })
+          dispatch({ type: "SET_IDENTITY", payload: identity })
+          dispatch({ type: "SET_CLIENT", payload: client })
           resolve({ identity, principal })
         },
         onError: reject,
@@ -66,6 +70,11 @@ function Auth() {
 
   const signOut = async () => {
     await client.logout()
+    dispatch({ type: "SET_AUTHENTICATION", payload: false })
+    dispatch({ type: "SET_SIGNED", payload: false })
+    dispatch({ type: "SET_PRINCIPAL", payload: "" })
+    dispatch({ type: "SET_IDENTITY", payload: "" })
+    dispatch({ type: "SET_CLIENT", payload: null })
     setSignedIn(false)
     setPrincipal("")
   }
@@ -81,6 +90,7 @@ function Auth() {
 
   useEffect(() => {
     initAuth()
+    return () => {}
   }, [])
 
   return (

@@ -1,8 +1,6 @@
 import React from "react"
 
-const SiteContext = React.createContext({
-  theme: "light",
-  toolbarOpen: false,
+const AuthContext = React.createContext({
   isAuthenticated: false,
   signedIn: false,
   principal: "",
@@ -10,4 +8,4 @@ const SiteContext = React.createContext({
   client: null,
 })
 
-export default SiteContext
+export default AuthContext

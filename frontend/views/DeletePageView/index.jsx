@@ -24,6 +24,7 @@ function DeletePageView() {
   })
   useEffect(() => {
     handleDeleteCrowdsale(crowdsaleId)
+    return () => {}
     // eslint-disable-next-line
   }, [])
   return (

@@ -17,6 +17,7 @@ function ListPageView() {
   })
   useEffect(() => {
     handleListAllCrodwsales()
+    return () => {}
   }, [])
   console.log("data at list crowdsales", data, data.length)
   return (
@@ -54,7 +55,7 @@ function ListPageView() {
                   variant="outlined"
                   color="primary"
                   component={Link}
-                  to={`/crowdsale/show/${i.crowdsaleId}`}
+                  to={`/show/${i.crowdsaleId}`}
                   style={{ marginTop: "2rem" }}
                 >
                   Details

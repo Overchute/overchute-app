@@ -51,7 +51,7 @@ function CreateCrowdsaleForm() {
     setSuccess(true)
     // delay for user to read message
     setTimeout(() => {
-      navigate(`/crowdsale/show/${csId}`)
+      navigate(`/show/${csId}`)
     }, 5000)
   })
   // console.log("state", state)

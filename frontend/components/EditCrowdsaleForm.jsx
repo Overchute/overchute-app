@@ -62,7 +62,7 @@ function EditCrowsaleForm({ data, id }) {
     let csId = response.ok
     setSuccess(true)
     setTimeout(() => {
-      navigate(`/crowdsale/show/${id}`)
+      navigate(`/show/${id}`)
     }, 5000)
   })
   console.log("edit view", initialValues)

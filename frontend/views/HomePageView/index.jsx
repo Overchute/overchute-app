@@ -1,14 +1,11 @@
 import React, { useContext } from "react"
-import SiteContext from "../../context"
+
 import { Box, Typography, Button } from "@mui/material"
 import LogoName from "../../assets/LogoName"
 import AddBoxIcon from "@mui/icons-material/AddBoxRounded"
 import { Link } from "react-router-dom"
 
 function HomePageView() {
-  const { state } = useContext(SiteContext)
-
-  console.log("state", state)
   return (
     <Box
       margin="3rem 0 0 0"

@@ -4,15 +4,19 @@ function path(root, sublink) {
 
 const ROOTS = {
   app: "/crowdsale",
-  home: "/",
+  guest: "/",
 }
 
-const ROOTS_AUTH = "/auth"
-
-export const PATH_AUTH = {
-  root: ROOTS.PATH_AUTH,
+export const PATH_GUEST = {
+  root: ROOTS.guest,
+  guest: {
+    list: path(ROOTS.guest, "/list"),
+    search: path(ROOTS.guest, "/search"),
+    show: path(ROOTS.guest, "/show/:id"),
+    signin: path(ROOTS.guest, "/signin"),
+    load: path(ROOTS.guest, "/loading"),
+  },
 }
-
 export const PATH_APP = {
   root: ROOTS.app,
 
@@ -21,9 +25,5 @@ export const PATH_APP = {
     create: path(ROOTS.app, "/create"),
     delete: path(ROOTS.app, "/delete/:id"),
     edit: path(ROOTS.app, "/edit/:id/:offer/:deadline"),
-    list: path(ROOTS.app, "/list"),
-    search: path(ROOTS.app, "/search"),
-    show: path(ROOTS.app, "/show/:id"),
-    load: path(ROOTS.home, "/loading"),
   },
 }

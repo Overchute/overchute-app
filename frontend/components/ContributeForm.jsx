@@ -41,7 +41,7 @@ function ContributeForm() {
       setSuccess(true)
       // delay for user to read message
       setTimeout(() => {
-        navigate(`/crowdsale/show/${csId}`)
+        navigate(`/show/${csId}`)
       }, 5000)
     },
   )
