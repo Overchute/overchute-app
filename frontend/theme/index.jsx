@@ -4,6 +4,7 @@ import {
   createTheme,
   ThemeProvider,
   StyledEngineProvider,
+  responsiveFontSizes,
 } from "@mui/material/styles"
 import palette from "./palette"
 import useSite from "../hooks/useSite"
@@ -21,7 +22,8 @@ export default function ThemeConfig({ children }) {
     [isLight],
   )
 
-  const theme = createTheme(themeOptions)
+  let theme = createTheme(themeOptions)
+  theme = responsiveFontSizes(theme)
 
   return (
     <StyledEngineProvider injectFirst>

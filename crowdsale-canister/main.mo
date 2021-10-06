@@ -38,6 +38,12 @@ shared (msg) actor class crowdsale (){
         let id = UUID.toText(g.new());
         let dayTimeframe = now + (3600 * 1000_000_000);
 
+        // Reject AnonymousIdentity
+        // if(Principal.toText(callerId) == "2vxsx-fae") {
+        //     Debug.print(debug_show(callerId));
+        //     throw Err.reject("An anonymus user cannot create a crowdsale");
+        // };
+
         if (crowdsaleCreate.deadline <= dayTimeframe) {
             Debug.print(debug_show(now));
             throw Err.reject("The deadline cannot be less than 24 hours from the date of creation");
@@ -442,5 +448,9 @@ shared (msg) actor class crowdsale (){
 
     private func transform(id: CrowdsaleId, crowdsale: Crowdsale): Crowdsale {
         return crowdsale;
+    };
+
+    public shared (msg) func whoami() : async Principal {
+        msg.caller
     };
 };
