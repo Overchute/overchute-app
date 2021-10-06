@@ -1,6 +1,8 @@
-import React from "react"
+import React, { useReducer, useContext, createContext } from "react"
 
-const AuthContext = React.createContext({
+import AuthReducer from "../reducer/AuthReducer"
+
+const AuthContext = createContext({
   isAuthenticated: false,
   signedIn: false,
   principal: "",
@@ -8,4 +10,14 @@ const AuthContext = React.createContext({
   client: null,
 })
 
-export default AuthContext
+function AuthProvider({ children }) {
+  const initialState = useContext(AuthContext)
+  const [state, dispatch] = useReducer(AuthReducer, initialState)
+  return (
+    <AuthContext.Provider value={{ state, dispatch }}>
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+export { AuthProvider, AuthContext }

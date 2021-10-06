@@ -1,7 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { SiteProvider } from "./context/SiteContext"
-import AuthProvider from "./context/AuthProvider"
+import { AuthProvider } from "./context/AuthContext"
 import App from "./App"
 
 ReactDOM.render(

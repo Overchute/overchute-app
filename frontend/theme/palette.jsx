@@ -14,6 +14,10 @@ const palette = {
       main: "#DB6400",
       contrast: "#fff",
     },
+    neutral: {
+      main: "#fff",
+      contrast: blueGrey[700],
+    },
     text: {
       primary: blueGrey[700],
       secondary: blueGrey[400],
@@ -37,6 +41,10 @@ const palette = {
     secondary: {
       main: "#DB6400",
       contrast: "#fff",
+    },
+    neutral: {
+      main: "#fff",
+      contrast: blueGrey[700],
     },
     text: {
       primary: blueGrey[300],

@@ -1,20 +1,12 @@
-// import React from "react"
-
-// const SiteContext = React.createContext({
-//   theme: "light",
-//   toolbarOpen: false,
-// })
-
-// export default SiteContext
-
 import React, { createContext } from "react"
 
 import useLocalStorage from "../hooks/useLocalStorage"
 
 const initialState = {
   themeMode: "light",
-  toolbarOpen: false,
+  toolbarMode: false,
   onChangeMode: () => {},
+  onToolbarMode: () => {},
 }
 
 const SiteContext = createContext(initialState)
@@ -22,6 +14,7 @@ const SiteContext = createContext(initialState)
 function SiteProvider({ children }) {
   const [site, setSite] = useLocalStorage("site", {
     themeMode: initialState.themeMode,
+    toolbarMode: initialState.toolbarMode,
   })
 
   const onChangeMode = (v) => {
@@ -30,12 +23,18 @@ function SiteProvider({ children }) {
       themeMode: v,
     })
   }
-
+  const onToolbarMode = (t) => {
+    setSite({
+      ...site,
+      toolbarMode: t,
+    })
+  }
   return (
     <SiteContext.Provider
       value={{
         ...site,
         onChangeMode,
+        onToolbarMode,
       }}
     >
       {children}

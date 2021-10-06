@@ -124,34 +124,25 @@ const Drawer = styled(MuiDrawer, {
 }))
 
 export default function MiniDrawer() {
-  const { themeMode, onChangeMode, toolbarOpen } = useSite()
-  // const { state, dispatch } = useContext(SiteContext)
-  // const theme = useTheme()
-  // var localTheme = localStorage.getItem("theme")
+  const { themeMode, onChangeMode, toolbarMode, onToolbarMode } = useSite()
+  const theme = useTheme()
 
   const handleDrawerOpen = () => {
-    dispatch({ type: "TOGGLE_TOOLBAR", payload: true })
+    onToolbarMode(true)
   }
 
   const handleDrawerClose = () => {
-    dispatch({ type: "TOGGLE_TOOLBAR", payload: false })
+    onToolbarMode(false)
   }
 
   const toggleTheme = () => {
-    let theme = themeMode === "light" ? "dark" : "light"
-
-    onChangeMode(theme)
-    // console.log("sidebar", localTheme)
-    // localStorage.setItem("theme", localTheme === "dark" ? "light" : "dark")
-    // dispatch({
-    //   type: "UPDATE_THEME",
-    //   payload: localTheme === "light" ? "dark" : "light",
-    // })
+    let t = themeMode === "light" ? "dark" : "light"
+    onChangeMode(t)
   }
   console.log("sidebar")
   return (
     <>
-      <AppBar position="fixed" open={toolbarOpen}>
+      <AppBar position="fixed" open={toolbarMode}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -160,7 +151,7 @@ export default function MiniDrawer() {
             edge="start"
             sx={{
               marginRight: "36px",
-              ...(toolbarOpen && { display: "none" }),
+              ...(toolbarMode && { display: "none" }),
             }}
           >
             <MenuIcon />
@@ -173,7 +164,7 @@ export default function MiniDrawer() {
           </Box>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={toolbarOpen}>
+      <Drawer variant="permanent" open={toolbarMode}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
@@ -198,7 +189,7 @@ export default function MiniDrawer() {
         <List>
           <ListItem button onClick={toggleTheme}>
             <ListItemIcon sx={{ pl: { xs: 0, sm: 1 } }}>
-              {state.theme === "light" ? <DarkIcon /> : <LightIcon />}
+              {themeMode === "light" ? <DarkIcon /> : <LightIcon />}
             </ListItemIcon>
             <ListItemText primary={"Theme"} />
           </ListItem>
