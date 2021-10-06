@@ -125,9 +125,9 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer() {
   const { themeMode, onChangeMode, toolbarOpen } = useSite()
-  const { state, dispatch } = useContext(SiteContext)
-  const theme = useTheme()
-  var localTheme = localStorage.getItem("theme")
+  // const { state, dispatch } = useContext(SiteContext)
+  // const theme = useTheme()
+  // var localTheme = localStorage.getItem("theme")
 
   const handleDrawerOpen = () => {
     dispatch({ type: "TOGGLE_TOOLBAR", payload: true })
@@ -138,14 +138,17 @@ export default function MiniDrawer() {
   }
 
   const toggleTheme = () => {
-    console.log("sidebar", localTheme)
-    localStorage.setItem("theme", localTheme === "dark" ? "light" : "dark")
-    dispatch({
-      type: "UPDATE_THEME",
-      payload: localTheme === "light" ? "dark" : "light",
-    })
+    let theme = themeMode === "light" ? "dark" : "light"
+
+    onChangeMode(theme)
+    // console.log("sidebar", localTheme)
+    // localStorage.setItem("theme", localTheme === "dark" ? "light" : "dark")
+    // dispatch({
+    //   type: "UPDATE_THEME",
+    //   payload: localTheme === "light" ? "dark" : "light",
+    // })
   }
-  console.log("sidebar", x)
+  console.log("sidebar")
   return (
     <>
       <AppBar position="fixed" open={toolbarOpen}>

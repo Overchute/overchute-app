@@ -24,10 +24,10 @@ function SiteProvider({ children }) {
     themeMode: initialState.themeMode,
   })
 
-  const onChangeMode = (e) => {
+  const onChangeMode = (v) => {
     setSite({
       ...site,
-      themeMode: e.target.value,
+      themeMode: v,
     })
   }
 
