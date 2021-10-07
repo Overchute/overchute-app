@@ -3,12 +3,12 @@ import { Navigate } from "react-router-dom"
 import useAuth from "../../hooks/useAuth"
 
 function AuthGuard({ children }) {
-  const { isAuthenticated } = useAuth
-  console.log("auth", isAuthenticated)
+  const { isAuthenticated } = useAuth()
+  console.log("auth xxx", isAuthenticated)
   return (
     <>
-      {state.isAuthenticated && <>{children}</>}
-      {!state.isAuthenticated && <Navigate to="/signin" />}
+      {isAuthenticated && <>{children}</>}
+      {!isAuthenticated && <Navigate to="/signin" />}
     </>
   )
 }

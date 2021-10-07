@@ -4,20 +4,20 @@ import { AuthContext } from "../../context/AuthContext"
 import { Box, Typography } from "@mui/material"
 
 function SigninPageView() {
-  const { state } = useContext(AuthContext)
-  const navigate = useNavigate()
-  const redirectIfNotAuth = async () => {
-    if (state.isAuthenticated) {
-      // Redirect home
-      setTimeout(() => {
-        navigate(`/`)
-      }, 1000)
-    }
-  }
-  useEffect(() => {
-    redirectIfNotAuth()
-    return () => {}
-  }, [state.isAuthenticated])
+  // const { state } = useContext(AuthContext)
+  // const navigate = useNavigate()
+  // const redirectIfNotAuth = async () => {
+  //   if (state.isAuthenticated) {
+  //     // Redirect home
+  //     setTimeout(() => {
+  //       navigate(`/`)
+  //     }, 1000)
+  //   }
+  // }
+  // useEffect(() => {
+  //   redirectIfNotAuth()
+  //   return () => {}
+  // }, [state.isAuthenticated])
   return (
     <Box
       margin="3rem 0 0 0"

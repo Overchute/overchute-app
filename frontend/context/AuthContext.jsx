@@ -9,6 +9,7 @@ import React, {
 import { AuthClient } from "@dfinity/auth-client"
 
 import AuthReducer from "../reducer/AuthReducer"
+import { SlowBuffer } from "buffer"
 
 const initialState = {
   isAuthenticated: false,
@@ -32,12 +33,15 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     const initAuth = async () => {
+      console.log("auth is init")
       const client = await AuthClient.create()
       const isAuthenticated = await client.isAuthenticated()
 
+      dispatch({ type: "SET_CLIENT", payload: client })
       setClient(client)
-
+      console.log("auth client", client)
       if (isAuthenticated) {
+        console.log("auth is authenticated")
         const identity = client.getIdentity()
         const principal = identity.getPrincipal().toString()
         dispatch({ type: "SET_AUTHENTICATION", payload: true })
