@@ -1,10 +1,10 @@
 import React, { useContext } from "react"
 import { Navigate } from "react-router-dom"
-import { AuthContext } from "../../context/AuthContext"
+import useAuth from "../../hooks/useAuth"
 
 function AuthGuard({ children }) {
-  const { state } = useContext(AuthContext)
-  console.log("auth", state)
+  const { isAuthenticated } = useAuth
+  console.log("auth", isAuthenticated)
   return (
     <>
       {state.isAuthenticated && <>{children}</>}

@@ -17,61 +17,71 @@ import InfinityIcon from "@mui/icons-material/AllInclusiveOutlined"
 import ExitIcon from "@mui/icons-material/ExitToAppOutlined"
 import InfoIcon from "@mui/icons-material/InfoOutlined"
 import IconButton from "@mui/material/IconButton"
+import useAuth from "../hooks/useAuth"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
 function Auth() {
-  const { state, dispatch } = useContext(AuthContext)
-  const [client, setClient] = useState()
-  const mountedRef = useRef(true)
+  const {
+    isAuthenticated,
+    signedIn,
+    principal,
+    identity,
+    client,
+    signIn,
+    signOut,
+  } = useAuth()
+  // const { state, dispatch } = useContext(AuthContext)
+  // const [client, setClient] = useState()
+  // const mountedRef = useRef(true)
 
-  const initAuth = async () => {
-    const client = await AuthClient.create()
-    const isAuthenticated = await client.isAuthenticated()
+  // const initAuth = async () => {
+  //   const client = await AuthClient.create()
+  //   const isAuthenticated = await client.isAuthenticated()
 
-    setClient(client)
+  //   setClient(client)
 
-    if (isAuthenticated) {
-      const identity = client.getIdentity()
-      const principal = identity.getPrincipal().toString()
-      dispatch({ type: "SET_AUTHENTICATION", payload: true })
-      dispatch({ type: "SET_SIGNED", payload: true })
-      dispatch({ type: "SET_PRINCIPAL", payload: principal })
-      dispatch({ type: "SET_IDENTITY", payload: identity })
-      dispatch({ type: "SET_CLIENT", payload: client })
-    }
-  }
+  //   if (isAuthenticated) {
+  //     const identity = client.getIdentity()
+  //     const principal = identity.getPrincipal().toString()
+  //     dispatch({ type: "SET_AUTHENTICATION", payload: true })
+  //     dispatch({ type: "SET_SIGNED", payload: true })
+  //     dispatch({ type: "SET_PRINCIPAL", payload: principal })
+  //     dispatch({ type: "SET_IDENTITY", payload: identity })
+  //     dispatch({ type: "SET_CLIENT", payload: client })
+  //   }
+  // }
 
-  const signIn = async () => {
-    const { identity, principal } = await new Promise((resolve, reject) => {
-      client.login({
-        identityProvider: "https://identity.ic0.app",
-        onSuccess: () => {
-          const identity = client.getIdentity()
-          const principal = identity.getPrincipal().toString()
-          dispatch({ type: "SET_AUTHENTICATION", payload: true })
-          dispatch({ type: "SET_SIGNED", payload: true })
-          dispatch({ type: "SET_PRINCIPAL", payload: principal })
-          dispatch({ type: "SET_IDENTITY", payload: identity })
-          dispatch({ type: "SET_CLIENT", payload: client })
-          resolve({ identity, principal })
-        },
-        onError: reject,
-      })
-    })
-  }
+  // const signIn = async () => {
+  //   const { identity, principal } = await new Promise((resolve, reject) => {
+  //     client.login({
+  //       identityProvider: "https://identity.ic0.app",
+  //       onSuccess: () => {
+  //         const identity = client.getIdentity()
+  //         const principal = identity.getPrincipal().toString()
+  //         dispatch({ type: "SET_AUTHENTICATION", payload: true })
+  //         dispatch({ type: "SET_SIGNED", payload: true })
+  //         dispatch({ type: "SET_PRINCIPAL", payload: principal })
+  //         dispatch({ type: "SET_IDENTITY", payload: identity })
+  //         dispatch({ type: "SET_CLIENT", payload: client })
+  //         resolve({ identity, principal })
+  //       },
+  //       onError: reject,
+  //     })
+  //   })
+  // }
 
-  const signOut = async () => {
-    await client.logout()
+  // const signOut = async () => {
+  //   await client.logout()
 
-    dispatch({ type: "SET_AUTHENTICATION", payload: false })
-    dispatch({ type: "SET_SIGNED", payload: false })
-    dispatch({ type: "SET_PRINCIPAL", payload: "" })
-    dispatch({ type: "SET_IDENTITY", payload: "" })
-    dispatch({ type: "SET_CLIENT", payload: null })
-  }
+  //   dispatch({ type: "SET_AUTHENTICATION", payload: false })
+  //   dispatch({ type: "SET_SIGNED", payload: false })
+  //   dispatch({ type: "SET_PRINCIPAL", payload: "" })
+  //   dispatch({ type: "SET_IDENTITY", payload: "" })
+  //   dispatch({ type: "SET_CLIENT", payload: null })
+  // }
   const [open, setOpen] = React.useState(false)
 
   const handleClickOpen = () => {
@@ -82,16 +92,23 @@ function Auth() {
     setOpen(false)
   }
 
-  useEffect(() => {
-    initAuth()
-    return () => {
-      mountedRef.current = false
-    }
-  }, [])
-  console.log("auth started")
+  // useEffect(() => {
+  //   initAuth()
+  //   return () => {
+  //     mountedRef.current = false
+  //   }
+  // }, [])
+  console.log(
+    "auth started",
+    isAuthenticated,
+    signedIn,
+    principal,
+    identity,
+    client,
+  )
   return (
     <Box>
-      {!state.signedIn && client ? (
+      {!signedIn && client ? (
         <Button
           variant="outlined"
           color="neutral"
@@ -102,8 +119,7 @@ function Auth() {
           Sign in
         </Button>
       ) : null}
-
-      {state.signedIn ? (
+      {signedIn ? (
         <Box>
           <Hidden mdDown>
             <Typography
@@ -116,7 +132,7 @@ function Auth() {
                 borderRadius: "8px",
               }}
             >
-              Signed in as : {state.principal}
+              Signed in as : {principal}
             </Typography>
 
             <Button
@@ -146,7 +162,7 @@ function Auth() {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-slide-description">
-                  {state.principal}
+                  {principal}
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
