@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext, useRef } from "react"
-import { AuthContext } from "../context/AuthContext"
+import React from "react"
+
 import {
   Box,
   Button,
@@ -12,7 +12,7 @@ import {
   DialogTitle,
   Slide,
 } from "@mui/material"
-import { AuthClient } from "@dfinity/auth-client"
+
 import InfinityIcon from "@mui/icons-material/AllInclusiveOutlined"
 import ExitIcon from "@mui/icons-material/ExitToAppOutlined"
 import InfoIcon from "@mui/icons-material/InfoOutlined"
