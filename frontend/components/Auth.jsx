@@ -33,55 +33,7 @@ function Auth() {
     signIn,
     signOut,
   } = useAuth()
-  // const { state, dispatch } = useContext(AuthContext)
-  // const [client, setClient] = useState()
-  // const mountedRef = useRef(true)
 
-  // const initAuth = async () => {
-  //   const client = await AuthClient.create()
-  //   const isAuthenticated = await client.isAuthenticated()
-
-  //   setClient(client)
-
-  //   if (isAuthenticated) {
-  //     const identity = client.getIdentity()
-  //     const principal = identity.getPrincipal().toString()
-  //     dispatch({ type: "SET_AUTHENTICATION", payload: true })
-  //     dispatch({ type: "SET_SIGNED", payload: true })
-  //     dispatch({ type: "SET_PRINCIPAL", payload: principal })
-  //     dispatch({ type: "SET_IDENTITY", payload: identity })
-  //     dispatch({ type: "SET_CLIENT", payload: client })
-  //   }
-  // }
-
-  // const signIn = async () => {
-  //   const { identity, principal } = await new Promise((resolve, reject) => {
-  //     client.login({
-  //       identityProvider: "https://identity.ic0.app",
-  //       onSuccess: () => {
-  //         const identity = client.getIdentity()
-  //         const principal = identity.getPrincipal().toString()
-  //         dispatch({ type: "SET_AUTHENTICATION", payload: true })
-  //         dispatch({ type: "SET_SIGNED", payload: true })
-  //         dispatch({ type: "SET_PRINCIPAL", payload: principal })
-  //         dispatch({ type: "SET_IDENTITY", payload: identity })
-  //         dispatch({ type: "SET_CLIENT", payload: client })
-  //         resolve({ identity, principal })
-  //       },
-  //       onError: reject,
-  //     })
-  //   })
-  // }
-
-  // const signOut = async () => {
-  //   await client.logout()
-
-  //   dispatch({ type: "SET_AUTHENTICATION", payload: false })
-  //   dispatch({ type: "SET_SIGNED", payload: false })
-  //   dispatch({ type: "SET_PRINCIPAL", payload: "" })
-  //   dispatch({ type: "SET_IDENTITY", payload: "" })
-  //   dispatch({ type: "SET_CLIENT", payload: null })
-  // }
   const [open, setOpen] = React.useState(false)
 
   const handleClickOpen = () => {
@@ -92,14 +44,8 @@ function Auth() {
     setOpen(false)
   }
 
-  // useEffect(() => {
-  //   initAuth()
-  //   return () => {
-  //     mountedRef.current = false
-  //   }
-  // }, [])
   console.log(
-    "auth started",
+    "auth widget",
     isAuthenticated,
     signedIn,
     principal,

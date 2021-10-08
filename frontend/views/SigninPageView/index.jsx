@@ -2,22 +2,23 @@ import React, { useContext, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { AuthContext } from "../../context/AuthContext"
 import { Box, Typography } from "@mui/material"
+import useAuth from "../../hooks/useAuth"
 
 function SigninPageView() {
-  // const { state } = useContext(AuthContext)
-  // const navigate = useNavigate()
-  // const redirectIfNotAuth = async () => {
-  //   if (state.isAuthenticated) {
-  //     // Redirect home
-  //     setTimeout(() => {
-  //       navigate(`/`)
-  //     }, 1000)
-  //   }
-  // }
-  // useEffect(() => {
-  //   redirectIfNotAuth()
-  //   return () => {}
-  // }, [state.isAuthenticated])
+  const { isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+  const redirectIfNotAuth = async () => {
+    if (isAuthenticated) {
+      // Redirect home
+      setTimeout(() => {
+        navigate(`/`)
+      }, 1000)
+    }
+  }
+  useEffect(() => {
+    redirectIfNotAuth()
+    return () => {}
+  }, [isAuthenticated])
   return (
     <Box
       margin="3rem 0 0 0"

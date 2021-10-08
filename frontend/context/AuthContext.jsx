@@ -9,7 +9,6 @@ import React, {
 import { AuthClient } from "@dfinity/auth-client"
 
 import AuthReducer from "../reducer/AuthReducer"
-import { SlowBuffer } from "buffer"
 
 const initialState = {
   isAuthenticated: false,
@@ -83,7 +82,7 @@ function AuthProvider({ children }) {
     dispatch({ type: "SET_SIGNED", payload: false })
     dispatch({ type: "SET_PRINCIPAL", payload: "" })
     dispatch({ type: "SET_IDENTITY", payload: "" })
-    dispatch({ type: "SET_CLIENT", payload: null })
+    // dispatch({ type: "SET_CLIENT", payload: null })
   }
 
   return (
