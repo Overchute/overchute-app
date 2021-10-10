@@ -1,7 +1,10 @@
 import React from "react"
+
 import { Outlet } from "react-router-dom"
 import { makeStyles } from "@mui/styles"
 import SideBar from "./Sidebar"
+import Navbar from "./Navbar"
+import { Hidden } from "@mui/material"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,7 +27,12 @@ function HomeLayout() {
   const classes = useStyles()
   return (
     <div className={classes.root}>
-      <SideBar />
+      <Hidden lgDown>
+        <SideBar />
+      </Hidden>
+      <Hidden lgUp>
+        <Navbar />
+      </Hidden>
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <div>

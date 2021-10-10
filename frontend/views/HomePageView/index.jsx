@@ -2,6 +2,7 @@ import React, { useContext } from "react"
 
 import { Box, Typography, Button } from "@mui/material"
 import LogoName from "../../assets/LogoName"
+import CreatorsContributorsScene from "../../assets/creators_contributors_scene.svg"
 import AddBoxIcon from "@mui/icons-material/AddBoxRounded"
 import { Link } from "react-router-dom"
 
@@ -13,8 +14,14 @@ function HomePageView() {
       flexDirection="column"
       alignItems="center"
     >
-      <Box style={{ display: "block", margin: "2rem 0" }} alt="logo">
-        <LogoName primary="#16697A" secondary="gold" />
+      <Box
+        style={{ display: "block", margin: "3rem 0", width: "65%" }}
+        alt="logo"
+      >
+        <img
+          src="/frontend/assets/creators_contributors_scene.svg"
+          width="100%"
+        />
       </Box>
       <Box maxWidth="50%" style={{ textAlign: "center" }}>
         <Typography variant="h5" gutterBottom style={{ margin: "2rem 0" }}>

@@ -1,11 +1,11 @@
 import React from "react"
 
 const LogoName = (props) => {
-  const { primary, secondary } = props
+  const { primary, secondary, height, margin } = props
   // console.log(primary, secondary)
   return (
     <svg
-      style={{ height: "24vmin", display: "block", margin: "2rem 0" }}
+      style={{ height: height, display: "block", margin: margin }}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1340.87 356.92"
     >

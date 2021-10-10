@@ -57,7 +57,6 @@ function Auth() {
       {!signedIn && client ? (
         <Button
           variant="outlined"
-          color="neutral"
           size="medium"
           endIcon={<InfinityIcon />}
           onClick={signIn}
