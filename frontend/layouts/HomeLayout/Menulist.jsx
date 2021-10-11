@@ -45,15 +45,15 @@ const Items = [
   },
 ]
 
-function Menulist(handleClick) {
-  const { themeMode, onChangeMode, toolbarMode, onToolbarMode } = useSite()
-  const toggleParent = () => {
-    console.log("yayayaya")
-    handleClick()
-  }
+function Menulist() {
+  const { themeMode, onChangeMode, onDrawerMode } = useSite()
+
   const toggleTheme = () => {
     let t = themeMode === "light" ? "dark" : "light"
     onChangeMode(t)
+  }
+  const onClickClose = () => {
+    onDrawerMode(false)
   }
   return (
     <>
@@ -61,10 +61,10 @@ function Menulist(handleClick) {
         {Items.map((i) => (
           <ListItem
             button
-            onClick={toggleParent}
             component={Link}
             to={i.url}
             key={i.page}
+            onClick={onClickClose}
           >
             <ListItemIcon sx={{ pl: { xs: 0, sm: 1 } }}>{i.icon}</ListItemIcon>
             <ListItemText primary={i.title} />
@@ -73,13 +73,7 @@ function Menulist(handleClick) {
       </List>
       <Divider />
       <List>
-        <ListItem
-          button
-          onClick={() => {
-            toggleTheme()
-            toggleParent()
-          }}
-        >
+        <ListItem button onClick={toggleTheme}>
           <ListItemIcon sx={{ pl: { xs: 0, sm: 1 } }}>
             {themeMode === "light" ? <DarkIcon /> : <LightIcon />}
           </ListItemIcon>
