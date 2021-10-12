@@ -16,7 +16,7 @@ function HomePageView() {
     >
       <Box
         style={{ display: "block", margin: "3rem 0", width: "65%" }}
-        alt="logo"
+        alt="scene"
       >
         <img
           src="/frontend/assets/creators_contributors_scene.svg"

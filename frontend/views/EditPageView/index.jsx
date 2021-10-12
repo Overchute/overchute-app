@@ -19,7 +19,7 @@ function EditPageView() {
         {`Id : ${params.id}`}
       </Typography>
       <Paper elevation={3}>
-        <Box minWidth="50%" padding="3rem">
+        <Box padding="3rem">
           {params.id !== undefined && (
             <EditCrowdsaleForm
               id={params.id}

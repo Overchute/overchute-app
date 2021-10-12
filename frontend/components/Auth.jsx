@@ -66,7 +66,7 @@ function Auth() {
       ) : null}
       {signedIn ? (
         <Box>
-          <Hidden mdDown>
+          <Hidden lgDown>
             <Typography
               variant="subtitle1"
               style={{

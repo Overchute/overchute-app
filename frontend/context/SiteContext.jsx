@@ -24,6 +24,7 @@ function SiteProvider({ children }) {
     setSite({
       ...site,
       themeMode: v,
+      drawerMode: false,
     })
   }
   const onToolbarMode = (t) => {

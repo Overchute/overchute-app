@@ -48,7 +48,7 @@ function ShowPageView() {
             {`Id : ${crowdsaleId}`}
           </Typography>
           <Paper elevation={3}>
-            <Box minWidth="50%" padding="3rem">
+            <Box padding="3rem">
               <CrowdsaleInfo data={data[0]} />
             </Box>
             <Box
@@ -58,12 +58,7 @@ function ShowPageView() {
               <LoadingScreen mode="mini" />
             </Box>
 
-            <Box
-              minWidth="50%"
-              justifyContent="center"
-              margin="2rem"
-              display="flex"
-            >
+            <Box justifyContent="center" margin="2rem" display="flex">
               <DeleteCrowdsale crowdsaleId={crowdsaleId} />
               <Button
                 component={Link}

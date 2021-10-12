@@ -7,6 +7,13 @@ import React, {
   useRef,
 } from "react"
 import { AuthClient } from "@dfinity/auth-client"
+// import { createActor, canisterId } from "canisters/crowdsale"
+
+// const crowdsale = createActor(canisterId, {
+//   agentOptions: { identity: identity },
+// })
+
+// export { crowdsale }
 
 import AuthReducer from "../reducer/AuthReducer"
 
