@@ -15,6 +15,9 @@ function CrowdsaleInfo({ data }) {
         {`Created at : ${created}`}
       </Typography>
       <Typography variant="body1" style={{ margin: "1rem 0" }}>
+        {`Creator : ${data.creator}`}
+      </Typography>
+      <Typography variant="body1" style={{ margin: "1rem 0" }}>
         {`Deadline : ${deadline}`}
       </Typography>
       <Typography variant="body1" style={{ margin: "1rem 0" }}>

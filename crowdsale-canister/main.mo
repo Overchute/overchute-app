@@ -459,4 +459,10 @@ shared (msg) actor class crowdsale (){
     public shared (msg) func whoami() : async Principal {
         msg.caller
     };
+
+    public shared (msg) func whoamiText() : async Text {
+        let caller = msg.caller;
+        let identity = Principal.toText(caller);
+        return "My identity is : " # identity # " !!!";
+    };
 };

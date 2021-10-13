@@ -101,7 +101,7 @@ function ShowPageView() {
               </Box>
             </Box>
           </Paper>
-          <Box height="800px"></Box>
+          {/* <Box height="800px"></Box> */}
         </Box>
       )}
       {data.length === 0 && <LoadingScreen />}
