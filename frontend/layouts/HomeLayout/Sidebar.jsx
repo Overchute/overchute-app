@@ -1,31 +1,27 @@
 import React from "react"
+import { alpha, styled } from "@mui/material/styles"
 import LogoName from "../../assets/LogoName"
 import { Drawer, AppBar, Toolbar, Box, Divider } from "@mui/material"
 import { Auth } from "../../components/Auth"
 import Menulist from "./Menulist"
-
+const RootStyle = styled(AppBar)(({ theme }) => ({
+  width: "calc(100% - 320px)",
+  padding: "1rem",
+  boxShadow: "none",
+  backdropFilter: "blur(6px)",
+  WebkitBackdropFilter: "blur(6px)", // Fix on Mobile
+  backgroundColor: alpha(theme.palette.background.default, 0.05),
+}))
 export default function Sidebar() {
   return (
     <Box width="320px">
-      <AppBar
-        position="fixed"
-        sx={{
-          width: "calc(100% - 320px)",
-          boxShadow: "none",
-          padding: "1rem",
-          background: "transparent",
-          border: "none",
-          // background:
-          //   "linear-gradient(45deg, #16697A 25%, #fdd508 60% , #DB6400 90%)",
-          color: "secondary",
-        }}
-      >
+      <RootStyle>
         <Toolbar>
           <Box padding="0 1rem" marginLeft="auto">
             <Auth />
           </Box>
         </Toolbar>
-      </AppBar>
+      </RootStyle>
       <Drawer variant="permanent" open={true}>
         <Box width="320px">
           <Box

@@ -1,19 +1,20 @@
 import React from "react"
+import { alpha, styled } from "@mui/material/styles"
 import LogoName from "../../assets/LogoName"
 import { AppBar, Box, Toolbar } from "@mui/material"
 import Drawer from "./Drawer"
 import { Auth } from "../../components/Auth"
+const RootStyle = styled(AppBar)(({ theme }) => ({
+  boxShadow: "none",
+  backdropFilter: "blur(6px)",
+  WebkitBackdropFilter: "blur(6px)", // Fix on Mobile
+  backgroundColor: alpha(theme.palette.background.default, 0.05),
+}))
 
 function MobileAppBar() {
   return (
     <Box>
-      <AppBar
-        position="fixed"
-        sx={{
-          padding: "1rem",
-          background: "transparent",
-        }}
-      >
+      <RootStyle>
         <Toolbar>
           <Drawer />
           <LogoName
@@ -26,7 +27,7 @@ function MobileAppBar() {
             <Auth />
           </Box>
         </Toolbar>
-      </AppBar>
+      </RootStyle>
     </Box>
   )
 }
