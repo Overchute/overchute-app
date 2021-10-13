@@ -21,6 +21,7 @@ module {
         deadline: Time.Time;
         contributedAmount: Float;
         contributions: Trie.Trie<Principal, Float>;
+        identity: Text;
     };
 
     public type CrowdsaleCreate = {

@@ -124,6 +124,7 @@ shared (msg) actor class crowdsale (){
                     deadline = crowdsaleUpdate.deadline;
                     contributedAmount = v.contributedAmount;
                     contributions = v.contributions;
+                    identity = v.identity;
                 };
                 crowdsales := Trie.replace(
                     crowdsales,
@@ -203,6 +204,7 @@ shared (msg) actor class crowdsale (){
                             deadline = v.deadline;
                             contributedAmount = v.contributedAmount + amount;
                             contributions = newContributions;
+                            identity = v.identity;
                         };
                         crowdsales := Trie.replace(
                             crowdsales,
@@ -228,6 +230,7 @@ shared (msg) actor class crowdsale (){
                             deadline = v.deadline;
                             contributedAmount = v.contributedAmount + amount;
                             contributions = newContributions;
+                            identity = v.identity;
                         };
                         crowdsales := Trie.replace(
                             crowdsales,
@@ -264,6 +267,7 @@ shared (msg) actor class crowdsale (){
                         deadline = v.deadline;
                         contributedAmount = v.contributedAmount;
                         contributions = v.contributions;
+                        identity = v.identity;
                     };
                     crowdsales := Trie.replace(
                         crowdsales,
@@ -307,6 +311,7 @@ shared (msg) actor class crowdsale (){
                             deadline = v.deadline;
                             contributedAmount = v.contributedAmount;
                             contributions = v.contributions;
+                            identity = v.identity;
                         };
                         crowdsales := Trie.replace(
                             crowdsales,
