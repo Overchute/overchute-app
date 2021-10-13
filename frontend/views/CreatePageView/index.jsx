@@ -14,7 +14,7 @@ function CreatePageView() {
         Create a crowdsale
       </Typography>
       <Paper elevation={3}>
-        <Box padding={{ xs: "1rem", sm: "2rem", md: "3rem" }}>
+        <Box padding="3rem">
           <CreateCrowdsaleForm />
         </Box>
       </Paper>

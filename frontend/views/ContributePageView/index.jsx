@@ -22,7 +22,7 @@ function ContributePageView() {
         {`Id : ${crowdsaleId}`}
       </Typography>
       <Paper elevation={3}>
-        <Box padding={{ xs: "1rem", sm: "2rem", md: "3rem" }}>
+        <Box padding="3rem">
           <ContributeForm crowdsaleId={crowdsaleId} />
         </Box>
       </Paper>

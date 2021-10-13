@@ -54,7 +54,7 @@ function CreateCrowdsaleForm() {
       navigate(`/show/${csId}`)
     }, 5000)
   })
-  // console.log("state", state)
+  console.log("from create", crowdsale)
   return (
     <Formik
       initialValues={initialValues}

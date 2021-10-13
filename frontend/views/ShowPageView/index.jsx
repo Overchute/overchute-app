@@ -48,7 +48,7 @@ function ShowPageView() {
             {`Id : ${crowdsaleId}`}
           </Typography>
           <Paper elevation={3}>
-            <Box padding={{ xs: "1rem", sm: "2rem", md: "3rem" }}>
+            <Box padding="3rem">
               <Box padding="3rem">
                 <CrowdsaleInfo data={data[0]} />
               </Box>
@@ -60,10 +60,10 @@ function ShowPageView() {
               </Box>
               <Box padding="3rem">
                 <Grid container spacing={4}>
-                  <Grid item xs="12" sm="12" md="12" lg="4" xl="4">
+                  <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                     <DeleteCrowdsale crowdsaleId={crowdsaleId} />
                   </Grid>
-                  <Grid item xs="12" sm="12" md="12" lg="4" xl="4">
+                  <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                     <Button
                       component={Link}
                       to={`/crowdsale/edit/${crowdsaleId}/${data[0].offerPrice}/${data[0].deadline}`}
@@ -80,7 +80,7 @@ function ShowPageView() {
                       edit
                     </Button>
                   </Grid>
-                  <Grid item xs="12" sm="12" md="12" lg="4" xl="4">
+                  <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                     <Button
                       component={Link}
                       to={`/crowdsale/contribute/${crowdsaleId}`}
