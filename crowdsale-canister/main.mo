@@ -63,6 +63,7 @@ shared (msg) actor class crowdsale (){
             deadline = crowdsaleCreate.deadline;
             contributedAmount = 0;
             contributions = Trie.empty();
+            identity = Principal.toText(callerId);
         };
 
         let (newCrowdsales, existing) = Trie.put(
