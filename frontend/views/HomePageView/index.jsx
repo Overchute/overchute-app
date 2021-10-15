@@ -43,6 +43,7 @@ function HomePageView() {
           <Typography variant="h5">Create a crowdsale</Typography>
         </Button>
       </Box>
+      <Box height="500px"></Box>
     </Box>
   )
 }
