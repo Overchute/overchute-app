@@ -1,103 +1,52 @@
-import React, {
-  useReducer,
-  useContext,
-  createContext,
-  useEffect,
-  useState,
-  useRef,
-} from "react"
-import { AuthClient } from "@dfinity/auth-client"
-// import { createActor, canisterId } from "canisters/crowdsale"
-
-// const crowdsale = createActor(canisterId, {
-//   agentOptions: { identity: identity },
-// })
-
-// export { crowdsale }
-
-import AuthReducer from "../reducer/AuthReducer"
-
-const initialState = {
-  isAuthenticated: false,
-  signedIn: false,
-  principal: "",
-  identity: "",
-  client: null,
-}
+import React, { createContext, useEffect } from "react"
+import { useAuthClient } from "../hooks/useAuthClient"
 
 const AuthContext = createContext({
-  ...initialState,
-  singIn: () => Promise.resolve(),
-  signOut: () => Promise.resolve(),
+  authClient: undefined,
+  setAuthClient: false,
+  isAuthenticated: false,
+  setIsAuthenticated: false,
+  isLoggedIn: false,
+  login: () => Promise.resolve(),
+  logout: () => Promise.resolve(),
+  actor: undefined,
+  principal: undefined,
 })
 
 function AuthProvider({ children }) {
-  // const initialState = useContext(AuthContext)
-  const [state, dispatch] = useReducer(AuthReducer, initialState)
-  const [client, setClient] = useState()
-  const mountedRef = useRef(true)
-
+  const {
+    authClient,
+    setAuthClient,
+    isAuthenticated,
+    setIsAuthenticated,
+    isLoggedIn,
+    login,
+    logout,
+    actor,
+    principal,
+  } = useAuthClient()
+  //   const identity = authClient.getIdentity()
+  //   const principal = identity.getPrincipal().toString()
   useEffect(() => {
-    const initAuth = async () => {
-      console.log("auth is init")
-      const client = await AuthClient.create()
-      const isAuthenticated = await client.isAuthenticated()
-
-      dispatch({ type: "SET_CLIENT", payload: client })
-      setClient(client)
-      console.log("auth client", client)
-      if (isAuthenticated) {
-        console.log("auth is authenticated")
-        const identity = client.getIdentity()
-        const principal = identity.getPrincipal().toString()
-        dispatch({ type: "SET_AUTHENTICATION", payload: true })
-        dispatch({ type: "SET_SIGNED", payload: true })
-        dispatch({ type: "SET_PRINCIPAL", payload: principal })
-        dispatch({ type: "SET_IDENTITY", payload: identity })
-        dispatch({ type: "SET_CLIENT", payload: client })
-      }
+    if (actor) {
+      console.log("we have actor", actor)
+    } else {
+      console.log("we dont have actor")
     }
-    initAuth()
-    return () => {
-      mountedRef.current = false
-    }
-  }, [])
-
-  const signIn = async () => {
-    const { identity, principal } = await new Promise((resolve, reject) => {
-      client.login({
-        identityProvider: "https://identity.ic0.app",
-        onSuccess: () => {
-          const identity = client.getIdentity()
-          const principal = identity.getPrincipal().toString()
-          dispatch({ type: "SET_AUTHENTICATION", payload: true })
-          dispatch({ type: "SET_SIGNED", payload: true })
-          dispatch({ type: "SET_PRINCIPAL", payload: principal })
-          dispatch({ type: "SET_IDENTITY", payload: identity })
-          dispatch({ type: "SET_CLIENT", payload: client })
-          resolve({ identity, principal })
-        },
-        onError: reject,
-      })
-    })
-  }
-
-  const signOut = async () => {
-    await client.logout()
-
-    dispatch({ type: "SET_AUTHENTICATION", payload: false })
-    dispatch({ type: "SET_SIGNED", payload: false })
-    dispatch({ type: "SET_PRINCIPAL", payload: "" })
-    dispatch({ type: "SET_IDENTITY", payload: "" })
-    // dispatch({ type: "SET_CLIENT", payload: null })
-  }
-
+  }, [actor])
+  if (!authClient) return null
   return (
     <AuthContext.Provider
       value={{
-        ...state,
-        signIn,
-        signOut,
+        authClient,
+        setAuthClient,
+        isAuthenticated,
+        setIsAuthenticated,
+        isLoggedIn,
+        login,
+        logout,
+        actor,
+        principal,
       }}
     >
       {children}

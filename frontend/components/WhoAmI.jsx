@@ -8,10 +8,14 @@ import {
 } from "@mui/material"
 import InfoIcon from "@mui/icons-material/InfoRounded"
 import { crowdsale } from "canisters/crowdsale"
+import { useAuthClient } from "../hooks/useAuthClient"
 
 function WhoAmI() {
+  const { authClient, actor } = useAuthClient()
+  console.log("who am i client", authClient, actor)
   const showInfo = useCallback(async () => {
-    let response = await crowdsale.whoamiText()
+    // let response = await crowdsale.whoamiText()
+    let response = await actor.whoamiText()
     console.log("whoami", response)
   })
   return (

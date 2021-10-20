@@ -2,13 +2,13 @@ import React, { useContext, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { AuthContext } from "../../context/AuthContext"
 import { Box, Typography } from "@mui/material"
-import useAuth from "../../hooks/useAuth"
+import { useAuthClient } from "../../hooks/useAuthClient"
 
 function SigninPageView() {
-  const { isAuthenticated } = useAuth()
+  const { isLoggedIn } = useAuthClient()
   const navigate = useNavigate()
   const redirectIfNotAuth = async () => {
-    if (isAuthenticated) {
+    if (isLoggedIn) {
       // Redirect home
       setTimeout(() => {
         navigate(`/`)
@@ -18,7 +18,7 @@ function SigninPageView() {
   useEffect(() => {
     redirectIfNotAuth()
     return () => {}
-  }, [isAuthenticated])
+  }, [isLoggedIn])
   return (
     <Box
       margin="3rem 0 0 0"
