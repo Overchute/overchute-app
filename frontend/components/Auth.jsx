@@ -17,24 +17,26 @@ import InfinityIcon from "@mui/icons-material/AllInclusiveOutlined"
 import ExitIcon from "@mui/icons-material/ExitToAppOutlined"
 import InfoIcon from "@mui/icons-material/InfoOutlined"
 import IconButton from "@mui/material/IconButton"
-import { useAuthClient } from "../hooks/useAuthClient"
+// import { useAuthClient } from "../hooks/useAuthClient"
+import useAuth from "../hooks/useAuth"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
 function Auth() {
-  const {
-    authClient,
-    setAuthClient,
-    isAuthenticated,
-    setIsAuthenticated,
-    isLoggedIn,
-    login,
-    logout,
-    actor,
-    principal,
-  } = useAuthClient()
+  // const {
+  //   authClient,
+  //   setAuthClient,
+  //   isAuthenticated,
+  //   setIsAuthenticated,
+  //   isLoggedIn,
+  //   login,
+  //   logout,
+  //   actor,
+  //   principal,
+  // } = useAuthClient()
+  const { authClient, principal, actor, isLoggedIn, login, logout } = useAuth()
 
   const [open, setOpen] = React.useState(false)
 
@@ -50,8 +52,8 @@ function Auth() {
     "auth widget",
     // authClient,
     // setAuthClient,
-    isAuthenticated,
-    isLoggedIn,
+    // isAuthenticated,
+    // isLoggedIn,
     // setIsAuthenticated,
     // login,
     // logout,

@@ -2,11 +2,23 @@ import React, { useContext } from "react"
 
 import { Box, Typography, Button } from "@mui/material"
 import LogoName from "../../assets/LogoName"
-import CreatorsContributorsScene from "../../assets/creators_contributors_scene.svg"
+
 import AddBoxIcon from "@mui/icons-material/AddBoxRounded"
 import { Link } from "react-router-dom"
+import useAuth from "../../hooks/useAuth"
+import { crowdsale } from "canisters/crowdsale"
 
 function HomePageView() {
+  const { authClient, principal, actor } = useAuth()
+  console.log(
+    "home",
+    authClient,
+    principal,
+    "actor :",
+    actor,
+    "crowdsale:",
+    crowdsale,
+  )
   return (
     <Box
       margin="3rem 0 0 0"

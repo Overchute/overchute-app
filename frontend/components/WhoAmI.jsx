@@ -7,16 +7,20 @@ import {
   ListItemText,
 } from "@mui/material"
 import InfoIcon from "@mui/icons-material/InfoRounded"
-import { crowdsale } from "canisters/crowdsale"
-import { useAuthClient } from "../hooks/useAuthClient"
+// import { actor } from "canisters/crowdsale"
+import useAuth from "../hooks/useAuth"
+// import { useAuthClient } from "../hooks/useAuthClient"
 
 function WhoAmI() {
-  const { authClient, actor } = useAuthClient()
-  console.log("who am i client", authClient, actor)
+  // const { authClient, actor } = useAuthClient()
+  const { authClient, actor } = useAuth()
+  // console.log("who am i client", authClient, actor)
   const showInfo = useCallback(async () => {
     // let response = await crowdsale.whoamiText()
-    let response = await actor.whoamiText()
-    console.log("whoami", response)
+    // let response = await actor.whoamiText()
+    // console.log("whoami actor", response)
+    let res = await actor.whoamiText()
+    console.log("whoami crowdsale", res)
   })
   return (
     <>
