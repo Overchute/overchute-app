@@ -9,7 +9,7 @@ import {
 import InfoIcon from "@mui/icons-material/InfoRounded"
 // import { actor } from "canisters/crowdsale"
 import useAuth from "../hooks/useAuth"
-import { crodwsaleLocal } from "../agent"
+import { crowdsaleLocal } from "../agent"
 // import { useAuthClient } from "../hooks/useAuthClient"
 
 function WhoAmI() {

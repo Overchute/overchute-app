@@ -1,15 +1,10 @@
 import { useEffect } from "react"
+
 import { createActor, canisterId } from "canisters/crowdsale"
 import useAuth from "./hooks/useAuth"
 
-function getActorIdentity() {
-  const { identity, isAuthenticated } = useAuth()
-
-  return "dgdfsgd68007"
-}
-
-const crodwsaleLocal = createActor(canisterId, {
-  agentOptions: { identity: getActorIdentity() },
+const crowdsaleLocal = createActor(canisterId, {
+  agentOptions: {},
 })
 
-export { crodwsaleLocal }
+export { crowdsaleLocal }
