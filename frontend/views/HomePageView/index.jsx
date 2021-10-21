@@ -7,6 +7,7 @@ import AddBoxIcon from "@mui/icons-material/AddBoxRounded"
 import { Link } from "react-router-dom"
 import useAuth from "../../hooks/useAuth"
 import { crowdsale } from "canisters/crowdsale"
+import { crodwsaleLocal } from "../../agent"
 
 function HomePageView() {
   const { authClient, principal, actor } = useAuth()
@@ -18,6 +19,8 @@ function HomePageView() {
     actor,
     "crowdsale:",
     crowdsale,
+    "local",
+    crodwsaleLocal,
   )
   return (
     <Box
