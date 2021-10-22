@@ -9,7 +9,7 @@ import {
 import InfoIcon from "@mui/icons-material/InfoRounded"
 // import { actor } from "canisters/crowdsale"
 import useAuth from "../hooks/useAuth"
-import CrowdsaleLocal from "../agent"
+import { crowdsaleLocal } from "../agent"
 // import { useAuthClient } from "../hooks/useAuthClient"
 
 function WhoAmI() {
@@ -20,8 +20,8 @@ function WhoAmI() {
     // let response = await crowdsale.whoamiText()
     // let response = await actor.whoamiText()
     // console.log("whoami actor", response)
-    let res = await CrowdsaleLocal.whoamiText()
-    console.log("whoami crowdsale", res)
+    let res = await crowdsaleLocal.whoamiText()
+    // console.log("whoami crowdsale", res)
   })
   return (
     <>
