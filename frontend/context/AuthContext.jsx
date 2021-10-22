@@ -8,6 +8,7 @@ import React, {
 } from "react"
 import AuthReducer from "../reducer/AuthReducer"
 import { AuthClient } from "@dfinity/auth-client"
+import { actorController } from "../agent"
 import { createActor, canisterId } from "canisters/crowdsale"
 
 const initialState = {
@@ -39,6 +40,7 @@ function AuthProvider({ children }) {
         const identity = localClient.getIdentity()
         const principalId = identity.getPrincipal().toString()
         initActor(identity)
+        actorController.authenticateActor(identity)
         dispatch({ type: "SET_AUTHENTICATION", payload: true })
         dispatch({ type: "SET_IDENTITY", payload: identity })
         dispatch({ type: "SET_PRINCIPAL", payload: principalId })
