@@ -4,10 +4,6 @@
       "main": "crowdsale-canister/main.mo",
       "type": "motoko"
     },
-    "minter": {
-      "main": "crowdsale-canister/minter.mo",
-      "type": "motoko"
-    },
     "assets": {
       "dependencies": [
         "crowdsale"
