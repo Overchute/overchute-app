@@ -1,103 +1,106 @@
 import React, {
-  useReducer,
-  useContext,
   createContext,
+  useContext,
+  useReducer,
   useEffect,
-  useState,
   useRef,
+  useState,
 } from "react"
-import { AuthClient } from "@dfinity/auth-client"
-// import { createActor, canisterId } from "canisters/crowdsale"
-
-// const crowdsale = createActor(canisterId, {
-//   agentOptions: { identity: identity },
-// })
-
-// export { crowdsale }
-
 import AuthReducer from "../reducer/AuthReducer"
+import { AuthClient } from "@dfinity/auth-client"
+import { actorController } from "../agent"
+import { createActor, canisterId } from "canisters/crowdsale"
 
 const initialState = {
+  authClient: undefined,
+  setAuthClient: false,
   isAuthenticated: false,
-  signedIn: false,
-  principal: "",
-  identity: "",
-  client: null,
+  setIsAuthenticated: false,
+  isLoggedIn: false,
+  identity: undefined,
+  actor: undefined,
+  principal: undefined,
 }
 
 const AuthContext = createContext({
   ...initialState,
-  singIn: () => Promise.resolve(),
-  signOut: () => Promise.resolve(),
+  login: () => Promise.resolve(),
+  logout: () => Promise.resolve(),
 })
 
 function AuthProvider({ children }) {
-  // const initialState = useContext(AuthContext)
   const [state, dispatch] = useReducer(AuthReducer, initialState)
-  const [client, setClient] = useState()
+  const [localClient, setLocalClient] = useState(undefined)
+  const [isAuth, setIsAuth] = useState(false)
   const mountedRef = useRef(true)
-
-  useEffect(() => {
-    const initAuth = async () => {
-      console.log("auth is init")
-      const client = await AuthClient.create()
-      const isAuthenticated = await client.isAuthenticated()
-
-      dispatch({ type: "SET_CLIENT", payload: client })
-      setClient(client)
-      console.log("auth client", client)
-      if (isAuthenticated) {
-        console.log("auth is authenticated")
-        const identity = client.getIdentity()
-        const principal = identity.getPrincipal().toString()
+  const login = () => {
+    localClient.login({
+      identityProvider: "https://identity.ic0.app",
+      onSuccess: () => {
+        const identity = localClient.getIdentity()
+        const principalId = identity.getPrincipal().toString()
+        initActor(identity)
+        actorController.authenticateActor(identity)
         dispatch({ type: "SET_AUTHENTICATION", payload: true })
-        dispatch({ type: "SET_SIGNED", payload: true })
-        dispatch({ type: "SET_PRINCIPAL", payload: principal })
         dispatch({ type: "SET_IDENTITY", payload: identity })
-        dispatch({ type: "SET_CLIENT", payload: client })
-      }
-    }
-    initAuth()
-    return () => {
-      mountedRef.current = false
-    }
-  }, [])
-
-  const signIn = async () => {
-    const { identity, principal } = await new Promise((resolve, reject) => {
-      client.login({
-        identityProvider: "https://identity.ic0.app",
-        onSuccess: () => {
-          const identity = client.getIdentity()
-          const principal = identity.getPrincipal().toString()
-          dispatch({ type: "SET_AUTHENTICATION", payload: true })
-          dispatch({ type: "SET_SIGNED", payload: true })
-          dispatch({ type: "SET_PRINCIPAL", payload: principal })
-          dispatch({ type: "SET_IDENTITY", payload: identity })
-          dispatch({ type: "SET_CLIENT", payload: client })
-          resolve({ identity, principal })
-        },
-        onError: reject,
-      })
+        dispatch({ type: "SET_PRINCIPAL", payload: principalId })
+        dispatch({ type: "SET_IS_LOGGED_IN", payload: true })
+        // setIsAuth(true)
+        // setPrincipal(principalId)
+        // setIsLoggedIn(true)
+      },
     })
   }
 
-  const signOut = async () => {
-    await client.logout()
+  const initActor = (id) => {
+    // console.log("init actor", id)
+    const actor = createActor(canisterId, {
+      agentOptions: {
+        identity: id,
+      },
+    })
+    dispatch({ type: "SET_ACTOR", payload: actor })
+    // setActor(actor)
+  }
 
+  const logout = async () => {
+    // clear() // this could be used for local storage
+    await localClient.logout()
     dispatch({ type: "SET_AUTHENTICATION", payload: false })
-    dispatch({ type: "SET_SIGNED", payload: false })
+    dispatch({ type: "SET_IS_LOGGED_IN", payload: false })
     dispatch({ type: "SET_PRINCIPAL", payload: "" })
     dispatch({ type: "SET_IDENTITY", payload: "" })
-    // dispatch({ type: "SET_CLIENT", payload: null })
+    // setIsAuthenticated(false)
+    // setActor(undefined)
+    // setPrincipal(undefined)
   }
+
+  useEffect(() => {
+    AuthClient.create().then(async (client) => {
+      const isAuthenticated = await client.isAuthenticated()
+      // dispatch({ type: "SET_AUTHENTICATION", payload: true })
+      const identity = client.getIdentity()
+      const principal = identity.getPrincipal().toString()
+      dispatch({ type: "SET_AUTH_CLIENT", payload: client })
+      dispatch({ type: "SET_IDENTITY", payload: identity })
+      dispatch({ type: "SET_PRINCIPAL", payload: principal })
+      initActor(identity)
+      setLocalClient(client)
+      console.log("auth client", client, identity, principal)
+      // setAuthClient(client)
+      // setIsAuthenticated(true)
+    })
+  }, [])
+  // useEffect(() => {
+  //   if (isAuthenticated) initActor()
+  // }, [isAuthenticated])
 
   return (
     <AuthContext.Provider
       value={{
         ...state,
-        signIn,
-        signOut,
+        login,
+        logout,
       }}
     >
       {children}

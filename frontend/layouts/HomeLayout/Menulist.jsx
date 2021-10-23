@@ -17,7 +17,7 @@ import SearchIcon from "@mui/icons-material/SearchRounded"
 
 import useSite from "../../hooks/useSite"
 import WhoAmI from "../../components/WhoAmI"
-import { Auth } from "../../components/Auth"
+// import { Auth } from "../../components/Auth"
 
 const Items = [
   {

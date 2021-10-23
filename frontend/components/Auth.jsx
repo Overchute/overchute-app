@@ -17,6 +17,7 @@ import InfinityIcon from "@mui/icons-material/AllInclusiveOutlined"
 import ExitIcon from "@mui/icons-material/ExitToAppOutlined"
 import InfoIcon from "@mui/icons-material/InfoOutlined"
 import IconButton from "@mui/material/IconButton"
+// import { useAuthClient } from "../hooks/useAuthClient"
 import useAuth from "../hooks/useAuth"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -24,15 +25,18 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 })
 
 function Auth() {
-  const {
-    isAuthenticated,
-    signedIn,
-    principal,
-    identity,
-    client,
-    signIn,
-    signOut,
-  } = useAuth()
+  // const {
+  //   authClient,
+  //   setAuthClient,
+  //   isAuthenticated,
+  //   setIsAuthenticated,
+  //   isLoggedIn,
+  //   login,
+  //   logout,
+  //   actor,
+  //   principal,
+  // } = useAuthClient()
+  const { authClient, principal, actor, isLoggedIn, login, logout } = useAuth()
 
   const [open, setOpen] = React.useState(false)
 
@@ -46,25 +50,29 @@ function Auth() {
 
   console.log(
     "auth widget",
-    isAuthenticated,
-    signedIn,
+    // authClient,
+    // setAuthClient,
+    // isAuthenticated,
+    // isLoggedIn,
+    // setIsAuthenticated,
+    // login,
+    // logout,
+    // actor,
     principal,
-    identity,
-    client,
   )
   return (
     <Box>
-      {!signedIn && client ? (
+      {!isLoggedIn && authClient ? (
         <Button
           variant="outlined"
           size="medium"
           endIcon={<InfinityIcon />}
-          onClick={signIn}
+          onClick={login}
         >
           Sign in
         </Button>
       ) : null}
-      {signedIn ? (
+      {isLoggedIn ? (
         <Box>
           <Hidden lgDown>
             <Typography
@@ -85,7 +93,7 @@ function Auth() {
               color="neutral"
               size="medium"
               endIcon={<ExitIcon />}
-              onClick={signOut}
+              onClick={logout}
             >
               Sign out
             </Button>
@@ -117,7 +125,7 @@ function Auth() {
                   size="medium"
                   endIcon={<ExitIcon />}
                   onClick={() => {
-                    signOut()
+                    logout()
                     handleClose()
                   }}
                 >
