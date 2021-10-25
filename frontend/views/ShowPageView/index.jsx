@@ -37,7 +37,7 @@ function ShowPageView() {
     <>
       {data.length > 0 && data[0] !== "none" && (
         <Box
-          margin="3rem 0 0 0"
+          margin="1rem 0 0 0"
           display="flex"
           flexDirection="column"
           alignItems="center"

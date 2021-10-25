@@ -27,7 +27,7 @@ function SigninPageView() {
       alignItems="center"
     >
       <Typography variant="h2" style={{ margin: "1rem 0" }}>
-        Uh Oh...
+        Uh oh...
       </Typography>
       <Typography variant="h6" style={{ margin: "2rem 0" }}>
         Looks like you need to sign in

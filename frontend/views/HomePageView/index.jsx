@@ -14,25 +14,32 @@ function HomePageView() {
   console.log("home", "actor :", actor)
   return (
     <Box
-      margin="3rem 0 0 0"
+      margin="1rem 0 0 0"
       display="flex"
       flexDirection="column"
       alignItems="center"
     >
       <Box
-        style={{ display: "block", margin: "3rem 0", width: "65%" }}
+        style={{
+          display: "block",
+          margin: "3rem 0",
+        }}
+        width={{ xs: "95%", sm: "85%", md: "65%", lg: "65%", xl: "65%" }}
         alt="scene"
       >
         <img src={imgScene} width="100%" />
       </Box>
-      <Box maxWidth="50%" style={{ textAlign: "center" }}>
+      <Box
+        maxWidth={{ xs: "95%", sm: "85%", md: "65%", lg: "55%", xl: "55%" }}
+        style={{ textAlign: "center" }}
+      >
         <Typography variant="h5" gutterBottom style={{ margin: "2rem 0" }}>
           A decentralized smart-contract application for crowdfunding the
           release of intellectual property under open licences.
         </Typography>
       </Box>
 
-      <Box margin="4rem 0">
+      <Box margin="2rem 0">
         <Button
           component={Link}
           to="/crowdsale/create"
@@ -45,7 +52,7 @@ function HomePageView() {
           <Typography variant="h5">Create a crowdsale</Typography>
         </Button>
       </Box>
-      {/* <Box height="500px"></Box> */}
+      <Box height="500px"></Box>
     </Box>
   )
 }
