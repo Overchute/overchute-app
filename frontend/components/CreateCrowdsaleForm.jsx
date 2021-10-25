@@ -7,11 +7,12 @@ import { TextField, Button, Box, Typography } from "@mui/material"
 import { makeStyles } from "@mui/styles"
 import SendIcon from "@mui/icons-material/SendRounded"
 import LoadingScreen from "./LoadingScreen"
-import { crowdsale } from "canisters/crowdsale"
+// import { crowdsale } from "canisters/crowdsale"
 import AdapterDateFns from "@mui/lab/AdapterDateFns"
 import LocalizationProvider from "@mui/lab/LocalizationProvider"
 import DatePicker from "@mui/lab/DatePicker"
 import DateNotice from "./DateNotice"
+import useAuth from "../hooks/useAuth"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +30,7 @@ let validationSchema = yup.object().shape({
 
 function CreateCrowdsaleForm() {
   const classes = useStyles()
+  const { actor } = useAuth()
   const navigate = useNavigate()
   const [isDisabled, setIsDisabled] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
@@ -42,7 +44,7 @@ function CreateCrowdsaleForm() {
     setIsDisabled(true)
 
     console.log(offer, deadline)
-    let response = await crowdsale.createCrowdsale({
+    let response = await actor.createCrowdsale({
       offerPrice: offer,
       deadline: deadline,
     })
@@ -54,7 +56,7 @@ function CreateCrowdsaleForm() {
       navigate(`/show/${csId}`)
     }, 5000)
   })
-  console.log("from create", crowdsale)
+  // console.log("from create", crowdsale)
   return (
     <Formik
       initialValues={initialValues}

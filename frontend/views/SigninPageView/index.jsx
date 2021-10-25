@@ -1,13 +1,11 @@
-import React, { useContext, useEffect } from "react"
+import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { AuthContext } from "../../context/AuthContext"
 import { Box, Typography } from "@mui/material"
-// import { useAuthClient } from "../../hooks/useAuthClient"
 import useAuth from "../../hooks/useAuth"
 
 function SigninPageView() {
   const { isLoggedIn } = useAuth()
-  // let isLoggedIn = false
+
   const navigate = useNavigate()
   const redirectIfNotAuth = async () => {
     if (isLoggedIn) {

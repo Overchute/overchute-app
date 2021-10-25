@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 
 function SearchCrowdsale() {
   const classes = useStyles()
-  console.log("classes", classes)
+  // console.log("classes", classes)
   const navigate = useNavigate()
   const [query, setQuery] = React.useState("")
 

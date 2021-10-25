@@ -2,14 +2,16 @@ import React, { useEffect, useCallback } from "react"
 import { Link } from "react-router-dom"
 import { Box, Typography, Button, Paper } from "@mui/material"
 import LoadingScreen from "../../components/LoadingScreen"
-import { crowdsale } from "canisters/crowdsale"
+// import { crowdsale } from "canisters/crowdsale"
+import useAuth from "../../hooks/useAuth"
 
 function ListPageView() {
+  const { actor } = useAuth()
   const [data, setData] = React.useState([])
   const [isDisabled, setIsDisabled] = React.useState(false)
   const handleListAllCrodwsales = useCallback(async () => {
     setIsDisabled(true)
-    let res = await crowdsale.getAllCrowdsales()
+    let res = await actor.getAllCrowdsales()
     res.length > 0 ? setData(res) : setData(["none"])
 
     console.log(res)

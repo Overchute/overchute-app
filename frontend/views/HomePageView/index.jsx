@@ -6,22 +6,12 @@ import LogoName from "../../assets/LogoName"
 import AddBoxIcon from "@mui/icons-material/AddBoxRounded"
 import { Link } from "react-router-dom"
 import useAuth from "../../hooks/useAuth"
-import { crowdsale } from "canisters/crowdsale"
-import { actorController } from "../../agent"
+// import { crowdsale } from "canisters/crowdsale"
+import imgScene from "../../assets/creators_contributors_scene.svg"
 
 function HomePageView() {
-  const { authClient, principal, actor } = useAuth()
-  console.log(
-    "home",
-    authClient,
-    principal,
-    "actor :",
-    actor,
-    "crowdsale:",
-    crowdsale,
-    "local",
-    actorController.actor,
-  )
+  const { actor } = useAuth()
+  console.log("home", "actor :", actor)
   return (
     <Box
       margin="3rem 0 0 0"
@@ -33,10 +23,7 @@ function HomePageView() {
         style={{ display: "block", margin: "3rem 0", width: "65%" }}
         alt="scene"
       >
-        <img
-          src="/frontend/assets/creators_contributors_scene.svg"
-          width="100%"
-        />
+        <img src={imgScene} width="100%" />
       </Box>
       <Box maxWidth="50%" style={{ textAlign: "center" }}>
         <Typography variant="h5" gutterBottom style={{ margin: "2rem 0" }}>
@@ -58,7 +45,7 @@ function HomePageView() {
           <Typography variant="h5">Create a crowdsale</Typography>
         </Button>
       </Box>
-      <Box height="500px"></Box>
+      {/* <Box height="500px"></Box> */}
     </Box>
   )
 }

@@ -17,7 +17,6 @@ import InfinityIcon from "@mui/icons-material/AllInclusiveOutlined"
 import ExitIcon from "@mui/icons-material/ExitToAppOutlined"
 import InfoIcon from "@mui/icons-material/InfoOutlined"
 import IconButton from "@mui/material/IconButton"
-// import { useAuthClient } from "../hooks/useAuthClient"
 import useAuth from "../hooks/useAuth"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -25,17 +24,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 })
 
 function Auth() {
-  // const {
-  //   authClient,
-  //   setAuthClient,
-  //   isAuthenticated,
-  //   setIsAuthenticated,
-  //   isLoggedIn,
-  //   login,
-  //   logout,
-  //   actor,
-  //   principal,
-  // } = useAuthClient()
   const { authClient, principal, actor, isLoggedIn, login, logout } = useAuth()
 
   const [open, setOpen] = React.useState(false)
@@ -48,18 +36,6 @@ function Auth() {
     setOpen(false)
   }
 
-  console.log(
-    "auth widget",
-    // authClient,
-    // setAuthClient,
-    // isAuthenticated,
-    // isLoggedIn,
-    // setIsAuthenticated,
-    // login,
-    // logout,
-    // actor,
-    principal,
-  )
   return (
     <Box>
       {!isLoggedIn && authClient ? (
@@ -90,7 +66,6 @@ function Auth() {
 
             <Button
               variant="outlined"
-              color="neutral"
               size="medium"
               endIcon={<ExitIcon />}
               onClick={logout}
@@ -121,7 +96,7 @@ function Auth() {
               <DialogActions>
                 <Button
                   variant="outlined"
-                  color="primary"
+                  // color="primary"
                   size="medium"
                   endIcon={<ExitIcon />}
                   onClick={() => {

@@ -2,10 +2,12 @@ import React, { useCallback, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { Box, Typography } from "@mui/material"
 import LoadingScreen from "../../components/LoadingScreen"
-import { crowdsale } from "canisters/crowdsale"
+// import { crowdsale } from "canisters/crowdsale"
+import useAuth from "../../hooks/useAuth"
 
 function DeletePageView() {
   let params = useParams()
+  const { actor } = useAuth()
   const navigate = useNavigate()
   // console.log("params", params)
   let crowdsaleId = params.id
@@ -14,7 +16,7 @@ function DeletePageView() {
 
   const handleDeleteCrowdsale = useCallback(async (crowdsaleId) => {
     console.log("delete now", crowdsaleId)
-    let response = await crowdsale.delete(crowdsaleId)
+    let response = await actor.delete(crowdsaleId)
     console.log("delete res", response)
     setSuccess(true)
     // delay for user to read message

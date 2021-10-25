@@ -7,11 +7,12 @@ import NoCrowdsaleFound from "../../components/NoCrowdsaleFound"
 import DeleteCrowdsale from "../../components/DeleteCrowdsale"
 import ContributeIcon from "@mui/icons-material/AddBoxOutlined"
 import EditIcon from "@mui/icons-material/ModeEditOutlineRounded"
-import { crowdsale } from "canisters/crowdsale"
+// import { crowdsale } from "canisters/crowdsale"
+import useAuth from "../../hooks/useAuth"
 
 function ShowPageView() {
   let params = useParams()
-
+  const { actor } = useAuth()
   let crowdsaleId = params.id
   // console.log("show csi", crowdsaleId)
   const [data, setData] = React.useState([])
@@ -19,7 +20,7 @@ function ShowPageView() {
   const [isDisabled, setIsDisabled] = React.useState(false)
 
   const getCrowdsaleById = useCallback(async (crowdsaleId) => {
-    let response = await crowdsale.getCrowdsale(crowdsaleId)
+    let response = await actor.getCrowdsale(crowdsaleId)
     console.log("show response", response)
     response.ok !== undefined ? setData([response.ok]) : setData(["none"])
     // setData(response)
