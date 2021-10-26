@@ -27,7 +27,7 @@ function ShowPageView() {
       "actor principal",
       principal,
       "creator",
-      data[0].creator,
+      response.ok.creator,
     )
     response.ok !== undefined ? setData([response.ok]) : setData(["none"])
     // setData(response)
