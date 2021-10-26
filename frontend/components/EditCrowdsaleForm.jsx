@@ -60,28 +60,28 @@ function EditCrowsaleForm({ data, id }) {
       offerPrice: offer,
       deadline: deadline,
     })
-    console.log("update res", response)
+    // console.log("update res", response)
     let csId = response.ok
     setSuccess(true)
     setTimeout(() => {
       navigate(`/show/${id}`)
     }, 5000)
   })
-  console.log("edit view", initialValues)
+  // console.log("edit view", initialValues)
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(values, actions, formikBag, FormikBag) => {
         // Validate if values are the same as before
-        console.log("actions", values)
+        // console.log("actions", values)
 
         if (
           initialValues.offer === values.offer &&
           initialValues.deadline === values.deadline
         ) {
           setMsg("You need to change at least one field")
-          console.log("both are the same")
+          // console.log("both are the same")
         } else {
           // if (initialValues.offer !== values.offer) {
           //   console.log(
@@ -90,7 +90,7 @@ function EditCrowsaleForm({ data, id }) {
           // }
           let nanos = convertToNanoseconds(values.deadline)
           handleUpdateCrodwsale(id, parseFloat(values.offer), nanos)
-          console.log("At least one field is changed. Let's go")
+          // console.log("At least one field is changed. Let's go")
         }
       }}
     >

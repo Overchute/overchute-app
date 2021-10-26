@@ -21,15 +21,16 @@ function ShowPageView() {
 
   const getCrowdsaleById = useCallback(async (crowdsaleId) => {
     let response = await actor.getCrowdsale(crowdsaleId)
-    console.log(
-      "show response",
-      response,
-      "actor principal",
-      principal,
-      "creator",
-      response.ok.identity,
-    )
     response.ok !== undefined ? setData([response.ok]) : setData(["none"])
+    // console.log(
+    //   "show response",
+    //   response,
+    //   "actor principal",
+    //   principal,
+    //   "creator",
+    //   response.ok.identity,
+    // )
+
     // setData(response)
     // console.log(response)
   })

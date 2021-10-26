@@ -11,7 +11,7 @@ import imgScene from "../../assets/creators_contributors_scene.svg"
 
 function HomePageView() {
   const { actor, principal } = useAuth()
-  console.log("home", "actor :", actor, "principal :", principal)
+  // console.log("home", "actor :", actor, "principal :", principal)
   return (
     <Box
       margin="1rem 0 0 0"

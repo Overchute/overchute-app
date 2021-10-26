@@ -4,7 +4,7 @@ import useAuth from "../../hooks/useAuth"
 
 function AuthGuard({ children }) {
   const { isLoggedIn } = useAuth()
-  console.log("auth guard", isLoggedIn)
+  // console.log("auth guard", isLoggedIn)
   return (
     <>
       {isLoggedIn && <>{children}</>}

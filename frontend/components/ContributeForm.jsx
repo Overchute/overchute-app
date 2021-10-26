@@ -38,7 +38,7 @@ function ContributeForm() {
     async (crodwsaleId, contribution) => {
       setIsDisabled(true)
       let response = await actor.makeContribution(crowdsaleId, contribution)
-      console.log("create res", response)
+      // console.log("create res", response)
       let csId = response.ok
       setSuccess(true)
       // delay for user to read message
@@ -52,8 +52,7 @@ function ContributeForm() {
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(values) => {
-        console.log("sumbit raw", parseInt(values.contribution))
-
+        // console.log("sumbit raw", parseInt(values.contribution))
         handleMakeContribution(crowdsaleId, parseFloat(values.contribution))
       }}
     >

@@ -48,7 +48,7 @@ function CreateCrowdsaleForm() {
       offerPrice: offer,
       deadline: deadline,
     })
-    console.log("create res", response)
+    // console.log("create res", response)
     let csId = response.ok
     setSuccess(true)
     // delay for user to read message

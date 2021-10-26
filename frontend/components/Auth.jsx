@@ -35,6 +35,7 @@ function Auth() {
 
   const handleClose = () => {
     setOpen(false)
+    navigate(`/`)
   }
 
   return (
@@ -69,7 +70,10 @@ function Auth() {
               variant="outlined"
               size="medium"
               endIcon={<ExitIcon />}
-              onClick={logout}
+              onClick={() => {
+                logout()
+                navigate(`/`)
+              }}
             >
               Sign out
             </Button>
@@ -103,7 +107,6 @@ function Auth() {
                   onClick={() => {
                     logout()
                     handleClose()
-                    navigate(`/`)
                   }}
                 >
                   Sign out

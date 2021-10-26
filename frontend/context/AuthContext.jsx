@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useReducer,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import React, { createContext, useReducer, useEffect, useState } from "react"
 import AuthReducer from "../reducer/AuthReducer"
 import { AuthClient } from "@dfinity/auth-client"
 // import { actorController } from "../agent"
@@ -31,8 +24,8 @@ const AuthContext = createContext({
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(AuthReducer, initialState)
   const [localClient, setLocalClient] = useState(undefined)
-  const [isAuth, setIsAuth] = useState(false)
-  const mountedRef = useRef(true)
+  // const [isAuth, setIsAuth] = useState(false)
+  // const mountedRef = useRef(true)
   const login = () => {
     localClient.login({
       identityProvider: "https://identity.ic0.app",
@@ -87,7 +80,7 @@ function AuthProvider({ children }) {
       dispatch({ type: "SET_PRINCIPAL", payload: principal })
       initActor(identity)
       setLocalClient(client)
-      console.log("auth client", client, identity, principal)
+      // console.log("auth client", client, identity, principal)
       // setAuthClient(client)
       // setIsAuthenticated(true)
     })

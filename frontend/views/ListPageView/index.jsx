@@ -21,7 +21,7 @@ function ListPageView() {
     handleListAllCrodwsales()
     return () => {}
   }, [])
-  console.log("data at list crowdsales", data, data.length)
+  // console.log("data at list crowdsales", data, data.length)
   return (
     <Box
       margin="1rem 0 0 0"

@@ -10,7 +10,7 @@ function MobileDrawer() {
     onDrawerMode(true)
   }
   const onClickClose = () => {
-    console.log("clicked")
+    // console.log("clicked")
     onDrawerMode(false)
   }
   // console.log("drawer", drawerMode, onDrawerMode)
