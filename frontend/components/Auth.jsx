@@ -1,5 +1,5 @@
 import React from "react"
-
+import { useNavigate } from "react-router-dom"
 import {
   Box,
   Button,
@@ -24,6 +24,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 })
 
 function Auth() {
+  const navigate = useNavigate()
   const { authClient, principal, actor, isLoggedIn, login, logout } = useAuth()
 
   const [open, setOpen] = React.useState(false)
@@ -102,6 +103,7 @@ function Auth() {
                   onClick={() => {
                     logout()
                     handleClose()
+                    navigate(`/`)
                   }}
                 >
                   Sign out

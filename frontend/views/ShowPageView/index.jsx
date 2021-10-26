@@ -27,7 +27,7 @@ function ShowPageView() {
       "actor principal",
       principal,
       "creator",
-      data[0].creator,
+      response.ok.identity,
     )
     response.ok !== undefined ? setData([response.ok]) : setData(["none"])
     // setData(response)
@@ -69,24 +69,28 @@ function ShowPageView() {
               <Box padding="3rem">
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
-                    <DeleteCrowdsale crowdsaleId={crowdsaleId} />
+                    {data[0].identity === principal && (
+                      <DeleteCrowdsale crowdsaleId={crowdsaleId} />
+                    )}
                   </Grid>
                   <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
-                    <Button
-                      component={Link}
-                      to={`/crowdsale/edit/${crowdsaleId}/${data[0].offerPrice}/${data[0].deadline}`}
-                      variant="outlined"
-                      color="primary"
-                      size="large"
-                      startIcon={<EditIcon />}
-                      style={{
-                        padding: "1rem",
+                    {data[0].identity === principal && (
+                      <Button
+                        component={Link}
+                        to={`/crowdsale/edit/${crowdsaleId}/${data[0].offerPrice}/${data[0].deadline}`}
+                        variant="outlined"
+                        color="primary"
+                        size="large"
+                        startIcon={<EditIcon />}
+                        style={{
+                          padding: "1rem",
 
-                        minWidth: "128px",
-                      }}
-                    >
-                      edit
-                    </Button>
+                          minWidth: "128px",
+                        }}
+                      >
+                        edit
+                      </Button>
+                    )}
                   </Grid>
                   <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                     <Button
