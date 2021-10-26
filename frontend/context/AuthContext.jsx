@@ -36,6 +36,7 @@ function AuthProvider({ children }) {
   const login = () => {
     localClient.login({
       identityProvider: "https://identity.ic0.app",
+      // identityProvider: "http://localhost:8080",
       onSuccess: () => {
         const identity = localClient.getIdentity()
         const principalId = identity.getPrincipal().toString()

@@ -12,7 +12,7 @@ import useAuth from "../../hooks/useAuth"
 
 function ShowPageView() {
   let params = useParams()
-  const { actor } = useAuth()
+  const { actor, principal } = useAuth()
   let crowdsaleId = params.id
   // console.log("show csi", crowdsaleId)
   const [data, setData] = React.useState([])
@@ -21,7 +21,14 @@ function ShowPageView() {
 
   const getCrowdsaleById = useCallback(async (crowdsaleId) => {
     let response = await actor.getCrowdsale(crowdsaleId)
-    console.log("show response", response)
+    console.log(
+      "show response",
+      response,
+      "actor principal",
+      principal,
+      "creator",
+      data[0].creator,
+    )
     response.ok !== undefined ? setData([response.ok]) : setData(["none"])
     // setData(response)
     // console.log(response)
