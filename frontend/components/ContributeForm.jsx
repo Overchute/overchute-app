@@ -38,6 +38,7 @@ function ContributeForm() {
     async (crodwsaleId, contribution) => {
       setIsDisabled(true)
       let response = await actor.makeContribution(crowdsaleId, contribution)
+      // let response = await crowdsale.makeContribution(crowdsaleId, contribution)
       // console.log("create res", response)
       let csId = response.ok
       setSuccess(true)

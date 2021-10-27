@@ -7,12 +7,12 @@ import { TextField, Button, Box, Typography } from "@mui/material"
 import { makeStyles } from "@mui/styles"
 import SendIcon from "@mui/icons-material/SendRounded"
 import LoadingScreen from "./LoadingScreen"
-// import { crowdsale } from "canisters/crowdsale"
 import AdapterDateFns from "@mui/lab/AdapterDateFns"
 import LocalizationProvider from "@mui/lab/LocalizationProvider"
 import DatePicker from "@mui/lab/DatePicker"
 import DateNotice from "./DateNotice"
 import useAuth from "../hooks/useAuth"
+// import { crowdsale } from "canisters/crowdsale"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,6 +48,10 @@ function CreateCrowdsaleForm() {
       offerPrice: offer,
       deadline: deadline,
     })
+    // let response = await crowdsale.createCrowdsale({
+    //   offerPrice: offer,
+    //   deadline: deadline,
+    // })
     // console.log("create res", response)
     let csId = response.ok
     setSuccess(true)

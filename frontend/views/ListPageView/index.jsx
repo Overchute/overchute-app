@@ -12,6 +12,7 @@ function ListPageView() {
   const handleListAllCrodwsales = useCallback(async () => {
     setIsDisabled(true)
     let res = await actor.getAllCrowdsales()
+    // let res = await crowdsale.getAllCrowdsales()
     res.length > 0 ? setData(res) : setData(["none"])
 
     console.log(res)

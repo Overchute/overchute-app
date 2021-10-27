@@ -15,9 +15,10 @@ function DeletePageView() {
   const [success, setSuccess] = React.useState(false)
 
   const handleDeleteCrowdsale = useCallback(async (crowdsaleId) => {
-    console.log("delete now", crowdsaleId)
+    // console.log("delete now", crowdsaleId)
     let response = await actor.delete(crowdsaleId)
-    console.log("delete res", response)
+    // let response = await crowdsale.delete(crowdsaleId)
+    // console.log("delete res", response)
     setSuccess(true)
     // delay for user to read message
     setTimeout(() => {

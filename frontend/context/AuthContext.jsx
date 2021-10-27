@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useEffect, useState } from "react"
 import AuthReducer from "../reducer/AuthReducer"
 import { AuthClient } from "@dfinity/auth-client"
-// import { actorController } from "../agent"
+
 import { createActor, canisterId } from "canisters/crowdsale"
 
 const initialState = {
@@ -24,24 +24,21 @@ const AuthContext = createContext({
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(AuthReducer, initialState)
   const [localClient, setLocalClient] = useState(undefined)
-  // const [isAuth, setIsAuth] = useState(false)
-  // const mountedRef = useRef(true)
+
   const login = () => {
     localClient.login({
       identityProvider: "https://identity.ic0.app",
-      // identityProvider: "http://localhost:8080",
+      // identityProvider:
+      //   "http://localhost:8000/?canisterId=rwlgt-iiaaa-aaaaa-aaaaa-cai",
       onSuccess: () => {
         const identity = localClient.getIdentity()
         const principalId = identity.getPrincipal().toString()
         initActor(identity)
-        // actorController.authenticateActor(identity)
+
         dispatch({ type: "SET_AUTHENTICATION", payload: true })
         dispatch({ type: "SET_IDENTITY", payload: identity })
         dispatch({ type: "SET_PRINCIPAL", payload: principalId })
         dispatch({ type: "SET_IS_LOGGED_IN", payload: true })
-        // setIsAuth(true)
-        // setPrincipal(principalId)
-        // setIsLoggedIn(true)
       },
     })
   }
@@ -64,9 +61,6 @@ function AuthProvider({ children }) {
     dispatch({ type: "SET_IS_LOGGED_IN", payload: false })
     dispatch({ type: "SET_PRINCIPAL", payload: "" })
     dispatch({ type: "SET_IDENTITY", payload: "" })
-    // setIsAuthenticated(false)
-    // setActor(undefined)
-    // setPrincipal(undefined)
   }
 
   useEffect(() => {

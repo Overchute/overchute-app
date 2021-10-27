@@ -60,6 +60,11 @@ function EditCrowsaleForm({ data, id }) {
       offerPrice: offer,
       deadline: deadline,
     })
+    // let response = await crowdsale.update({
+    //   crowdsaleId: id,
+    //   offerPrice: offer,
+    //   deadline: deadline,
+    // })
     // console.log("update res", response)
     let csId = response.ok
     setSuccess(true)
