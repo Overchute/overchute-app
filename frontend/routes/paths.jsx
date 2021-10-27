@@ -25,5 +25,6 @@ export const PATH_APP = {
     create: path(ROOTS.app, "/create"),
     delete: path(ROOTS.app, "/delete/:id"),
     edit: path(ROOTS.app, "/edit/:id/:offer/:deadline"),
+    edit: path(ROOTS.app, "/my"),
   },
 }

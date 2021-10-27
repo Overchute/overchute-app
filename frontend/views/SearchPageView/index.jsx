@@ -6,7 +6,7 @@ import SearchCrowdsale from "../../components/SearchCrowdsale"
 function SearchPageView() {
   return (
     <Box
-      margin="3rem 0 0 0"
+      margin="1rem 0 0 0"
       display="flex"
       flexDirection="column"
       alignItems="center"

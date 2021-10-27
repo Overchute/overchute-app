@@ -14,6 +14,7 @@ import DarkIcon from "@mui/icons-material/Brightness4Rounded"
 import ListIcon from "@mui/icons-material/ListAltRounded"
 import AddBoxIcon from "@mui/icons-material/AddBoxRounded"
 import SearchIcon from "@mui/icons-material/SearchRounded"
+import InventoryIcon from "@mui/icons-material/Inventory2Rounded"
 
 import useSite from "../../hooks/useSite"
 import WhoAmI from "../../components/WhoAmI"
@@ -43,6 +44,13 @@ const Items = [
     title: "List",
     url: "/list",
     icon: <ListIcon />,
+  },
+  ,
+  {
+    page: "my",
+    title: "My Crowdsales",
+    url: "/crowdsale/my",
+    icon: <InventoryIcon />,
   },
 ]
 

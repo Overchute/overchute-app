@@ -34,6 +34,7 @@ export default function Router() {
         { path: "create", element: <Create /> },
         { path: "delete/:id", element: <Delete /> },
         { path: "edit/:id/:offer/:deadline", element: <Edit /> },
+        { path: "my", element: <My /> },
       ],
     },
 
@@ -88,6 +89,7 @@ const Create = Loadable(lazy(() => import("../views/CreatePageView")))
 const Delete = Loadable(lazy(() => import("../views/DeletePageView")))
 const Edit = Loadable(lazy(() => import("../views/EditPageView")))
 const Show = Loadable(lazy(() => import("../views/ShowPageView")))
+const My = Loadable(lazy(() => import("../views/MyCrowdsalesPageView")))
 
 // Guest - unprotected
 const HomePage = Loadable(lazy(() => import("../views/HomePageView")))
