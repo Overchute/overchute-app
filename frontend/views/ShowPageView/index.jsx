@@ -54,7 +54,7 @@ function ShowPageView() {
           <Typography variant="h2" style={{ margin: "1rem 0" }}>
             Crowdsale
           </Typography>
-          <Typography variant="h6" style={{ margin: "2rem 0" }}>
+          <Typography variant="h6" style={{ margin: "1rem 0" }}>
             {`Id : ${crowdsaleId}`}
           </Typography>
           <Paper elevation={3}>
@@ -63,12 +63,12 @@ function ShowPageView() {
                 <CrowdsaleInfo data={data[0]} />
               </Box>
               <Box
-                margin="4rem 0"
+                margin="3rem 0"
                 display={isDisabled === true ? "block" : "none"}
               >
                 <LoadingScreen mode="mini" />
               </Box>
-              <Box padding="3rem">
+              <Box padding="2rem">
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                     {data[0].identity === principal && (

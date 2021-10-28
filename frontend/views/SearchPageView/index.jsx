@@ -11,8 +11,8 @@ function SearchPageView() {
       flexDirection="column"
       alignItems="center"
     >
-      <Typography variant="h2" style={{ margin: "2rem 0" }}>
-        Search a Crowdsale
+      <Typography variant="h3" style={{ margin: "2rem 0 1rem 0" }}>
+        Crowdsale Protocol
       </Typography>
 
       <Box minWidth="50%" padding="3rem">

@@ -43,9 +43,9 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
-    // [theme.breakpoints.up("md")]: {
-    //   width: "60ch",
-    // },
+    [theme.breakpoints.up("md")]: {
+      width: "60ch",
+    },
   },
 }))
 
@@ -71,13 +71,13 @@ function SearchCrowdsale() {
             <SearchIcon />
           </div> */}
           <InputBase
-            placeholder="Search…"
+            placeholder="Search crowdsale..."
             fullWidth
             classes={{
               root: classes.inputRoot,
               input: classes.inputInput,
             }}
-            inputProps={{ "aria-label": "search" }}
+            inputProps={{ "aria-label": "search crowdsale" }}
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>

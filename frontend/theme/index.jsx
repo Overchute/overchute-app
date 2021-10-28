@@ -18,6 +18,24 @@ export default function ThemeConfig({ children }) {
       palette: isLight
         ? { ...palette.light, mode: "light" }
         : { ...palette.dark, mode: "dark" },
+      shape: {
+        borderRadius: 8,
+        borderRadiusSm: 12,
+        borderRadiusMd: 16,
+      },
+      // Overrides
+      components: {
+        MuiPaper: {
+          defaultProps: {
+            elevation: 0,
+          },
+          styleOverrides: {
+            root: {
+              backgroundImage: "none",
+            },
+          },
+        },
+      },
     }),
     [isLight],
   )
