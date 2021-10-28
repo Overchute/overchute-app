@@ -1,7 +1,6 @@
 import React, { useContext } from "react"
 
-import { Box, Typography, Button } from "@mui/material"
-import LogoName from "../../assets/LogoName"
+import { Box, Typography, Button, Paper } from "@mui/material"
 
 import AddBoxIcon from "@mui/icons-material/AddBoxRounded"
 import { Link } from "react-router-dom"
@@ -52,7 +51,6 @@ function HomePageView() {
           <Typography variant="h5">Create a crowdsale</Typography>
         </Button>
       </Box>
-      <Box height="500px"></Box>
     </Box>
   )
 }

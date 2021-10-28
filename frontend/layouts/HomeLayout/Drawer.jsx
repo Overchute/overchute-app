@@ -3,8 +3,15 @@ import { Drawer, Divider, IconButton, Box } from "@mui/material"
 import MenuIcon from "@mui/icons-material/Menu"
 import Menulist from "./Menulist"
 import useSite from "../../hooks/useSite"
+import { makeStyles } from "@mui/styles"
 
+const useStyles = makeStyles({
+  paper: {
+    backgroundImage: "none",
+  },
+})
 function MobileDrawer() {
+  const classes = useStyles()
   const { drawerMode, onDrawerMode } = useSite()
   const onClickOpen = () => {
     onDrawerMode(true)
@@ -26,7 +33,12 @@ function MobileDrawer() {
       >
         <MenuIcon fontSize="inherit" />
       </IconButton>
-      <Drawer anchor="left" open={drawerMode} onClose={onClickClose}>
+      <Drawer
+        classes={{ paper: classes.paper }}
+        anchor="left"
+        open={drawerMode}
+        onClose={onClickClose}
+      >
         <Box width="260px">
           <Box
             style={{

@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom"
 import { alpha } from "@mui/material/styles"
 import LogoName from "../../assets/LogoName"
 import { Drawer, AppBar, Toolbar, Box, Divider } from "@mui/material"
@@ -35,12 +36,14 @@ export default function Sidebar() {
               justifyContent: "center",
             }}
           >
-            <LogoName
-              primary="#16697A"
-              secondary="gold"
-              height="7vmin"
-              margin="2rem 0"
-            />
+            <Link to="/">
+              <LogoName
+                primary="#16697A"
+                secondary="gold"
+                height="7vmin"
+                margin="2rem 0"
+              />
+            </Link>
           </Box>
           <Divider />
           <Menulist />

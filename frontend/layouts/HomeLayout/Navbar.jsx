@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom"
 import { alpha } from "@mui/material/styles"
 import LogoName from "../../assets/LogoName"
 import { AppBar, Box, Toolbar } from "@mui/material"
@@ -21,12 +22,14 @@ function MobileAppBar() {
       >
         <Toolbar>
           <Drawer />
-          <LogoName
-            primary="#16697A"
-            secondary="gold"
-            height="8vmin"
-            margin="1rem 0"
-          />
+          <Link to="/">
+            <LogoName
+              primary="#16697A"
+              secondary="gold"
+              height="8vmin"
+              margin="1rem 0"
+            />
+          </Link>
           <Box padding="0 1rem" marginLeft="auto">
             <Auth />
           </Box>

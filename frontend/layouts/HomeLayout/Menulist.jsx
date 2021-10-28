@@ -17,7 +17,7 @@ import SearchIcon from "@mui/icons-material/SearchRounded"
 import InventoryIcon from "@mui/icons-material/Inventory2Rounded"
 
 import useSite from "../../hooks/useSite"
-import WhoAmI from "../../components/WhoAmI"
+// import WhoAmI from "../../components/WhoAmI"
 // import { Auth } from "../../components/Auth"
 
 const Items = [
@@ -89,7 +89,7 @@ function Menulist() {
           <ListItemText primary={"Theme"} />
         </ListItem>
       </List>
-      <WhoAmI />
+      {/* <WhoAmI /> */}
     </>
   )
 }
