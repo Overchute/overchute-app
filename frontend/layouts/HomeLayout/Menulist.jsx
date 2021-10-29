@@ -33,12 +33,12 @@ const Items = [
     url: "/crowdsale/create",
     icon: <AddBoxIcon />,
   },
-  {
-    page: "search",
-    title: "Search",
-    url: "/search",
-    icon: <SearchIcon />,
-  },
+  // {
+  //   page: "search",
+  //   title: "Search",
+  //   url: "/search",
+  //   icon: <SearchIcon />,
+  // },
   {
     page: "list",
     title: "List",

@@ -6,7 +6,7 @@ import { Typography, Button, Box, TextField } from "@mui/material"
 import LoadingScreen from "./LoadingScreen"
 import SendIcon from "@mui/icons-material/SendRounded"
 import * as yup from "yup"
-// import { crowdsale } from "canisters/crowdsale"
+import { crowdsale } from "canisters/crowdsale"
 import useAuth from "../hooks/useAuth"
 
 const useStyles = makeStyles((theme) => ({
@@ -37,8 +37,8 @@ function ContributeForm() {
   const handleMakeContribution = useCallback(
     async (crodwsaleId, contribution) => {
       setIsDisabled(true)
-      let response = await actor.makeContribution(crowdsaleId, contribution)
-      // let response = await crowdsale.makeContribution(crowdsaleId, contribution)
+      // let response = await actor.makeContribution(crowdsaleId, contribution)
+      let response = await crowdsale.makeContribution(crowdsaleId, contribution)
       // console.log("create res", response)
       let csId = response.ok
       setSuccess(true)

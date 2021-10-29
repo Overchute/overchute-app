@@ -7,9 +7,9 @@ function AuthGuard({ children }) {
   // console.log("auth guard", isLoggedIn)
   return (
     <>
-      {isLoggedIn && <>{children}</>}
-      {!isLoggedIn && <Navigate to="/signin" />}
-      {/* {children} */}
+      {/* {isLoggedIn && <>{children}</>}
+      {!isLoggedIn && <Navigate to="/signin" />} */}
+      {children}
     </>
   )
 }

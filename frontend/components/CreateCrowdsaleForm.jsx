@@ -12,7 +12,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider"
 import DatePicker from "@mui/lab/DatePicker"
 import DateNotice from "./DateNotice"
 import useAuth from "../hooks/useAuth"
-// import { crowdsale } from "canisters/crowdsale"
+import { crowdsale } from "canisters/crowdsale"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,14 +44,14 @@ function CreateCrowdsaleForm() {
     setIsDisabled(true)
 
     console.log(offer, deadline)
-    let response = await actor.createCrowdsale({
-      offerPrice: offer,
-      deadline: deadline,
-    })
-    // let response = await crowdsale.createCrowdsale({
+    // let response = await actor.createCrowdsale({
     //   offerPrice: offer,
     //   deadline: deadline,
     // })
+    let response = await crowdsale.createCrowdsale({
+      offerPrice: offer,
+      deadline: deadline,
+    })
     // console.log("create res", response)
     let csId = response.ok
     setSuccess(true)
