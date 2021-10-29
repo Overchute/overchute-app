@@ -1,5 +1,5 @@
 import React from "react"
-
+import { Box } from "@mui/material"
 import { Outlet } from "react-router-dom"
 import { makeStyles } from "@mui/styles"
 import SideBar from "./Sidebar"
@@ -33,12 +33,18 @@ function HomeLayout() {
       <Hidden lgUp>
         <Navbar />
       </Hidden>
-      <main className={classes.content}>
+      <Box
+        sx={{
+          flexGrow: "1",
+          padding: (theme) => theme.spacing(3),
+          width: "calc(100% - 320px)",
+        }}
+      >
         <div className={classes.toolbar} />
         <div>
           <Outlet />
         </div>
-      </main>
+      </Box>
     </div>
   )
 }

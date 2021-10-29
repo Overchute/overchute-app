@@ -26,7 +26,7 @@ function HomePageView() {
     <Container>
       <Grid container spacing={10}>
         <Grid item xs={12}>
-          <Paper elevation="3">
+          <Paper elevation={3}>
             <Box
               margin="3rem 0"
               display="flex"
@@ -58,8 +58,8 @@ function HomePageView() {
           </Paper>
         </Grid>
         <Grid item xs={12}>
-          <Paper elevation="3">
-            <Box margin="3rem 0">
+          <Paper elevation={3}>
+            <Box padding="4rem 0">
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={12} md={6} lg={6}>
                   <Box
