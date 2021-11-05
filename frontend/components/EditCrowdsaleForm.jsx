@@ -14,7 +14,7 @@ import {
 import { makeStyles } from "@mui/styles"
 import SendIcon from "@mui/icons-material/SendRounded"
 import LoadingScreen from "./LoadingScreen"
-import { crowdsale } from "canisters/crowdsale"
+// import { crowdsale } from "canisters/crowdsale"
 import useAuth from "../hooks/useAuth"
 
 const useStyles = makeStyles((theme) => ({
@@ -55,16 +55,16 @@ function EditCrowsaleForm({ data, id }) {
     setIsDisabled(true)
 
     console.log(offer, deadline)
-    // let response = await actor.update({
-    //   crowdsaleId: id,
-    //   offerPrice: offer,
-    //   deadline: deadline,
-    // })
-    let response = await crowdsale.update({
+    let response = await actor.update({
       crowdsaleId: id,
       offerPrice: offer,
       deadline: deadline,
     })
+    // let response = await crowdsale.update({
+    //   crowdsaleId: id,
+    //   offerPrice: offer,
+    //   deadline: deadline,
+    // })
     // console.log("update res", response)
     let csId = response.ok
     setSuccess(true)

@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from "react"
 import { Box, Typography, Paper, Button } from "@mui/material"
 import { Link } from "react-router-dom"
 import LoadingScreen from "../../components/LoadingScreen"
-import { crowdsale } from "canisters/crowdsale"
+// import { crowdsale } from "canisters/crowdsale"
 import useAuth from "../../hooks/useAuth"
 
 function MyCrowdsalesPageView() {
@@ -11,8 +11,8 @@ function MyCrowdsalesPageView() {
 
   console.log(principal)
   const handleListMyCrodwsales = useCallback(async () => {
-    // let res = await actor.getCrowdsalesByCaller()
-    let res = await crowdsale.getCrowdsalesByCaller()
+    let res = await actor.getCrowdsalesByCaller()
+    // let res = await crowdsale.getCrowdsalesByCaller()
     res.length > 0 ? setData(res) : setData(["none"])
     console.log("my crowdsales", res)
   })

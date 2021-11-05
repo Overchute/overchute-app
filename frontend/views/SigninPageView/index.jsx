@@ -11,7 +11,7 @@ function SigninPageView() {
     if (isLoggedIn) {
       // Redirect home
       setTimeout(() => {
-        navigate(`/`)
+        navigate(`/crowdsale/my`)
       }, 1000)
     }
   }
