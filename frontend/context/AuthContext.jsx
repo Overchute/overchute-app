@@ -25,22 +25,37 @@ function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(AuthReducer, initialState)
   const [localClient, setLocalClient] = useState(undefined)
 
-  const login = () => {
-    localClient.login({
-      identityProvider: "https://identity.ic0.app",
-      // identityProvider:
-      //   "http://localhost:8000/?canisterId=rwlgt-iiaaa-aaaaa-aaaaa-cai",
-      onSuccess: () => {
-        const identity = localClient.getIdentity()
-        const principalId = identity.getPrincipal().toString()
-        initActor(identity)
+  const login = async () => {
+    const nnsCanisterId = "ryjl3-tyaaa-aaaaa-aaaba-cai"
 
-        dispatch({ type: "SET_AUTHENTICATION", payload: true })
-        dispatch({ type: "SET_IDENTITY", payload: identity })
-        dispatch({ type: "SET_PRINCIPAL", payload: principalId })
-        dispatch({ type: "SET_IS_LOGGED_IN", payload: true })
-      },
+    // Whitelist
+    const whitelist = [nnsCanisterId]
+
+    // Host
+    const host = "https://mainnet.dfinity.network"
+
+    // Make the request
+    const result = await window.ic.plug.requestConnect({
+      whitelist,
+      host,
     })
+
+    const connectionState = result ? "allowed" : "denied"
+    console.log(`The Connection was ${connectionState}!`)
+    // localClient.login({
+    //   identityProvider: "https://identity.ic0.app",
+    //   // identityProvider:
+    //   //   "http://localhost:8000/?canisterId=rwlgt-iiaaa-aaaaa-aaaaa-cai",
+    //   onSuccess: () => {
+    //     const identity = localClient.getIdentity()
+    //     const principalId = identity.getPrincipal().toString()
+    //     initActor(identity)
+    //     dispatch({ type: "SET_AUTHENTICATION", payload: true })
+    //     dispatch({ type: "SET_IDENTITY", payload: identity })
+    //     dispatch({ type: "SET_PRINCIPAL", payload: principalId })
+    //     dispatch({ type: "SET_IS_LOGGED_IN", payload: true })
+    //   },
+    // })
   }
 
   const initActor = (id) => {
