@@ -19,6 +19,7 @@
     "@mui/lab": "*",
     "@mui/material": "^5.0.0",
     "@mui/styles": "^5.0.0",
+    "@psychedelic/plug-connect": "^0.1.4",
     "date-fns": "^2.24.0",
     "date-fns-tz": "^1.1.6",
     "formik": "^2.2.9",

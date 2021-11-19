@@ -28,10 +28,7 @@ function AuthProvider({ children }) {
     // const host = "http://localhost:8000/?canisterId=ryjl3-tyaaa-aaaaa-aaaba-cai"
 
     // Make the request
-    const isConnected = await window.ic.plug.requestConnect({
-      whitelist,
-      // host,
-    })
+    const isConnected = await window.ic.plug.isConnected()
     if (isConnected) {
       console.log("is connected")
       // console.log("agent", window.ic.plug?.agent)

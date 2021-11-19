@@ -38,11 +38,12 @@ function SigninPageView() {
       <Typography
         align="center"
         variant="subtitle1"
-        style={{ margin: "2rem 0" }}
+        style={{ margin: "2rem 0", maxWidth: "600px" }}
       >
-        Click the sign in button on the toolbar and proceed
-        <br />
-        to sign in with your Internet Identity.
+        Click the sign in button on the toolbar and proceed to connect with your
+        Plug wallet. If you don't have the Plug wallet the button will take you
+        to the Chrome store to download it. After you have set up your wallet
+        and you are logged in make sure you refresh this page.
       </Typography>
     </Box>
   )

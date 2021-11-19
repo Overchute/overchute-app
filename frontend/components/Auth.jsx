@@ -12,6 +12,8 @@ import {
   DialogTitle,
   Slide,
 } from "@mui/material"
+import PlugConnect from "@psychedelic/plug-connect"
+import { canisterId } from "canisters/crowdsale"
 
 import InfinityIcon from "@mui/icons-material/AllInclusiveOutlined"
 import ExitIcon from "@mui/icons-material/ExitToAppOutlined"
@@ -41,15 +43,20 @@ function Auth() {
   return (
     <Box>
       {!isLoggedIn ? (
-        <Button
-          variant="outlined"
-          size="medium"
-          endIcon={<InfinityIcon />}
-          onClick={login}
-        >
-          Sign in
-        </Button>
-      ) : null}
+        <PlugConnect
+          title="SIGN IN"
+          whitelist={[canisterId]}
+          onConnectCallback={login}
+        />
+      ) : // <Button
+      //   variant="outlined"
+      //   size="medium"
+      //   endIcon={<InfinityIcon />}
+      //   onClick={login}
+      // >
+      //   Sign in
+      // </Button>
+      null}
       {isLoggedIn ? (
         <Box>
           <Hidden lgDown>
@@ -66,7 +73,7 @@ function Auth() {
               Signed in as : {principal}
             </Typography>
 
-            <Button
+            {/* <Button
               variant="outlined"
               size="medium"
               endIcon={<ExitIcon />}
@@ -76,7 +83,12 @@ function Auth() {
               }}
             >
               Sign out
-            </Button>
+            </Button> */}
+            {/* <PlugConnect
+              title="CONNECTED"
+              whitelist={[canisterId]}
+              onConnectCallback={() => {}}
+            /> */}
           </Hidden>
           <Hidden lgUp>
             <IconButton onClick={handleClickOpen} aria-label="info">
@@ -99,7 +111,7 @@ function Auth() {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button
+                {/* <Button
                   variant="outlined"
                   // color="primary"
                   size="medium"
@@ -110,7 +122,7 @@ function Auth() {
                   }}
                 >
                   Sign out
-                </Button>
+                </Button> */}
               </DialogActions>
             </Dialog>
           </Hidden>
