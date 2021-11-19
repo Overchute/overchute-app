@@ -2,15 +2,10 @@ import React, { createContext, useReducer, useEffect, useState } from "react"
 import AuthReducer from "../reducer/AuthReducer"
 import { AuthClient } from "@dfinity/auth-client"
 
-import { createActor, canisterId } from "canisters/crowdsale"
+import { createActor, canisterId, idlFactory } from "canisters/crowdsale"
 
 const initialState = {
-  authClient: undefined,
-  setAuthClient: false,
-  isAuthenticated: false,
-  setIsAuthenticated: false,
   isLoggedIn: false,
-  identity: undefined,
   actor: undefined,
   principal: undefined,
 }
@@ -24,24 +19,39 @@ const AuthContext = createContext({
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(AuthReducer, initialState)
   const [localClient, setLocalClient] = useState(undefined)
+  // const nnsCanisterId = "deyev-eiaaa-aaaak-aaaca-cai"
+  const whitelist = [canisterId]
 
   const login = async () => {
-    const nnsCanisterId = "ryjl3-tyaaa-aaaaa-aaaba-cai"
-
-    // Whitelist
-    const whitelist = [nnsCanisterId]
-
     // Host
-    const host = "https://mainnet.dfinity.network"
+    // const host = "https://mainnet.dfinity.network"
+    // const host = "http://localhost:8000/?canisterId=ryjl3-tyaaa-aaaaa-aaaba-cai"
 
     // Make the request
-    const result = await window.ic.plug.requestConnect({
+    const isConnected = await window.ic.plug.requestConnect({
       whitelist,
-      host,
+      // host,
     })
+    if (isConnected) {
+      console.log("is connected")
+      // console.log("agent", window.ic.plug?.agent)
+      // const agent = window.ic.plug?.agent
+      // const identity = await window.ic.plug?.agent._identity
+      console.log(
+        "plug object",
+        window.ic.plug,
+        window.ic.plug?.principal.toString(),
+      )
+      initActor("plug")
+      dispatch({ type: "SET_IS_LOGGED_IN", payload: true })
+      dispatch({
+        type: "SET_PRINCIPAL",
+        payload: window.ic.plug?.principal.toString(),
+      })
+    } else {
+      console.log("plug could not connect")
+    }
 
-    const connectionState = result ? "allowed" : "denied"
-    console.log(`The Connection was ${connectionState}!`)
     // localClient.login({
     //   identityProvider: "https://identity.ic0.app",
     //   // identityProvider:
@@ -58,45 +68,48 @@ function AuthProvider({ children }) {
     // })
   }
 
-  const initActor = (id) => {
+  const initActor = async (id) => {
     // console.log("init actor", id)
-    const actor = createActor(canisterId, {
-      agentOptions: {
-        identity: id,
-      },
-    })
+    let actor
+    if (id === "plug") {
+      actor = await window.ic.plug?.createActor({
+        canisterId: canisterId,
+        interfaceFactory: idlFactory,
+      })
+    } else {
+      actor = createActor(canisterId, {
+        agentOptions: {
+          identity: id,
+        },
+      })
+    }
+
     dispatch({ type: "SET_ACTOR", payload: actor })
+    console.log("actor", actor)
     // setActor(actor)
   }
 
   const logout = async () => {
     // clear() // this could be used for local storage
     await localClient.logout()
-    dispatch({ type: "SET_AUTHENTICATION", payload: false })
+
     dispatch({ type: "SET_IS_LOGGED_IN", payload: false })
     dispatch({ type: "SET_PRINCIPAL", payload: "" })
-    dispatch({ type: "SET_IDENTITY", payload: "" })
   }
 
   useEffect(() => {
     AuthClient.create().then(async (client) => {
       const isAuthenticated = await client.isAuthenticated()
-      // dispatch({ type: "SET_AUTHENTICATION", payload: true })
+
       const identity = client.getIdentity()
       const principal = identity.getPrincipal().toString()
-      dispatch({ type: "SET_AUTH_CLIENT", payload: client })
+
       dispatch({ type: "SET_IDENTITY", payload: identity })
       dispatch({ type: "SET_PRINCIPAL", payload: principal })
       initActor(identity)
       setLocalClient(client)
-      // console.log("auth client", client, identity, principal)
-      // setAuthClient(client)
-      // setIsAuthenticated(true)
     })
   }, [])
-  // useEffect(() => {
-  //   if (isAuthenticated) initActor()
-  // }, [isAuthenticated])
 
   return (
     <AuthContext.Provider

@@ -22,7 +22,7 @@ function ListPageView() {
     handleListAllCrodwsales()
     return () => {}
   }, [])
-  // console.log("data at list crowdsales", data, data.length)
+  console.log("list")
   return (
     <Box
       margin="1rem 0 0 0"

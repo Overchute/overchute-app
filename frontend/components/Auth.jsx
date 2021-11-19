@@ -25,7 +25,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function Auth() {
   const navigate = useNavigate()
-  const { authClient, principal, actor, isLoggedIn, login, logout } = useAuth()
+  const { principal, actor, isLoggedIn, login, logout } = useAuth()
 
   const [open, setOpen] = React.useState(false)
 
@@ -40,7 +40,7 @@ function Auth() {
 
   return (
     <Box>
-      {!isLoggedIn && authClient ? (
+      {!isLoggedIn ? (
         <Button
           variant="outlined"
           size="medium"
