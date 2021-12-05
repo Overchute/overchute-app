@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Alert, AlertTitle } from "@mui/material"
+import { Alert, AlertTitle } from "@mui/material"
 import { today, utcMilllisecondsSinceEpoch } from "./utils/DateUtility"
 import { format } from "date-fns-tz"
 
@@ -7,9 +7,9 @@ function DateNotice() {
   return (
     <Alert severity="info">
       <AlertTitle>Important notice</AlertTitle>
-      The minimum deadline for a crowdsale is one day after creation.
+      The deadline for a crowdsale must be at least one day after creation.
       <br />
-      The deadline's time for all crowdsales is at 11:59 pm UTC.
+      All crowdsales end at 11:59 UTC.
       <br />
       {`Local time : ${format(today, "MMM dd yyyy kk:mm:ss")}`} <br />
       {`UTC time : ${format(

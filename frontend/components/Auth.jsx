@@ -15,8 +15,8 @@ import {
 import PlugConnect from "@psychedelic/plug-connect"
 import { canisterId } from "canisters/crowdsale"
 
-import InfinityIcon from "@mui/icons-material/AllInclusiveOutlined"
-import ExitIcon from "@mui/icons-material/ExitToAppOutlined"
+// import InfinityIcon from "@mui/icons-material/AllInclusiveOutlined"
+// import ExitIcon from "@mui/icons-material/ExitToAppOutlined"
 import InfoIcon from "@mui/icons-material/InfoOutlined"
 import IconButton from "@mui/material/IconButton"
 import useAuth from "../hooks/useAuth"
@@ -46,7 +46,12 @@ function Auth() {
         <PlugConnect
           title="SIGN IN"
           whitelist={[canisterId]}
-          onConnectCallback={login}
+          // onConnectCallback={login}
+          onConnectCallback={() => {
+            // console.log("trying to connect")
+            login()
+            navigate("/crowdsale/my")
+          }}
         />
       ) : // <Button
       //   variant="outlined"

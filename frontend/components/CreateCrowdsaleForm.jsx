@@ -43,7 +43,7 @@ function CreateCrowdsaleForm() {
   const handleCreateCrodwsale = useCallback(async (offer, deadline) => {
     setIsDisabled(true)
 
-    console.log(offer, deadline)
+    // console.log(offer, deadline)
     let response = await actor.createCrowdsale({
       offerPrice: offer,
       deadline: deadline,
@@ -83,7 +83,7 @@ function CreateCrowdsaleForm() {
             <TextField
               required
               id="offer"
-              label="Enter Offer"
+              label="Enter Asking Price"
               value={props.values.offer}
               variant="outlined"
               onChange={props.handleChange}

@@ -13,7 +13,7 @@ function NoCrowdsaleFound() {
         Crowdsale
       </Typography>
       <Typography variant="h6" style={{ margin: "2rem 0" }}>
-        {`Id : ${crowdsaleId}`}
+        {`Crowdsale Id : ${crowdsaleId}`}
       </Typography>
       <Typography variant="h2" style={{ margin: "2rem 0" }}>
         🤔

@@ -55,7 +55,7 @@ function ShowPageView() {
             Crowdsale
           </Typography>
           <Typography variant="h6" style={{ margin: "1rem 0" }}>
-            {`Id : ${crowdsaleId}`}
+            {`Crowdsale Id : ${crowdsaleId}`}
           </Typography>
           <Paper elevation={3}>
             <Box padding="3rem">
@@ -86,7 +86,6 @@ function ShowPageView() {
                         startIcon={<EditIcon />}
                         style={{
                           padding: "1rem",
-
                           minWidth: "128px",
                         }}
                       >
@@ -104,7 +103,6 @@ function ShowPageView() {
                       startIcon={<ContributeIcon />}
                       style={{
                         padding: "1rem",
-
                         minWidth: "128px",
                       }}
                     >

@@ -1,5 +1,4 @@
 import React, { useCallback, useContext } from "react"
-
 import { Formik, Form } from "formik"
 import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
@@ -54,12 +53,13 @@ function EditCrowsaleForm({ data, id }) {
   const handleUpdateCrodwsale = useCallback(async (id, offer, deadline) => {
     setIsDisabled(true)
 
-    console.log(offer, deadline)
+    // console.log(offer, deadline)
     let response = await actor.update({
       crowdsaleId: id,
       offerPrice: offer,
       deadline: deadline,
     })
+    // UNCOMMENT BELOW FOR DEVELOPMENT
     // let response = await crowdsale.update({
     //   crowdsaleId: id,
     //   offerPrice: offer,
@@ -111,7 +111,7 @@ function EditCrowsaleForm({ data, id }) {
             <TextField
               required
               id="offer"
-              label="Enter Offer"
+              label="Enter Asking Price"
               value={props.values.offer}
               variant="outlined"
               onChange={(e) => {
@@ -127,6 +127,7 @@ function EditCrowsaleForm({ data, id }) {
                 required
                 id="deadline"
                 label="Enter Deadline"
+                disabled
                 value={props.values.deadline}
                 minDate={minDeadline}
                 inputProps={{ readOnly: true }}

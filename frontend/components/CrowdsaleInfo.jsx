@@ -9,7 +9,7 @@ function CrowdsaleInfo({ data }) {
   return (
     <>
       <Typography variant="body1" style={{ margin: "1rem 0" }}>
-        {`Id : ${data.crowdsaleId}`}
+        {`Crowdsale Id : ${data.crowdsaleId}`}
       </Typography>
       <Typography variant="body1" style={{ margin: "1rem 0" }}>
         {`Created at : ${created}`}
@@ -21,7 +21,7 @@ function CrowdsaleInfo({ data }) {
         {`Deadline : ${deadline}`}
       </Typography>
       <Typography variant="body1" style={{ margin: "1rem 0" }}>
-        {`Offer price : ${data.offerPrice}`}
+        {`Asking price : ${data.offerPrice}`}
       </Typography>
       <Typography variant="body1" style={{ margin: "1rem 0" }}>
         {`Contributed amount : ${data.contributedAmount}`}

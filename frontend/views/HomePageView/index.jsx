@@ -170,7 +170,7 @@ function HomePageView() {
                   A creator releases an already-existing digital product under a
                   standard open-source or creative-commons licence, but with a
                   suspensive condition, so it only comes into force upon the
-                  success of a crowdsale, with a specified offer price.
+                  success of a crowdsale, with a specified asking price.
                 </Typography>
               </Box>
               <Box display="flex" flexDirection="column" alignItems="center">
@@ -230,10 +230,10 @@ function HomePageView() {
                   style={{ marginBottom: "3rem", maxWidth: "75%" }}
                 >
                   At the end of the crowdsale period, if the contributed total
-                  falls short of the offer price, all contributions are refunded
-                  - no deal. But if the contributed total exceeds the offer
-                  price, the product is released under the open licence. The
-                  offer price is paid to the creator and the excess
+                  falls short of the asking price, all contributions are
+                  refunded - no deal. But if the contributed total exceeds the
+                  asking price, the product is released under the open licence.
+                  The asking price is paid to the creator and the excess
                   contributions (overshoot) are shared equally between the
                   creator and contributors, after a platform fee.
                 </Typography>
@@ -312,7 +312,7 @@ function HomePageView() {
                       textAlign={{ xs: "center", sm: "center", md: "left" }}
                       variant="subtitle1"
                     >
-                      As a creator, setting a low offer price gives the best
+                      As a creator, setting a low asking price gives the best
                       chance of success, and because the overshoot is shared,
                       you don't miss out on higher contributions.
                     </Typography>

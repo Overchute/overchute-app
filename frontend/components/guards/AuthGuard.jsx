@@ -9,6 +9,7 @@ function AuthGuard({ children }) {
     <>
       {isLoggedIn && <>{children}</>}
       {!isLoggedIn && <Navigate to="/signin" />}
+
       {/* {children} */}
     </>
   )

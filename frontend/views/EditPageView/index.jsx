@@ -16,7 +16,7 @@ function EditPageView() {
         Edit crowdsale
       </Typography>
       <Typography variant="h6" style={{ margin: "2rem 0" }}>
-        {`Id : ${params.id}`}
+        {`Crowdsale Id : ${params.id}`}
       </Typography>
       <Paper elevation={3}>
         <Box padding="3rem">

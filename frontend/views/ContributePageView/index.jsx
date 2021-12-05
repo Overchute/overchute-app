@@ -19,7 +19,7 @@ function ContributePageView() {
         Crowdsale
       </Typography>
       <Typography variant="h6" style={{ margin: "2rem 0" }}>
-        {`Id : ${crowdsaleId}`}
+        {`Crowdsale Id : ${crowdsaleId}`}
       </Typography>
       <Paper elevation={3}>
         <Box padding="3rem">
