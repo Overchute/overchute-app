@@ -23,6 +23,8 @@ shared (msg) actor class crowdsale (){
     public type CrowdsaleCreate = Types.CrowdsaleCreate;
     public type CrowdsaleUpdate = Types.CrowdsaleUpdate;
     public type CrowdsaleId = Types.CrowdsaleId;
+    public type CrowdsaleContribution = Types.CrowdsaleContribution;
+    public type CrowdsaleRewards = Types.CrowdsaleRewards;
     public type UserId = Types.UserId;
     public type Status = Types.Status;
     public type Error = Types.Error;
@@ -62,7 +64,7 @@ shared (msg) actor class crowdsale (){
             offerPrice = crowdsaleCreate.offerPrice;
             deadline = crowdsaleCreate.deadline;
             contributedAmount = 0;
-            contributions = Trie.empty();
+            contributions = [];
             identity = Principal.toText(callerId);
         };
 
@@ -166,13 +168,16 @@ shared (msg) actor class crowdsale (){
     };
 
     // make contribution to crowdsale
-    public shared(msg) func makeContribution(id: CrowdsaleId, amount: Float) : async Result.Result<(Text), Error> {
+    public shared(msg) func makeContribution(crowdsaleId: CrowdsaleId, amount: Float) : async Result.Result<(Text), Error> {
         let callerId = msg.caller;
         let result = Trie.find(
             crowdsales,
-            key(id),
+            key(crowdsaleId),
             Text.equal
         );
+        if (amount <= 0) {
+            throw Err.reject("Contribution must be more than 0");
+        };
         switch (result) {
             case null {
                 #err(#NotFound);
@@ -181,65 +186,32 @@ shared (msg) actor class crowdsale (){
                 if (Time.now() > v.deadline) {
                     throw Err.reject("Crowdsale expired");
                 };
-                let foundContributions = Trie.find(
-                    v.contributions,
-                    keyPrincipal(callerId),
-                    Principal.equal
-                );
-                switch (foundContributions) {
-                    case null {
-                        let (newContributions, _) = Trie.put(
-                            v.contributions,
-                            keyPrincipal(callerId),
-                            Principal.equal,
-                            amount
-                        );
-                        let crowdsale: Crowdsale = {
-                            crowdsaleId = v.crowdsaleId;
-                            creator = v.creator;
-                            createdAt = v.createdAt;
-                            updatedAt = Time.now();
-                            status = v.status;
-                            offerPrice = v.offerPrice;
-                            deadline = v.deadline;
-                            contributedAmount = v.contributedAmount + amount;
-                            contributions = newContributions;
-                            identity = v.identity;
-                        };
-                        crowdsales := Trie.replace(
-                            crowdsales,
-                            key(v.crowdsaleId),
-                            Text.equal,
-                            ?crowdsale
-                        ).0;
-                    };
-                    case (? c) {
-                        let (newContributions, _) = Trie.put(
-                            v.contributions,
-                            keyPrincipal(callerId),
-                            Principal.equal,
-                            c + amount
-                        );
-                        let crowdsale: Crowdsale = {
-                            crowdsaleId = v.crowdsaleId;
-                            creator = v.creator;
-                            createdAt = v.createdAt;
-                            updatedAt = Time.now();
-                            status = v.status;
-                            offerPrice = v.offerPrice;
-                            deadline = v.deadline;
-                            contributedAmount = v.contributedAmount + amount;
-                            contributions = newContributions;
-                            identity = v.identity;
-                        };
-                        crowdsales := Trie.replace(
-                            crowdsales,
-                            key(v.crowdsaleId),
-                            Text.equal,
-                            ?crowdsale
-                        ).0;
-                    };
+                var newContributionsArray: [CrowdsaleContribution] = [];
+                let contribution: CrowdsaleContribution = {
+                    crowdsaleId = crowdsaleId;
+                    contributor = callerId;
+                    amount = amount;
+                    date = Time.now();
                 };
+                newContributionsArray := Array.append<CrowdsaleContribution>(v.contributions, [contribution]);
+                let crowdsale: Crowdsale = {
+                    crowdsaleId = v.crowdsaleId;
+                    creator = v.creator;
+                    createdAt = v.createdAt;
+                    updatedAt = Time.now();
+                    status = v.status;
+                    offerPrice = v.offerPrice;
+                    deadline = v.deadline;
+                    contributedAmount = v.contributedAmount + amount;
+                    contributions = newContributionsArray;
+                    identity = v.identity;
+                };
+                crowdsales := Trie.replace(
+                    crowdsales,
+                    key(v.crowdsaleId),
+                    Text.equal,
+                    ?crowdsale
+                ).0;
                 checkIfFulfilled(v.crowdsaleId);
                 #ok((v.crowdsaleId));
             };
@@ -326,7 +298,7 @@ shared (msg) actor class crowdsale (){
     };
 
     // retrieve all crowdsale contributions by its id
-    public query func getAllContributionsByCrowdsaleId(id: CrowdsaleId) : async Result.Result<(Trie.Trie<Principal, Float>), Error> {
+    public query func getAllContributionsByCrowdsaleId(id: CrowdsaleId) : async Result.Result<([CrowdsaleContribution]), Error> {
         let result = Trie.find(
             crowdsales,
             key(id),
@@ -343,7 +315,7 @@ shared (msg) actor class crowdsale (){
     };
 
     // retrieve crowdsale contribution by its id and caller
-    public query(msg) func getContributionByCallerAndCrowdsaleId(id: CrowdsaleId) : async Result.Result<(Float), Error> {
+    public query(msg) func getContributionByCallerAndCrowdsaleId(id: CrowdsaleId) : async Result.Result<([CrowdsaleContribution]), Error> {
         let callerId = msg.caller;
         let result = Trie.find(
             crowdsales,
@@ -355,25 +327,13 @@ shared (msg) actor class crowdsale (){
                 #err(#NotFound);
             };
             case (? c) {
-                let foundContributions = Trie.find(
-                    c.contributions,
-                    keyPrincipal(callerId),
-                    Principal.equal
-                );
-                switch (foundContributions) {
-                    case null {
-                        #err(#NotFound);
-                    };
-                    case (? v) {
-                        #ok((v));
-                    }
-                };
+                #ok((c.contributions));
             };
         };
     };
 
     // retrieve crowdsale contributions by its id and principal
-    public func getContributionByPrincipalAndCrowdsaleId(id: CrowdsaleId, callerId: Principal) : async Result.Result<(Float), Error> {
+    /*public func getContributionByPrincipalAndCrowdsaleId(id: CrowdsaleId, callerId: Principal) : async Result.Result<([CrowdsaleContribution]), Error> {
         let result = Trie.find(
             crowdsales,
             key(id),
@@ -384,22 +344,10 @@ shared (msg) actor class crowdsale (){
                 #err(#NotFound);
             };
             case (? c) {
-                let foundContributions = Trie.find(
-                    c.contributions,
-                    keyPrincipal(callerId),
-                    Principal.equal
-                );
-                switch (foundContributions) {
-                    case null {
-                        #err(#NotFound);
-                    };
-                    case (? v) {
-                        #ok((v));
-                    }
-                };
+                #ok((c.contributions));
             };
         };
-    };
+    };*/
 
     // retrieve all created crowdsales
     public query(msg) func getAllCrowdsales() : async [Crowdsale] {
@@ -440,6 +388,80 @@ shared (msg) actor class crowdsale (){
         result;
     };
 
+    // calculate rewards
+    public shared(msg) func calculateRewards(crowdsaleId: CrowdsaleId) : async Result.Result<CrowdsaleRewards, Error> {
+        let PLATFORM_REWARD_SHARE = 0.1;
+        let CREATOR_REWARD_SHARE = 0.5;
+        let CONTRIBUTOR_REWARD_SHARE = 0.5;
+        let callerId = msg.caller;
+        let result = Trie.find(
+            crowdsales,
+            key(crowdsaleId),
+            Text.equal
+        );
+        switch (result) {
+            case null {
+                #err(#NotFound);
+            };
+            case (? v) {
+                let overshoot = v.contributedAmount - v.offerPrice;
+                let platformRewards = overshoot * PLATFORM_REWARD_SHARE;
+                let overshootLeftAfterPlatform = overshoot - platformRewards;
+                var contributorsRewardsAll : Trie.Trie<UserId, Float> = Trie.empty();
+                var contributorsRewardsCalculated : Trie.Trie<UserId, Float> = Trie.empty();
+                var crowdsaleContributions: [CrowdsaleContribution] = v.contributions; 
+                let REWARDS_TO_CONTRIBUTORS = (overshoot - platformRewards) * CREATOR_REWARD_SHARE;
+                for (i in Iter.range(0, crowdsaleContributions.size() - 1)) {
+                    let foundRewards = Trie.find(
+                        contributorsRewardsAll,
+                        keyPrincipal(crowdsaleContributions[i].contributor),
+                        Principal.equal
+                    );
+                    switch (foundRewards) {
+                        case null {
+                            let (newReward, _) = Trie.put(
+                                contributorsRewardsAll,
+                                keyPrincipal(crowdsaleContributions[i].contributor),
+                                Principal.equal,
+                                crowdsaleContributions[i].amount
+                            );
+                            contributorsRewardsAll := newReward;
+                        };
+                        case (? c) {
+                            let (newReward, _) = Trie.put(
+                                contributorsRewardsAll,
+                                keyPrincipal(crowdsaleContributions[i].contributor),
+                                Principal.equal,
+                                c + crowdsaleContributions[i].amount
+                            );
+                            contributorsRewardsAll := newReward;
+                        };
+                    };
+                };
+                for ((key, value) in Trie.iter(contributorsRewardsAll)) {
+                    let (newRewardsCalculated, _) = Trie.put(
+                        contributorsRewardsCalculated,
+                        keyPrincipal(key),
+                        Principal.equal,
+                        value / v.contributedAmount * REWARDS_TO_CONTRIBUTORS
+                    );
+                    contributorsRewardsCalculated := newRewardsCalculated;
+                };
+
+                let crowdsaleRewards: CrowdsaleRewards = {
+                    crowdsaleId = crowdsaleId;
+                    overshoot = overshoot;
+                    platformRewards = platformRewards;
+                    creatorRewardsTotal = overshootLeftAfterPlatform * CREATOR_REWARD_SHARE;
+                    contributorsRewardsAll = contributorsRewardsAll;
+                    contributorsRewardsCalculated = contributorsRewardsAll;
+                    contributorsRewardsTotal = overshootLeftAfterPlatform * CONTRIBUTOR_REWARD_SHARE;
+                };
+                #ok((crowdsaleRewards));
+            };
+        };
+    };
+
     private func extractCrowdsale(k : Text, v : Crowdsale) : Crowdsale {
         return v;
     };
@@ -463,6 +485,6 @@ shared (msg) actor class crowdsale (){
     public shared (msg) func whoamiText() : async Text {
         let caller = msg.caller;
         let identity = Principal.toText(caller);
-        return "My identity is : " # identity # " !!!";
+        return "My identity is : " # identity # "!";
     };
 };

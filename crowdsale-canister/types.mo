@@ -20,8 +20,25 @@ module {
         offerPrice: Float;
         deadline: Time.Time;
         contributedAmount: Float;
-        contributions: Trie.Trie<Principal, Float>;
+        contributions: [CrowdsaleContribution];
         identity: Text;
+    };
+
+    public type CrowdsaleContribution = {
+        crowdsaleId: CrowdsaleId;
+        contributor: UserId;
+        amount: Float;
+        date: Time.Time;
+    };
+
+    public type CrowdsaleRewards = {
+        crowdsaleId: CrowdsaleId;
+        overshoot: Float;
+        platformRewards: Float;
+        creatorRewardsTotal: Float;
+        contributorsRewardsAll: Trie.Trie<Principal, Float>;
+        contributorsRewardsCalculated: Trie.Trie<Principal, Float>;
+        contributorsRewardsTotal: Float;
     };
 
     public type CrowdsaleCreate = {
