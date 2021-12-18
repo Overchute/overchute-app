@@ -60,7 +60,7 @@ shared (msg) actor class crowdsale (){
             creator = callerId;
             createdAt = Time.now();
             updatedAt = Time.now();
-            status = #open;
+            status = #OPEN;
             offerPrice = crowdsaleCreate.offerPrice;
             deadline = crowdsaleCreate.deadline;
             contributedAmount = 0;
@@ -234,7 +234,7 @@ shared (msg) actor class crowdsale (){
                         creator = v.creator;
                         createdAt = v.createdAt;
                         updatedAt = Time.now();
-                        status = #fulfilled;
+                        status = #SUCCEEDED;
                         offerPrice = v.offerPrice;
                         deadline = v.deadline;
                         contributedAmount = v.contributedAmount;
@@ -269,16 +269,16 @@ shared (msg) actor class crowdsale (){
             case (? v) {
                 if (now <= v.deadline) { return; }
                 else {
-                    if (v.status == #fulfilled) {
+                    if (v.status == #SUCCEEDED) {
                         // run distribution routine
                         Debug.print("DISTRIBUTE THEM ALL!!!!111");
-                    } else if (v.status == #open) {
+                    } else if (v.status == #OPEN) {
                         let crowdsale: Crowdsale = {
                             crowdsaleId = v.crowdsaleId;
                             creator = v.creator;
                             createdAt = v.createdAt;
                             updatedAt = Time.now();
-                            status = #failed;
+                            status = #FAILED;
                             offerPrice = v.offerPrice;
                             deadline = v.deadline;
                             contributedAmount = v.contributedAmount;
@@ -407,45 +407,45 @@ shared (msg) actor class crowdsale (){
                 let overshoot = v.contributedAmount - v.offerPrice;
                 let platformRewards = overshoot * PLATFORM_REWARD_SHARE;
                 let overshootLeftAfterPlatform = overshoot - platformRewards;
-                var contributorsRewardsAll : Trie.Trie<UserId, Float> = Trie.empty();
-                var contributorsRewardsCalculated : Trie.Trie<UserId, Float> = Trie.empty();
+                var contributorsContributionsAll : Trie.Trie<UserId, Float> = Trie.empty();
+                var contributorsPayout : Trie.Trie<UserId, Float> = Trie.empty();
                 var crowdsaleContributions: [CrowdsaleContribution] = v.contributions; 
                 let REWARDS_TO_CONTRIBUTORS = (overshoot - platformRewards) * CREATOR_REWARD_SHARE;
                 for (i in Iter.range(0, crowdsaleContributions.size() - 1)) {
                     let foundRewards = Trie.find(
-                        contributorsRewardsAll,
+                        contributorsContributionsAll,
                         keyPrincipal(crowdsaleContributions[i].contributor),
                         Principal.equal
                     );
                     switch (foundRewards) {
                         case null {
                             let (newReward, _) = Trie.put(
-                                contributorsRewardsAll,
+                                contributorsContributionsAll,
                                 keyPrincipal(crowdsaleContributions[i].contributor),
                                 Principal.equal,
                                 crowdsaleContributions[i].amount
                             );
-                            contributorsRewardsAll := newReward;
+                            contributorsContributionsAll := newReward;
                         };
                         case (? c) {
                             let (newReward, _) = Trie.put(
-                                contributorsRewardsAll,
+                                contributorsContributionsAll,
                                 keyPrincipal(crowdsaleContributions[i].contributor),
                                 Principal.equal,
                                 c + crowdsaleContributions[i].amount
                             );
-                            contributorsRewardsAll := newReward;
+                            contributorsContributionsAll := newReward;
                         };
                     };
                 };
-                for ((key, value) in Trie.iter(contributorsRewardsAll)) {
+                for ((key, value) in Trie.iter(contributorsContributionsAll)) {
                     let (newRewardsCalculated, _) = Trie.put(
-                        contributorsRewardsCalculated,
+                        contributorsPayout,
                         keyPrincipal(key),
                         Principal.equal,
                         value / v.contributedAmount * REWARDS_TO_CONTRIBUTORS
                     );
-                    contributorsRewardsCalculated := newRewardsCalculated;
+                    contributorsPayout := newRewardsCalculated;
                 };
 
                 let crowdsaleRewards: CrowdsaleRewards = {
@@ -453,9 +453,10 @@ shared (msg) actor class crowdsale (){
                     overshoot = overshoot;
                     platformRewards = platformRewards;
                     creatorRewardsTotal = overshootLeftAfterPlatform * CREATOR_REWARD_SHARE;
-                    contributorsRewardsAll = contributorsRewardsAll;
-                    contributorsRewardsCalculated = contributorsRewardsAll;
-                    contributorsRewardsTotal = overshootLeftAfterPlatform * CONTRIBUTOR_REWARD_SHARE;
+                    creatorPayoutTotal = overshootLeftAfterPlatform * CREATOR_REWARD_SHARE + v.offerPrice;
+                    contributorsContributionsAll = contributorsContributionsAll;
+                    contributorsPayout = contributorsPayout;
+                    contributorsPayoutTotal = overshootLeftAfterPlatform * CONTRIBUTOR_REWARD_SHARE;
                 };
                 #ok((crowdsaleRewards));
             };

@@ -9,7 +9,7 @@ import Trie "mo:base/Trie";
 module {
     public type UserId = Principal;
     public type CrowdsaleId = Text;
-    public type Status = { #open; #closed; #failed; #fulfilled; };
+    public type Status = { #OPEN; #CLOSED; #FAILED; #SUCCEEDED; };
 
     public type Crowdsale = {
         crowdsaleId: CrowdsaleId;
@@ -36,9 +36,12 @@ module {
         overshoot: Float;
         platformRewards: Float;
         creatorRewardsTotal: Float;
-        contributorsRewardsAll: Trie.Trie<Principal, Float>;
-        contributorsRewardsCalculated: Trie.Trie<Principal, Float>;
-        contributorsRewardsTotal: Float;
+        creatorPayoutTotal: Float;
+        // sum of all contributions of each contributor
+        contributorsContributionsAll: Trie.Trie<Principal, Float>;
+        contributorsPayout: Trie.Trie<Principal, Float>;
+        // how much do we need to pay to contributors
+        contributorsPayoutTotal: Float;
     };
 
     public type CrowdsaleCreate = {
