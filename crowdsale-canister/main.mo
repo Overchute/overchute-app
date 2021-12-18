@@ -388,8 +388,8 @@ shared (msg) actor class crowdsale (){
         result;
     };
 
-    // calculate rewards
-    public shared(msg) func calculateRewards(crowdsaleId: CrowdsaleId) : async Result.Result<CrowdsaleRewards, Error> {
+    // calculate results
+    public shared(msg) func calculateResults(crowdsaleId: CrowdsaleId) : async Result.Result<CrowdsaleRewards, Error> {
         let PLATFORM_REWARD_SHARE = 0.1;
         let CREATOR_REWARD_SHARE = 0.5;
         let CONTRIBUTOR_REWARD_SHARE = 0.5;
@@ -404,6 +404,9 @@ shared (msg) actor class crowdsale (){
                 #err(#NotFound);
             };
             case (? v) {
+                if (v.creator != callerId) {
+                    throw Err.reject("No access");
+                };
                 let overshoot = v.contributedAmount - v.offerPrice;
                 let platformRewards = overshoot * PLATFORM_REWARD_SHARE;
                 let overshootLeftAfterPlatform = overshoot - platformRewards;
