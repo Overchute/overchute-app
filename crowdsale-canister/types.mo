@@ -17,12 +17,16 @@ module {
         createdAt: Time.Time;
         updatedAt: Time.Time;
         status: Status;
+        productType: ProductType;
         offerPrice: Float;
         deadline: Time.Time;
         contributedAmount: Float;
         contributions: [CrowdsaleContribution];
+        imageUrl: ?Text;
         identity: Text;
     };
+
+    public type ProductType = { #SOURCE_CODE; };
 
     public type CrowdsaleContribution = {
         crowdsaleId: CrowdsaleId;
@@ -31,22 +35,22 @@ module {
         date: Time.Time;
     };
 
-    public type CrowdsaleRewards = {
+    public type CrowdsaleOvershootShare = {
         crowdsaleId: CrowdsaleId;
         overshoot: Float;
-        platformRewards: Float;
-        creatorRewardsTotal: Float;
+        platformOvershootShare: Float;
+        creatorOvershootShareTotal: Float;
         creatorPayoutTotal: Float;
-        // sum of all contributions of each contributor
         contributorsContributionsAll: Trie.Trie<Principal, Float>;
         contributorsPayout: Trie.Trie<Principal, Float>;
-        // how much do we need to pay to contributors
         contributorsPayoutTotal: Float;
     };
 
     public type CrowdsaleCreate = {
         offerPrice: Float;
         deadline: Time.Time;
+        productType: ProductType;
+        imageUrl: ?Text;
     };
 
     public type CrowdsaleUpdate = {

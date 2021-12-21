@@ -24,7 +24,7 @@ shared (msg) actor class crowdsale (){
     public type CrowdsaleUpdate = Types.CrowdsaleUpdate;
     public type CrowdsaleId = Types.CrowdsaleId;
     public type CrowdsaleContribution = Types.CrowdsaleContribution;
-    public type CrowdsaleRewards = Types.CrowdsaleRewards;
+    public type CrowdsaleOvershootShare = Types.CrowdsaleOvershootShare;
     public type UserId = Types.UserId;
     public type Status = Types.Status;
     public type Error = Types.Error;
@@ -61,10 +61,12 @@ shared (msg) actor class crowdsale (){
             createdAt = Time.now();
             updatedAt = Time.now();
             status = #OPEN;
+            productType = crowdsaleCreate.productType;
             offerPrice = crowdsaleCreate.offerPrice;
             deadline = crowdsaleCreate.deadline;
             contributedAmount = 0;
             contributions = [];
+            imageUrl = crowdsaleCreate.imageUrl;
             identity = Principal.toText(callerId);
         };
 
@@ -122,10 +124,12 @@ shared (msg) actor class crowdsale (){
                     createdAt = v.createdAt;
                     updatedAt = Time.now();
                     status = v.status;
+                    productType = v.productType;
                     offerPrice = crowdsaleUpdate.offerPrice;
                     deadline = crowdsaleUpdate.deadline;
                     contributedAmount = v.contributedAmount;
                     contributions = v.contributions;
+                    imageUrl = v.imageUrl;
                     identity = v.identity;
                 };
                 crowdsales := Trie.replace(
@@ -199,11 +203,13 @@ shared (msg) actor class crowdsale (){
                     creator = v.creator;
                     createdAt = v.createdAt;
                     updatedAt = Time.now();
+                    productType = v.productType;
                     status = v.status;
                     offerPrice = v.offerPrice;
                     deadline = v.deadline;
                     contributedAmount = v.contributedAmount + amount;
                     contributions = newContributionsArray;
+                    imageUrl = v.imageUrl;
                     identity = v.identity;
                 };
                 crowdsales := Trie.replace(
@@ -235,10 +241,12 @@ shared (msg) actor class crowdsale (){
                         createdAt = v.createdAt;
                         updatedAt = Time.now();
                         status = #SUCCEEDED;
+                        productType = v.productType;
                         offerPrice = v.offerPrice;
                         deadline = v.deadline;
                         contributedAmount = v.contributedAmount;
                         contributions = v.contributions;
+                        imageUrl = v.imageUrl;
                         identity = v.identity;
                     };
                     crowdsales := Trie.replace(
@@ -279,10 +287,12 @@ shared (msg) actor class crowdsale (){
                             createdAt = v.createdAt;
                             updatedAt = Time.now();
                             status = #FAILED;
+                            productType = v.productType;
                             offerPrice = v.offerPrice;
                             deadline = v.deadline;
                             contributedAmount = v.contributedAmount;
                             contributions = v.contributions;
+                            imageUrl = v.imageUrl;
                             identity = v.identity;
                         };
                         crowdsales := Trie.replace(
@@ -333,7 +343,7 @@ shared (msg) actor class crowdsale (){
     };
 
     // retrieve crowdsale contributions by its id and principal
-    /*public func getContributionByPrincipalAndCrowdsaleId(id: CrowdsaleId, callerId: Principal) : async Result.Result<([CrowdsaleContribution]), Error> {
+    public func getContributionByPrincipalAndCrowdsaleId(id: CrowdsaleId, callerId: Principal) : async Result.Result<([CrowdsaleContribution]), Error> {
         let result = Trie.find(
             crowdsales,
             key(id),
@@ -347,12 +357,53 @@ shared (msg) actor class crowdsale (){
                 #ok((c.contributions));
             };
         };
-    };*/
+    };
 
     // retrieve all created crowdsales
     public query(msg) func getAllCrowdsales() : async [Crowdsale] {
         let result = Trie.toArray<CrowdsaleId, Crowdsale, Crowdsale>(crowdsales, transform);
         return result;
+    };
+
+    // retrieve all crowdsales by status
+    public query(msg) func getCrowdsalesByStatus(status: Status) : async [Crowdsale] {
+        let caller = msg.caller;
+        let allCrowdsales = Trie.toArray<CrowdsaleId, Crowdsale, Crowdsale>(crowdsales, transform);
+        var result: [Crowdsale] = [];
+        for (i in Iter.range(0, allCrowdsales.size() - 1)) {
+            switch(allCrowdsales[i]) {
+                case (crowdsale) {
+                    if (crowdsale.status == status) {
+                        result := Array.append<Crowdsale>(result, [crowdsale]);
+                    };
+                };
+            };
+        };
+        result;
+    };
+
+    // retrieve current or expired crowdsales
+    public query(msg) func getCrowdsalesByExpiration(isExpired: Bool) : async [Crowdsale] {
+        let caller = msg.caller;
+        let now = Time.now();
+        let allCrowdsales = Trie.toArray<CrowdsaleId, Crowdsale, Crowdsale>(crowdsales, transform);
+        var result: [Crowdsale] = [];
+        for (i in Iter.range(0, allCrowdsales.size() - 1)) {
+            switch(allCrowdsales[i]) {
+                case (crowdsale) {
+                    if (isExpired == true) {
+                        if (now >= crowdsale.deadline) {
+                            result := Array.append<Crowdsale>(result, [crowdsale]);
+                        };
+                    } else {
+                        if (now < crowdsale.deadline) {
+                            result := Array.append<Crowdsale>(result, [crowdsale]);
+                        };
+                    }
+                };
+            };
+        };
+        result;
     };
 
     // retrieve all created crowdsales by caller
@@ -389,10 +440,10 @@ shared (msg) actor class crowdsale (){
     };
 
     // calculate results
-    public shared(msg) func calculateResults(crowdsaleId: CrowdsaleId) : async Result.Result<CrowdsaleRewards, Error> {
-        let PLATFORM_REWARD_SHARE = 0.1;
-        let CREATOR_REWARD_SHARE = 0.5;
-        let CONTRIBUTOR_REWARD_SHARE = 0.5;
+    public shared(msg) func calculateResults(crowdsaleId: CrowdsaleId) : async Result.Result<CrowdsaleOvershootShare, Error> {
+        let PLATFORM_OVERSHOOT_SHARE = 0.1;
+        let CREATOR_OVERSHOOT_SHARE = 0.5;
+        let CONTRIBUTOR_OVERSHOOT_SHARE = 0.5;
         let callerId = msg.caller;
         let result = Trie.find(
             crowdsales,
@@ -408,60 +459,60 @@ shared (msg) actor class crowdsale (){
                     throw Err.reject("No access");
                 };
                 let overshoot = v.contributedAmount - v.offerPrice;
-                let platformRewards = overshoot * PLATFORM_REWARD_SHARE;
-                let overshootLeftAfterPlatform = overshoot - platformRewards;
+                let platformOvershootShare = overshoot * PLATFORM_OVERSHOOT_SHARE;
+                let overshootLeftAfterPlatform = overshoot - platformOvershootShare;
                 var contributorsContributionsAll : Trie.Trie<UserId, Float> = Trie.empty();
                 var contributorsPayout : Trie.Trie<UserId, Float> = Trie.empty();
                 var crowdsaleContributions: [CrowdsaleContribution] = v.contributions; 
-                let REWARDS_TO_CONTRIBUTORS = (overshoot - platformRewards) * CREATOR_REWARD_SHARE;
+                let OVERSHOOT_SHARE_TO_CONTRIBUTORS = (overshoot - platformOvershootShare) * CREATOR_OVERSHOOT_SHARE;
                 for (i in Iter.range(0, crowdsaleContributions.size() - 1)) {
-                    let foundRewards = Trie.find(
+                    let foundOvershootShare = Trie.find(
                         contributorsContributionsAll,
                         keyPrincipal(crowdsaleContributions[i].contributor),
                         Principal.equal
                     );
-                    switch (foundRewards) {
+                    switch (foundOvershootShare) {
                         case null {
-                            let (newReward, _) = Trie.put(
+                            let (newOvershootShare, _) = Trie.put(
                                 contributorsContributionsAll,
                                 keyPrincipal(crowdsaleContributions[i].contributor),
                                 Principal.equal,
                                 crowdsaleContributions[i].amount
                             );
-                            contributorsContributionsAll := newReward;
+                            contributorsContributionsAll := newOvershootShare;
                         };
                         case (? c) {
-                            let (newReward, _) = Trie.put(
+                            let (newOvershootShare, _) = Trie.put(
                                 contributorsContributionsAll,
                                 keyPrincipal(crowdsaleContributions[i].contributor),
                                 Principal.equal,
                                 c + crowdsaleContributions[i].amount
                             );
-                            contributorsContributionsAll := newReward;
+                            contributorsContributionsAll := newOvershootShare;
                         };
                     };
                 };
                 for ((key, value) in Trie.iter(contributorsContributionsAll)) {
-                    let (newRewardsCalculated, _) = Trie.put(
+                    let (newOvershootShareCalculated, _) = Trie.put(
                         contributorsPayout,
                         keyPrincipal(key),
                         Principal.equal,
-                        value / v.contributedAmount * REWARDS_TO_CONTRIBUTORS
+                        value / v.contributedAmount * OVERSHOOT_SHARE_TO_CONTRIBUTORS
                     );
-                    contributorsPayout := newRewardsCalculated;
+                    contributorsPayout := newOvershootShareCalculated;
                 };
 
-                let crowdsaleRewards: CrowdsaleRewards = {
+                let crowdsaleOvershootShare: CrowdsaleOvershootShare = {
                     crowdsaleId = crowdsaleId;
                     overshoot = overshoot;
-                    platformRewards = platformRewards;
-                    creatorRewardsTotal = overshootLeftAfterPlatform * CREATOR_REWARD_SHARE;
-                    creatorPayoutTotal = overshootLeftAfterPlatform * CREATOR_REWARD_SHARE + v.offerPrice;
+                    platformOvershootShare = platformOvershootShare;
+                    creatorOvershootShareTotal = overshootLeftAfterPlatform * CREATOR_OVERSHOOT_SHARE;
+                    creatorPayoutTotal = overshootLeftAfterPlatform * CREATOR_OVERSHOOT_SHARE + v.offerPrice;
                     contributorsContributionsAll = contributorsContributionsAll;
                     contributorsPayout = contributorsPayout;
-                    contributorsPayoutTotal = overshootLeftAfterPlatform * CONTRIBUTOR_REWARD_SHARE;
+                    contributorsPayoutTotal = overshootLeftAfterPlatform * CONTRIBUTOR_OVERSHOOT_SHARE;
                 };
-                #ok((crowdsaleRewards));
+                #ok((crowdsaleOvershootShare));
             };
         };
     };
