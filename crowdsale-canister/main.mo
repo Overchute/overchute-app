@@ -15,8 +15,8 @@ import Iter "mo:base/Iter";
 import Err "mo:base/Error";
 import Bool "mo:base/Bool";
 
-shared (msg) actor class crowdsale (){
-    private let admin = msg.caller;
+shared (msg) actor class crowdsale (owner: Principal) = this {
+    private stable let admin : Principal = owner;
     private let g = UUID.Generator();
 
     public type Crowdsale = Types.Crowdsale;
@@ -514,6 +514,17 @@ shared (msg) actor class crowdsale (){
                 };
                 #ok((crowdsaleOvershootShare));
             };
+        };
+    };
+
+    // erase everything
+    public shared(msg) func eraseDatabase() : async Result.Result<(Text), Error> {
+        let callerId = msg.caller;
+        if (admin != callerId) {
+            throw Err.reject("No access");
+        } else {
+            crowdsales := Trie.empty();
+            #ok(("ok"));
         };
     };
 
