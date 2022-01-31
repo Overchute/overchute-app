@@ -55,6 +55,10 @@ shared (msg) actor class crowdsale (owner: Principal) = this {
             throw Err.reject("Offer price cannot be less or equal than 0");
         };
 
+        if (crowdsaleCreate.refundBonusDeposit < 0) {
+            throw Err.reject("Refund bonus deposit cannot be less than 0");
+        };
+
         let crowdsale: Crowdsale = {
             crowdsaleId = id;
             creator = callerId;
@@ -66,6 +70,8 @@ shared (msg) actor class crowdsale (owner: Principal) = this {
             deadline = crowdsaleCreate.deadline;
             contributedAmount = 0;
             contributions = [];
+            refundBonusDeposit = crowdsaleCreate.refundBonusDeposit;
+            license = crowdsaleCreate.license;
             imageUrl = crowdsaleCreate.imageUrl;
             identity = Principal.toText(callerId);
         };
@@ -129,6 +135,8 @@ shared (msg) actor class crowdsale (owner: Principal) = this {
                     deadline = crowdsaleUpdate.deadline;
                     contributedAmount = v.contributedAmount;
                     contributions = v.contributions;
+                    refundBonusDeposit = v.refundBonusDeposit;
+                    license = v.license;
                     imageUrl = v.imageUrl;
                     identity = v.identity;
                 };
@@ -209,6 +217,8 @@ shared (msg) actor class crowdsale (owner: Principal) = this {
                     deadline = v.deadline;
                     contributedAmount = v.contributedAmount + amount;
                     contributions = newContributionsArray;
+                    refundBonusDeposit = v.refundBonusDeposit;
+                    license = v.license;
                     imageUrl = v.imageUrl;
                     identity = v.identity;
                 };
@@ -246,6 +256,8 @@ shared (msg) actor class crowdsale (owner: Principal) = this {
                         deadline = v.deadline;
                         contributedAmount = v.contributedAmount;
                         contributions = v.contributions;
+                        refundBonusDeposit = v.refundBonusDeposit;
+                        license = v.license;
                         imageUrl = v.imageUrl;
                         identity = v.identity;
                     };
@@ -292,6 +304,8 @@ shared (msg) actor class crowdsale (owner: Principal) = this {
                             deadline = v.deadline;
                             contributedAmount = v.contributedAmount;
                             contributions = v.contributions;
+                            refundBonusDeposit = v.refundBonusDeposit;
+                            license = v.license;
                             imageUrl = v.imageUrl;
                             identity = v.identity;
                         };
@@ -441,9 +455,13 @@ shared (msg) actor class crowdsale (owner: Principal) = this {
 
     // calculate results
     public shared(msg) func calculateResults(crowdsaleId: CrowdsaleId) : async Result.Result<CrowdsaleOvershootShare, Error> {
-        let PLATFORM_OVERSHOOT_SHARE = 0.1;
         let CREATOR_OVERSHOOT_SHARE = 0.5;
         let CONTRIBUTOR_OVERSHOOT_SHARE = 0.5;
+        let PLATFORM_OVERSHOOT_SHARE = 0.1;
+        var CROWDSALE_STATUS : Status = #OPEN;
+        var contributorsContributionsAll : Trie.Trie<UserId, Float> = Trie.empty();
+        var contributorsPayout : Trie.Trie<UserId, Float> = Trie.empty();
+        var contributorsRefundBonus : Trie.Trie<UserId, Float> = Trie.empty();
         let callerId = msg.caller;
         let result = Trie.find(
             crowdsales,
@@ -458,59 +476,125 @@ shared (msg) actor class crowdsale (owner: Principal) = this {
                 if (v.creator != callerId) {
                     throw Err.reject("No access");
                 };
-                let overshoot = v.contributedAmount - v.offerPrice;
-                let platformOvershootShare = overshoot * PLATFORM_OVERSHOOT_SHARE;
-                let overshootLeftAfterPlatform = overshoot - platformOvershootShare;
-                var contributorsContributionsAll : Trie.Trie<UserId, Float> = Trie.empty();
-                var contributorsPayout : Trie.Trie<UserId, Float> = Trie.empty();
+
+                // load crowdsale contributions
                 var crowdsaleContributions: [CrowdsaleContribution] = v.contributions; 
-                let OVERSHOOT_SHARE_TO_CONTRIBUTORS = (overshoot - platformOvershootShare) * CREATOR_OVERSHOOT_SHARE;
+
+                // initialize variables
+                let REFUND_BONUS_DEPOSIT = v.refundBonusDeposit;
+                var CREATOR_REFUND_BONUS = 0.0;
+                var CONTRIBUTORS_REFUND_BONUS = 0.0;
+                let REFUND_BONUS_RATE = REFUND_BONUS_DEPOSIT / v.offerPrice;
+
+                // calculate overshoot
+                var overshoot = v.contributedAmount - v.offerPrice;
+
+                // define the status of the crowdsale
+                if (overshoot >= 0) {
+                    CROWDSALE_STATUS := #SUCCEEDED;
+                } else {
+                    CROWDSALE_STATUS := #FAILED;
+                    overshoot := 0;
+                };
+
+                // calculate overshoot rebate
+                var platformOvershootShare = v.contributedAmount * PLATFORM_OVERSHOOT_SHARE;
+
+                // set overshoot condition for a platform
+                if (platformOvershootShare > overshoot) {
+                    platformOvershootShare := overshoot;
+                };
+
+                // calculate overshoot sharing
+                let OVERSHOOT_SHARE_TO_CONTRIBUTORS = (overshoot - platformOvershootShare) * CONTRIBUTOR_OVERSHOOT_SHARE;
+                let OVERSHOOT_SHARE_TO_CREATOR = (overshoot - platformOvershootShare) * CREATOR_OVERSHOOT_SHARE;
+
+                // calculate all contributions per contributor
                 for (i in Iter.range(0, crowdsaleContributions.size() - 1)) {
-                    let foundOvershootShare = Trie.find(
+                    let foundContributions = Trie.find(
                         contributorsContributionsAll,
                         keyPrincipal(crowdsaleContributions[i].contributor),
                         Principal.equal
                     );
-                    switch (foundOvershootShare) {
+                    switch (foundContributions) {
                         case null {
-                            let (newOvershootShare, _) = Trie.put(
+                            let (newContributions, _) = Trie.put(
                                 contributorsContributionsAll,
                                 keyPrincipal(crowdsaleContributions[i].contributor),
                                 Principal.equal,
                                 crowdsaleContributions[i].amount
                             );
-                            contributorsContributionsAll := newOvershootShare;
+                            contributorsContributionsAll := newContributions;
                         };
                         case (? c) {
-                            let (newOvershootShare, _) = Trie.put(
+                            let (newContributions, _) = Trie.put(
                                 contributorsContributionsAll,
                                 keyPrincipal(crowdsaleContributions[i].contributor),
                                 Principal.equal,
                                 c + crowdsaleContributions[i].amount
                             );
-                            contributorsContributionsAll := newOvershootShare;
+                            contributorsContributionsAll := newContributions;
                         };
                     };
                 };
+
+                // calculate refund bonuses
+                if (CROWDSALE_STATUS == #SUCCEEDED) {
+                    CONTRIBUTORS_REFUND_BONUS := 0;
+                } else {
+                    CONTRIBUTORS_REFUND_BONUS := v.contributedAmount * REFUND_BONUS_RATE;
+                  
+                    // calculate total refund bonuses for all contributors
+                    for ((key, value) in Trie.iter(contributorsContributionsAll)) {
+                        let (newContributorsRefundBonus, _) = Trie.put(
+                            contributorsRefundBonus,
+                            keyPrincipal(key),
+                            Principal.equal,
+                            value * REFUND_BONUS_RATE
+                        );
+                        contributorsRefundBonus := newContributorsRefundBonus;
+                    };
+                };
+
+                CREATOR_REFUND_BONUS := REFUND_BONUS_DEPOSIT - CONTRIBUTORS_REFUND_BONUS;
+                var creatorAmountToPayTotal = 0.0;
+                var contributorsAmountToPayTotal = 0.0;
+
+                // calculate total payouts for all contributors
                 for ((key, value) in Trie.iter(contributorsContributionsAll)) {
+                    var amountToPay = 0.0;
+                    if (CROWDSALE_STATUS == #SUCCEEDED) {
+                        amountToPay := value / v.contributedAmount * OVERSHOOT_SHARE_TO_CONTRIBUTORS;
+                        creatorAmountToPayTotal := v.offerPrice + OVERSHOOT_SHARE_TO_CREATOR + CREATOR_REFUND_BONUS;
+                        contributorsAmountToPayTotal := OVERSHOOT_SHARE_TO_CONTRIBUTORS;
+                    } else {
+                        amountToPay := value + value * REFUND_BONUS_RATE;
+                        creatorAmountToPayTotal := CREATOR_REFUND_BONUS;
+                        contributorsAmountToPayTotal := CONTRIBUTORS_REFUND_BONUS + v.contributedAmount;
+                    };
+
                     let (newOvershootShareCalculated, _) = Trie.put(
                         contributorsPayout,
                         keyPrincipal(key),
                         Principal.equal,
-                        value / v.contributedAmount * OVERSHOOT_SHARE_TO_CONTRIBUTORS
+                        amountToPay
                     );
                     contributorsPayout := newOvershootShareCalculated;
                 };
 
+                // fill in response
                 let crowdsaleOvershootShare: CrowdsaleOvershootShare = {
                     crowdsaleId = crowdsaleId;
                     overshoot = overshoot;
                     platformOvershootShare = platformOvershootShare;
-                    creatorOvershootShareTotal = overshootLeftAfterPlatform * CREATOR_OVERSHOOT_SHARE;
-                    creatorPayoutTotal = overshootLeftAfterPlatform * CREATOR_OVERSHOOT_SHARE + v.offerPrice;
+                    creatorOvershootShareTotal = OVERSHOOT_SHARE_TO_CREATOR;
+                    creatorRefundBonus = CREATOR_REFUND_BONUS;
+                    creatorPayoutTotal = creatorAmountToPayTotal;
                     contributorsContributionsAll = contributorsContributionsAll;
+                    contributorsRefundBonusTotal = CONTRIBUTORS_REFUND_BONUS;
+                    contributorsRefundBonusAll = contributorsRefundBonus;
                     contributorsPayout = contributorsPayout;
-                    contributorsPayoutTotal = overshootLeftAfterPlatform * CONTRIBUTOR_OVERSHOOT_SHARE;
+                    contributorsPayoutTotal = contributorsAmountToPayTotal;
                 };
                 #ok((crowdsaleOvershootShare));
             };

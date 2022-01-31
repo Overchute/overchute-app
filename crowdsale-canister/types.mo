@@ -22,6 +22,8 @@ module {
         deadline: Time.Time;
         contributedAmount: Float;
         contributions: [CrowdsaleContribution];
+        refundBonusDeposit: Float;
+        license: Int;
         imageUrl: ?Text;
         identity: Text;
     };
@@ -40,8 +42,11 @@ module {
         overshoot: Float;
         platformOvershootShare: Float;
         creatorOvershootShareTotal: Float;
+        creatorRefundBonus: Float;
         creatorPayoutTotal: Float;
         contributorsContributionsAll: Trie.Trie<Principal, Float>;
+        contributorsRefundBonusTotal: Float;
+        contributorsRefundBonusAll: Trie.Trie<Principal, Float>;
         contributorsPayout: Trie.Trie<Principal, Float>;
         contributorsPayoutTotal: Float;
     };
@@ -50,6 +55,8 @@ module {
         offerPrice: Float;
         deadline: Time.Time;
         productType: ProductType;
+        refundBonusDeposit: Float;
+        license: Int;
         imageUrl: ?Text;
     };
 
