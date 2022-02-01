@@ -457,7 +457,7 @@ shared (msg) actor class crowdsale (owner: Principal) = this {
     public shared(msg) func calculateResults(crowdsaleId: CrowdsaleId) : async Result.Result<CrowdsaleOvershootShare, Error> {
         let CREATOR_OVERSHOOT_SHARE = 0.5;
         let CONTRIBUTOR_OVERSHOOT_SHARE = 0.5;
-        let PLATFORM_OVERSHOOT_SHARE = 0.1;
+        let PLATFORM_OVERSHOOT_SHARE = 0.05;
         var CROWDSALE_STATUS : Status = #OPEN;
         var contributorsContributionsAll : Trie.Trie<UserId, Float> = Trie.empty();
         var contributorsPayout : Trie.Trie<UserId, Float> = Trie.empty();
